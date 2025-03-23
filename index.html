@@ -8,28 +8,44 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f4f4f4;
+            background: linear-gradient(to right, #ff9966, #ff5e62);
             margin: 0;
             padding: 0;
+            color: white;
         }
         header {
-            background-color: #333;
+            background: rgba(0, 0, 0, 0.8);
             color: white;
             padding: 20px;
-            font-size: 24px;
+            font-size: 28px;
+            font-weight: bold;
         }
         .container {
-            margin: 20px auto;
+            margin: 40px auto;
             max-width: 800px;
-            background: white;
-            padding: 20px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
         }
         .coming-soon {
-            font-size: 18px;
-            color: #555;
+            font-size: 20px;
             margin-top: 20px;
+            font-weight: bold;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .button:hover {
+            background: rgba(0, 0, 0, 1);
         }
     </style>
 </head>
@@ -39,6 +55,7 @@
         <h2>Play Fun and Engaging Browser Games!</h2>
         <p>Our collection of casual games is coming soon. Stay tuned!</p>
         <div class="coming-soon">More games will be available soon!</div>
+        <a href="#" class="button">Explore Games</a>
     </div>
 </body>
 </html>
