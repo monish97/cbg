@@ -48,28 +48,39 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        form {
+        .contact-form {
             display: flex;
             flex-direction: column;
+            gap: 15px;
         }
-        input, textarea {
-            margin-bottom: 15px;
+        .contact-form input, .contact-form textarea {
+            width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
         }
-        button {
+        .contact-form textarea {
+            height: 100px;
+            resize: none;
+        }
+        .contact-form button {
             background: #ff9800;
             color: white;
-            padding: 10px;
             border: none;
+            padding: 10px;
             cursor: pointer;
             font-size: 16px;
             border-radius: 5px;
         }
-        button:hover {
+        .contact-form button:hover {
             background: #e68900;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 16px;
+            color: green;
+            display: none;
         }
         footer {
             padding: 15px;
@@ -81,6 +92,14 @@
             bottom: 0;
             left: 0;
         }
+        footer a {
+            color: #ff9800;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -90,43 +109,19 @@
     
     <main>
         <h2>Contact Us</h2>
-        <form id="contactForm">
+        <form class="contact-form" action="https://formsubmit.co/mhv9390@gmail.com" method="POST">
+            <input type="hidden" name="_captcha" value="false">
             <input type="email" name="email" placeholder="Your Email" required>
             <input type="text" name="subject" placeholder="Subject" required>
             <textarea name="message" placeholder="Your Message" required></textarea>
             <button type="submit">Send</button>
         </form>
-        <p id="response-message" style="color: green; display: none; margin-top: 10px;">Thank you for contacting us. Your request has been sent to support.</p>
+        <p class="message">Thank you for contacting us. Your request has been sent to support.</p>
     </main>
     
     <footer>
         <a href="faq.html">FAQs</a> | <a href="about.html">About Us</a> | 
         <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
     </footer>
-    
-    <script>
-        document.getElementById("contact-form").addEventListener("submit", function(event) {
-            event.preventDefault();
-            document.getElementById("response-message").style.display = "block";
-            setTimeout(() => {
-                document.getElementById("contact-form").reset();
-            }, 1000);
-        });
-    </script>
-    <script>
-        document.getElementById('contactForm').addEventListener('submit', async function (e) {
-        e.preventDefault();
-            const formData = new FormData(this);
-    
-            const response = await fetch('/api/sendEmail', {
-                method: 'POST',
-                body: JSON.stringify(Object.fromEntries(formData)),
-                headers: { 'Content-Type': 'application/json' }
-            });
-    
-            const result = await response.json();
-            alert(result.message);
-        });
-    </script>
 </body>
 </html>
