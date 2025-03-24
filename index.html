@@ -97,71 +97,72 @@
     </header>
     <div class="container">
         <script>
-    const categories = [
-        { name: "For You", icon: "✨" },
-        { name: "Top Games", icon: "🏆" },
-        { name: "New Games", icon: "🆕" },
-        { name: "Trending Games", icon: "📈" },
-        { name: "Hot Picks", icon: "🔥" }
-    ];
-
-    async function fetchGames() {
-        try {
-            const response = await fetch("https://gamemonetize.com/feed.php?format=0&num=50&page=1");
-            const text = await response.text();
-            const parser = new DOMParser();
-            const xml = parser.parseFromString(text, "text/xml");
-            const games = Array.from(xml.getElementsByTagName("item"));
-
-            if (!games.length) {
-                console.error("No games found in the feed");
-                return;
+            const categories = [
+                { name: "For You", icon: "✨" },
+                { name: "Top Games", icon: "🏆" },
+                { name: "New Games", icon: "🆕" },
+                { name: "Trending Games", icon: "📈" },
+                { name: "Hot Picks", icon: "🔥" }
+            ];
+        
+            async function fetchGames() {
+                try {
+                    const response = await fetch("https://gamemonetize.com/feed.php?format=0&num=50&page=1");
+                    const text = await response.text();
+                    const parser = new DOMParser();
+                    const xml = parser.parseFromString(text, "text/xml");
+                    const games = Array.from(xml.getElementsByTagName("item"));
+        
+                    if (!games.length) {
+                        console.error("No games found in the feed");
+                        return;
+                    }
+        
+                    categories.forEach((category, index) => {
+                        const container = document.createElement('div');
+                        container.classList.add('category');
+                        container.innerHTML = `
+                            <h2>${category.icon} ${category.name} ${category.icon}</h2>
+                            <div class='scroll-buttons'>
+                                <button class='scroll-btn' onclick='scrollLeftCategory("games-container-${index}")'>⬅️</button>
+                                <button class='scroll-btn' onclick='scrollRightCategory("games-container-${index}")'>➡️</button>
+                            </div>
+                            <div class='games-container' id='games-container-${index}'></div>
+                        `;
+                        document.body.appendChild(container);
+        
+                        const gamesContainer = document.getElementById(`games-container-${index}`);
+        
+                        // Get random 10 games for each category
+                        const selectedGames = games.sort(() => 0.5 - Math.random()).slice(0, 10);
+        
+                        selectedGames.forEach((game) => {
+                            const title = game.getElementsByTagName("title")[0].textContent;
+                            const link = game.getElementsByTagName("link")[0].textContent;
+                            const thumbnail = game.getElementsByTagName("thumbnail")[0].textContent;
+        
+                            const gameCard = document.createElement('div');
+                            gameCard.classList.add('game-card');
+                            gameCard.innerHTML = `
+                                <img src='${thumbnail}' alt='${title}'>
+                                <p>${title}</p>
+                            `;
+                            gameCard.onclick = () => playGame(link);
+                            gamesContainer.appendChild(gameCard);
+                        });
+                    });
+                } catch (error) {
+                    console.error("Error fetching games:", error);
+                }
             }
+        
+            function playGame(url) {
+                window.location.href = `play.html?game=${encodeURIComponent(url)}`;
+            }
+        
+            fetchGames();
+        </script>
 
-            categories.forEach((category, index) => {
-                const container = document.createElement('div');
-                container.classList.add('category');
-                container.innerHTML = `
-                    <h2>${category.icon} ${category.name} ${category.icon}</h2>
-                    <div class='scroll-buttons'>
-                        <button class='scroll-btn' onclick='scrollLeftCategory("games-container-${index}")'>⬅️</button>
-                        <button class='scroll-btn' onclick='scrollRightCategory("games-container-${index}")'>➡️</button>
-                    </div>
-                    <div class='games-container' id='games-container-${index}'></div>
-                `;
-                document.body.appendChild(container);
-
-                const gamesContainer = document.getElementById(`games-container-${index}`);
-
-                // Get random 10 games for each category
-                const selectedGames = games.sort(() => 0.5 - Math.random()).slice(0, 10);
-
-                selectedGames.forEach((game) => {
-                    const title = game.getElementsByTagName("title")[0].textContent;
-                    const link = game.getElementsByTagName("link")[0].textContent;
-                    const thumbnail = game.getElementsByTagName("thumbnail")[0].textContent;
-
-                    const gameCard = document.createElement('div');
-                    gameCard.classList.add('game-card');
-                    gameCard.innerHTML = `
-                        <img src='${thumbnail}' alt='${title}'>
-                        <p>${title}</p>
-                    `;
-                    gameCard.onclick = () => playGame(link);
-                    gamesContainer.appendChild(gameCard);
-                });
-            });
-        } catch (error) {
-            console.error("Error fetching games:", error);
-        }
-    }
-
-    function playGame(url) {
-        window.location.href = `play.html?game=${encodeURIComponent(url)}`;
-    }
-
-    fetchGames();
-</script>
 
 
         <footer>
