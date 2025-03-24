@@ -61,7 +61,8 @@
         }
         .scroll-buttons {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 10px;
             margin-top: 10px;
         }
         .scroll-btn {
@@ -108,8 +109,8 @@
                 document.write(`<div class='category'>
                     <h2>${category.icon} ${category.name} ${category.icon}</h2>
                     <div class='scroll-buttons'>
-                        <button class='scroll-btn' onclick='scrollLeft(${index})'>⬅️</button>
-                        <button class='scroll-btn' onclick='scrollRight(${index})'>➡️</button>
+                        <button class='scroll-btn' onclick='scrollLeft("games-container-${index}")'>⬅️</button>
+                        <button class='scroll-btn' onclick='scrollRight("games-container-${index}")'>➡️</button>
                     </div>
                     <div class='games-container' id='games-container-${index}'>`);
                 for (let i = 1; i <= 10; i++) {
@@ -136,11 +137,11 @@
             const themeIcon = document.querySelector('.toggle-theme');
             themeIcon.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
         }
-        function scrollLeft(index) {
-            document.getElementById(`games-container-${index}`).scrollBy({ left: -220, behavior: 'smooth' });
+        function scrollLeft(containerId) {
+            document.getElementById(containerId).scrollBy({ left: -220, behavior: 'smooth' });
         }
-        function scrollRight(index) {
-            document.getElementById(`games-container-${index}`).scrollBy({ left: 220, behavior: 'smooth' });
+        function scrollRight(containerId) {
+            document.getElementById(containerId).scrollBy({ left: 220, behavior: 'smooth' });
         }
     </script>
 </body>
