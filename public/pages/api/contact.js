@@ -22,8 +22,8 @@ export default async function handler(req, res) {
 
         if (!response.ok) throw new Error("Failed to send email");
 
-        return res.status(200).json({ message: "Thank you for contacting us. Your request has been sent to support." });
+        res.status(200).send("Success"); // Don't send JSON response
     } catch (error) {
-        return res.status(500).json({ message: "An error occurred. Please try again." });
+        res.status(500).send("Error sending message");
     }
 }
