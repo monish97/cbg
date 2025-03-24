@@ -38,6 +38,7 @@
         .toggle-container {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             margin-right: 20px;
             background: #ff9800;
             width: 50px;
@@ -45,6 +46,7 @@
             border-radius: 12px;
             position: relative;
             cursor: pointer;
+            padding: 2px;
         }
         .toggle-slider {
             position: absolute;
@@ -59,16 +61,14 @@
         .dark-mode .toggle-slider {
             transform: translateX(26px);
         }
-        .toggle-container::before {
-            content: "🌙";
-            position: absolute;
-            left: 6px;
-            top: 2px;
+        .toggle-container span {
             font-size: 16px;
-        }
-        .dark-mode .toggle-container::before {
-            content: "☀️";
-            left: 28px;
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5px;
+            align-items: center;
         }
         iframe {
             border: none;
@@ -106,7 +106,9 @@
     <header>
         <h1 class="header-title">Casual Browser Games</h1>
         <div class="toggle-container" onclick="toggleMode()">
+            <span>🌙</span>
             <div class="toggle-slider"></div>
+            <span>☀️</span>
         </div>
     </header>
     <iframe id="gameFrame" allowfullscreen></iframe>
