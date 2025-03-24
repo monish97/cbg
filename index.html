@@ -26,7 +26,14 @@
         .logo { font-size: 24px; font-weight: bold; }
         .toggle-theme { cursor: pointer; font-size: 18px; }
         .category { margin-top: 30px; }
-        h2 { border-bottom: 3px solid #ff9800; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        h2 {
+            border-bottom: 3px solid #ff9800;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
         .games-container {
             display: flex;
             overflow-x: auto;
@@ -52,6 +59,11 @@
             border-radius: 10px; 
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
+        .scroll-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
         .scroll-btn {
             background: #ff9800;
             color: white;
@@ -59,7 +71,6 @@
             padding: 10px;
             cursor: pointer;
             border-radius: 5px;
-            margin-top: 10px;
         }
         footer {
             margin-top: 40px;
@@ -86,17 +97,20 @@
     <div class="container">
         <script>
             const categories = [
-                { name: "✨ For You", icon: "✨" },
-                { name: "🏆 Top Games", icon: "🏆" },
-                { name: "🆕 New Games", icon: "🆕" },
-                { name: "📈 Trending Games", icon: "📈" },
-                { name: "🔥 Hot Picks", icon: "🔥" }
+                { name: "For You", icon: "✨" },
+                { name: "Top Games", icon: "🏆" },
+                { name: "New Games", icon: "🆕" },
+                { name: "Trending Games", icon: "📈" },
+                { name: "Hot Picks", icon: "🔥" }
             ];
             
             categories.forEach((category, index) => {
                 document.write(`<div class='category'>
-                    <h2>${category.icon} ${category.name}</h2>
-                    <button class='scroll-btn' onclick='scrollLeft(${index})'>⬅️</button>
+                    <h2>${category.icon} ${category.name} ${category.icon}</h2>
+                    <div class='scroll-buttons'>
+                        <button class='scroll-btn' onclick='scrollLeft(${index})'>⬅️</button>
+                        <button class='scroll-btn' onclick='scrollRight(${index})'>➡️</button>
+                    </div>
                     <div class='games-container' id='games-container-${index}'>`);
                 for (let i = 1; i <= 10; i++) {
                     document.write(`
@@ -106,9 +120,7 @@
                         </div>
                     `);
                 }
-                document.write(`</div>
-                    <button class='scroll-btn' onclick='scrollRight(${index})'>➡️</button>
-                </div>`);
+                document.write(`</div></div>`);
             });
         </script>
         <footer>
