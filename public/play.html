@@ -42,43 +42,37 @@
         .toggle-container {
             display: flex;
             align-items: center;
-            width: 50px;
-            height: 24px;
+            width: 60px;
+            height: 30px;
             background: #ff9800;
-            border-radius: 12px;
+            border-radius: 15px;
             position: relative;
             cursor: pointer;
         }
         .toggle-slider {
             position: absolute;
-            width: 22px;
-            height: 22px;
+            width: 26px;
+            height: 26px;
             background: white;
             border-radius: 50%;
-            top: 1px;
-            left: 2px;
+            top: 2px;
+            left: 3px;
             transition: transform 0.3s;
         }
         .dark-mode .toggle-slider {
-            transform: translateX(26px);
+            transform: translateX(30px);
         }
-        .toggle-container::before {
-            content: '☀️';
+        .toggle-icons {
+            display: flex;
+            justify-content: space-between;
             position: absolute;
-            left: 5px;
+            width: 100%;
+            bottom: -20px;
             font-size: 16px;
         }
-        .toggle-container::after {
-            content: '🌙';
-            position: absolute;
-            right: 5px;
-            font-size: 16px;
-        }
-        .dark-mode .toggle-container::before {
-            content: '🌙';
-        }
-        .dark-mode .toggle-container::after {
-            content: '☀️';
+        .toggle-icons span {
+            flex: 1;
+            text-align: center;
         }
         iframe {
             border: none;
@@ -118,6 +112,10 @@
         <h1 class="header-title">Casual Browser Games</h1>
         <div class="toggle-container" onclick="toggleMode()">
             <div class="toggle-slider"></div>
+            <div class="toggle-icons">
+                <span>☀️</span>
+                <span>🌙</span>
+            </div>
         </div>
     </header>
     <iframe id="gameFrame" allowfullscreen></iframe>
