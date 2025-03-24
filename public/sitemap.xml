@@ -5,8 +5,19 @@
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://www.casualbrowsergames.com/play.html</loc>
+        <loc>https://www.casualbrowsergames.com/faq.html</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://www.casualbrowsergames.com/about.html</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://www.casualbrowsergames.com/contact.html</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://www.casualbrowsergames.com/privacy.html</loc>
         <priority>0.8</priority>
     </url>
 </urlset>
-
