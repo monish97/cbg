@@ -5,57 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Casual Browser Games</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: linear-gradient(to right, #ff9966, #ff5e62);
-            margin: 0;
-            padding: 0;
-            color: white;
-        }
-        header {
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 20px;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .container {
-            margin: 40px auto;
-            max-width: 800px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-        }
-        .coming-soon {
-            font-size: 20px;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-        .button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-        .button:hover {
-            background: rgba(0, 0, 0, 1);
-        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; color: #333; }
+        .container { width: 80%; margin: auto; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: #222; color: white; }
+        .logo { font-size: 24px; font-weight: bold; }
+        .toggle-theme { cursor: pointer; }
+        .category { margin-top: 20px; }
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .game-card { background: white; padding: 10px; text-align: center; cursor: pointer; border-radius: 10px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); }
+        .game-card img { width: 100%; border-radius: 10px; }
     </style>
 </head>
 <body>
-    <header>Casual Browser Games</header>
+    <header>
+        <div class="logo">CasualBrowserGames</div>
+        <div class="toggle-theme">🌙</div>
+    </header>
     <div class="container">
-        <h2>Play Fun and Engaging Browser Games!</h2>
-        <p>Our collection of casual games is coming soon. Stay tuned!</p>
-        <div class="coming-soon">More games will be available soon!</div>
-        <a href="play.html?game=https://html5.gamemonetize.co/o9w62c798uwmlajkjrayt2ock1u01trq/" class="button">Play a Game</a>
+        <div class="category">
+            <h2>For You</h2>
+            <div class="games-grid">
+                <div class="game-card" onclick="playGame('game1')">
+                    <img src="thumb1.jpg" alt="Game 1">
+                    <p>Game 1</p>
+                </div>
+            </div>
+        </div>
+        <div class="category">
+            <h2>Top Games</h2>
+            <div class="games-grid">
+                <div class="game-card" onclick="playGame('game2')">
+                    <img src="thumb2.jpg" alt="Game 2">
+                    <p>Game 2</p>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <a href="faq.html">FAQs</a> | <a href="about.html">About Us</a> | <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
+        </footer>
     </div>
+    <script>
+        function playGame(gameId) {
+            window.location.href = `play.html?game=${gameId}`;
+        }
+    </script>
 </body>
 </html>
