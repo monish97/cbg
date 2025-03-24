@@ -109,7 +109,7 @@
                 const text = await response.text();
                 const parser = new DOMParser();
                 const xml = parser.parseFromString(text, "text/xml");
-                const games = Array.from(xml.getElementsByTagName("item"));
+                const games = Array.from(xml.getElementsByTagName("game"));
 
                 if (!games.length) {
                     console.error("No games found in the feed.");
@@ -142,12 +142,11 @@
 
                     const gamesContainer = document.getElementById(`games-container-${index}`);
 
-                    // Select 10 random games for each category
                     const selectedGames = games.sort(() => 0.5 - Math.random()).slice(0, 10);
 
                     selectedGames.forEach((game) => {
                         const title = game.getElementsByTagName("title")[0].textContent;
-                        const link = game.getElementsByTagName("link")[0].textContent;
+                        const link = game.getElementsByTagName("url")[0].textContent;
                         const thumbnail = game.getElementsByTagName("thumbnail")[0].textContent;
 
                         const gameCard = document.createElement("div");
