@@ -39,6 +39,10 @@
         .header-title {
             margin: 0 auto;
         }
+        .header-title a {
+            color: white;
+            text-decoration: none;
+        }
         .toggle-container {
             display: flex;
             align-items: center;
@@ -73,10 +77,10 @@
             padding: 0 5px;
         }
         .toggle-icons span:first-child {
-            order: 2;
+            order: 1;
         }
         .toggle-icons span:last-child {
-            order: 1;
+            order: 2;
         }
         iframe {
             border: none;
@@ -113,11 +117,11 @@
 </head>
 <body>
     <header>
-        <h1 class="header-title">Casual Browser Games</h1>
+        <h1 class="header-title"><a href="index.html">Casual Browser Games</a></h1>
         <div class="toggle-container" onclick="toggleMode()">
             <div class="toggle-icons">
-                <span>🌙</span>
                 <span>☀️</span>
+                <span>🌙</span>
             </div>
             <div class="toggle-slider"></div>
         </div>
