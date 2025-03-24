@@ -10,10 +10,14 @@ export default async function handler(req, res) {
     }
 
     try {
-        const response = await fetch("https://api.formsubmit.co/ajax/" + process.env.EMAIL_TO, {
+        const response = await fetch("https://formsubmit.co/" + process.env.EMAIL_TO, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, subject, message }),
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+                email,
+                subject,
+                message,
+            }).toString(),
         });
 
         if (!response.ok) throw new Error("Failed to send email");
@@ -23,4 +27,3 @@ export default async function handler(req, res) {
         return res.status(500).json({ message: "An error occurred. Please try again." });
     }
 }
-
