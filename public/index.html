@@ -121,7 +121,9 @@
                 console.error("Error fetching games:", error);
             }
         }
-
+        function toggleMode() {
+            document.body.classList.toggle("dark-mode");
+        }
         function playGame(url, orientation, width, height) {
             window.location.href = `play.html?game=${encodeURIComponent(url)}&orientation=${orientation}&width=${width}&height=${height}`;
         }
