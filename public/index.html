@@ -107,7 +107,7 @@
                         <img src='${game.image}' alt='${game.title}'>
                         <p>${game.title}</p>
                     `;
-                    gameCard.onclick = () => playGame(game.url);
+                    gameCard.onclick = () => playGame(game.url, game.orientation, game.width, game.height);
                     gamesContainer.appendChild(gameCard);
                 });
             } catch (error) {
@@ -115,8 +115,8 @@
             }
         }
 
-        function playGame(url) {
-            window.location.href = `play.html?game=${encodeURIComponent(url)}`;
+        function playGame(url, orientation, width, height) {
+            window.location.href = `play.html?game=${encodeURIComponent(url)}&orientation=${orientation}&width=${width}&height=${height}`;
         }
 
         fetchGames();
