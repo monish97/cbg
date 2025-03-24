@@ -1,8 +1,6 @@
-Allow: /
-
 User-agent: *
 Disallow: /admin/
 Disallow: /login/
 Disallow: /register/
 
-Sitemap: https://casualbrowsergames.com/sitemap.xml
+Sitemap: https://www.casualbrowsergames.com/sitemap.xml
