@@ -35,15 +35,40 @@
         .header-title {
             margin: 0 auto;
         }
-        .mode-toggle {
-            background: #ff9800;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
+        .toggle-container {
+            display: flex;
+            align-items: center;
             margin-right: 20px;
+            background: #ff9800;
+            width: 50px;
+            height: 24px;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+        }
+        .toggle-slider {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 1px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+        .dark-mode .toggle-slider {
+            transform: translateX(26px);
+        }
+        .toggle-container::before {
+            content: "🌙";
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            font-size: 16px;
+        }
+        .dark-mode .toggle-container::before {
+            content: "☀️";
+            left: 28px;
         }
         iframe {
             border: none;
@@ -80,7 +105,9 @@
 <body>
     <header>
         <h1 class="header-title">Casual Browser Games</h1>
-        <button class="mode-toggle" onclick="toggleMode()">🌙 Dark Mode</button>
+        <div class="toggle-container" onclick="toggleMode()">
+            <div class="toggle-slider"></div>
+        </div>
     </header>
     <iframe id="gameFrame" allowfullscreen></iframe>
     <footer>
@@ -95,12 +122,6 @@
 
         function toggleMode() {
             document.body.classList.toggle("dark-mode");
-            const modeBtn = document.querySelector(".mode-toggle");
-            if (document.body.classList.contains("dark-mode")) {
-                modeBtn.textContent = "☀️ Light Mode";
-            } else {
-                modeBtn.textContent = "🌙 Dark Mode";
-            }
         }
 
         const gameUrl = getQueryParam('game');
