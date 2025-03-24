@@ -97,33 +97,64 @@
     </header>
     <div class="container">
         <script>
-            const categories = [
-                { name: "For You", icon: "✨" },
-                { name: "Top Games", icon: "🏆" },
-                { name: "New Games", icon: "🆕" },
-                { name: "Trending Games", icon: "📈" },
-                { name: "Hot Picks", icon: "🔥" }
-            ];
-            
+    const categories = [
+        { name: "For You", icon: "✨" },
+        { name: "Top Games", icon: "🏆" },
+        { name: "New Games", icon: "🆕" },
+        { name: "Trending Games", icon: "📈" },
+        { name: "Hot Picks", icon: "🔥" }
+    ];
+
+    async function fetchGames() {
+        try {
+            const response = await fetch("https://gamemonetize.com/feed.php?format=0&num=50&page=1");
+            const data = await response.json();
+            if (!data || !data.games) {
+                console.error("Invalid data received from GameMonetize API");
+                return;
+            }
+
             categories.forEach((category, index) => {
-                document.write(`<div class='category'>
+                const container = document.createElement('div');
+                container.classList.add('category');
+                container.innerHTML = `
                     <h2>${category.icon} ${category.name} ${category.icon}</h2>
                     <div class='scroll-buttons'>
                         <button class='scroll-btn' onclick='scrollLeftCategory("games-container-${index}")'>⬅️</button>
                         <button class='scroll-btn' onclick='scrollRightCategory("games-container-${index}")'>➡️</button>
                     </div>
-                    <div class='games-container' id='games-container-${index}'>`);
-                for (let i = 1; i <= 10; i++) {
-                    document.write(`
-                        <div class='game-card' onclick="playGame('https://html5.gamemonetize.com/game${i}.html')">
-                            <img src='https://via.placeholder.com/200x150' alt='Game ${i}'>
-                            <p>Game ${i}</p>
-                        </div>
-                    `);
-                }
-                document.write(`</div></div>`);
+                    <div class='games-container' id='games-container-${index}'></div>
+                `;
+                document.body.appendChild(container);
+
+                const gamesContainer = document.getElementById(`games-container-${index}`);
+
+                // Get random 10 games for each category
+                const games = data.games.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+                games.forEach((game) => {
+                    const gameCard = document.createElement('div');
+                    gameCard.classList.add('game-card');
+                    gameCard.innerHTML = `
+                        <img src='${game.image}' alt='${game.title}'>
+                        <p>${game.title}</p>
+                    `;
+                    gameCard.onclick = () => playGame(game.url);
+                    gamesContainer.appendChild(gameCard);
+                });
             });
-        </script>
+        } catch (error) {
+            console.error("Error fetching games:", error);
+        }
+    }
+
+    function playGame(url) {
+        window.location.href = `play.html?game=${encodeURIComponent(url)}`;
+    }
+
+    fetchGames();
+</script>
+
         <footer>
             <a href="faq.html">FAQs</a> | <a href="about.html">About Us</a> | <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
         </footer>
