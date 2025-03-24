@@ -17,7 +17,7 @@
             text-align: center;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            height: 100vh;
             justify-content: space-between;
             align-items: center;
         }
@@ -28,34 +28,59 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             position: fixed;
             top: 0;
             left: 0;
             z-index: 100;
         }
-        header h1 {
-            margin: 0;
+        .header-title {
+            margin: 0 auto;
+        }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            width: 70px;
+            height: 30px;
+            background: #ff9800;
+            border-radius: 15px;
+            position: relative;
             cursor: pointer;
         }
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: auto;
-            padding-top: 80px;
-        }
-        .about {
+        .toggle-slider {
+            position: absolute;
+            width: 26px;
+            height: 26px;
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: left;
+            border-radius: 50%;
+            top: 2px;
+            left: 3px;
+            transition: transform 0.3s;
         }
-        h2 {
-            border-bottom: 3px solid #ff9800;
-            padding-bottom: 10px;
-            display: inline-block;
+        .dark-mode .toggle-slider {
+            transform: translateX(40px);
+        }
+        .toggle-icons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            padding: 0 5px;
+        }
+        .toggle-icons span:first-child {
+            order: 2;
+        }
+        .toggle-icons span:last-child {
+            order: 1;
+        }
+        main {
+            margin-top: 80px;
+            width: 90%;
+            max-width: 800px;
         }
         footer {
             padding: 15px;
@@ -67,14 +92,36 @@
             bottom: 0;
             left: 0;
         }
+        footer a {
+            color: #ff9800;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .dark-mode {
+            background: #333;
+            color: white;
+        }
+        .dark-mode header, .dark-mode footer {
+            background: #111;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1 onclick="location.href='index.html'">Casual Browser Games</h1>
+        <h1 class="header-title">Casual Browser Games</h1>
+        <div class="toggle-container" onclick="toggleMode()">
+            <div class="toggle-icons">
+                <span>🌙</span>
+                <span>☀️</span>
+            </div>
+            <div class="toggle-slider"></div>
+        </div>
     </header>
     
-    <div class="container">
+    <main>
         <section class="about">
             <h2>About Us</h2>
             <p>Welcome to <strong>CasualBrowserGames.com</strong>, your ultimate destination for <strong>free online games</strong>! We offer a massive collection of <strong>browser-based games</strong> that you can play instantly—no downloads, no installations, just pure fun! Whether you're into <strong>action games, puzzle games, strategy games, racing games, or classic arcade games</strong>, we've got something for every gamer.</p>
@@ -85,10 +132,17 @@
             
             <p>Start playing now and explore the best <strong>online browser games</strong> at <strong>CasualBrowserGames.com</strong>—where gaming is always <strong>fast, free, and fun!</strong></p>
         </section>
-    </div>
+    </main>
     
     <footer>
-        <p>&copy; 2025 CasualBrowserGames.com | All Rights Reserved</p>
+        <a href="faq.html">FAQs</a> | <a href="about.html">About Us</a> | 
+        <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
     </footer>
+    
+    <script>
+        function toggleMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+    </script>
 </body>
 </html>
