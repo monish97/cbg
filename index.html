@@ -11,6 +11,7 @@
             padding: 0; 
             background: #f4f4f4; 
             color: #333; 
+            transition: background 0.3s, color 0.3s;
         }
         .container { width: 90%; max-width: 1200px; margin: auto; }
         header { 
@@ -20,24 +21,32 @@
             padding: 20px; 
             background: #222; 
             color: white; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .logo { font-size: 24px; font-weight: bold; }
+        .toggle-theme { cursor: pointer; font-size: 18px; }
+        .category { margin-top: 30px; }
+        h2 {
+            border-bottom: 3px solid #ff9800;
+            padding-bottom: 10px;
+            text-align: center;
+        }
         .games-container {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
             gap: 10px;
-            justify-content: center;
             padding: 10px 0;
+            justify-content: center;
         }
         .game-card { 
             background: white; 
-            padding: 15px; 
+            padding: 10px; 
             text-align: center; 
             cursor: pointer; 
             border-radius: 10px; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
             transition: transform 0.2s;
-            width: 200px;
+            width: 100px;
         }
         .game-card:hover { transform: scale(1.05); }
         .game-card img { 
@@ -51,20 +60,33 @@
             background: #222;
             color: white;
         }
+        footer a { color: #ff9800; text-decoration: none; margin: 0 10px; }
+        footer a:hover { text-decoration: underline; }
+        .dark-mode {
+            background: #1e1e1e;
+            color: #f4f4f4;
+        }
+        .dark-mode header, .dark-mode footer { background: #111; }
+        .dark-mode .game-card { background: #333; color: white; }
     </style>
 </head>
 <body>
     <header>
         <div class="logo">CasualBrowserGames</div>
+        <div class="toggle-theme" onclick="toggleTheme()">🌙</div>
     </header>
     <div class="container">
-        <h2>All Games</h2>
-        <div class='games-container' id='games-container'></div>
+        <div class="category">
+            <h2>🔥 All Games</h2>
+            <div class='games-container' id='games-container'></div>
+        </div>
     </div>
+    
     <footer>
         <a href="faq.html">FAQs</a> | <a href="about.html">About Us</a> | 
         <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
     </footer>
+
     <script>
         async function fetchGames() {
             try {
@@ -72,7 +94,7 @@
                 const data = await response.json();
                 const games = data.items;
                 const gamesContainer = document.getElementById("games-container");
-
+                
                 games.forEach((game) => {
                     const gameCard = document.createElement("div");
                     gameCard.classList.add("game-card");
@@ -90,6 +112,12 @@
 
         function playGame(url) {
             window.location.href = `play.html?game=${encodeURIComponent(url)}`;
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const themeIcon = document.querySelector('.toggle-theme');
+            themeIcon.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
         }
 
         fetchGames();
