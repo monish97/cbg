@@ -72,6 +72,12 @@
             font-size: 16px;
             padding: 0 5px;
         }
+        .toggle-icons span:first-child {
+            order: 2;
+        }
+        .toggle-icons span:last-child {
+            order: 1;
+        }
         iframe {
             border: none;
             width: 100vw;
@@ -110,8 +116,8 @@
         <h1 class="header-title">Casual Browser Games</h1>
         <div class="toggle-container" onclick="toggleMode()">
             <div class="toggle-icons">
-                <span>☀️</span>
                 <span>🌙</span>
+                <span>☀️</span>
             </div>
             <div class="toggle-slider"></div>
         </div>
