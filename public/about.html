@@ -4,22 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - Casual Browser Games</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to your existing CSS file -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #333;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header {
+            padding: 15px;
+            background: #222;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+        header h1 {
+            margin: 0;
+            cursor: pointer;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding-top: 80px;
+        }
+        .about {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: left;
+        }
+        h2 {
+            border-bottom: 3px solid #ff9800;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        footer {
+            padding: 15px;
+            background: #222;
+            color: white;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Casual Browser Games</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="games.html">Games</a></li>
-                <li><a href="about.html" class="active">About Us</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
+        <h1 onclick="location.href='index.html'">Casual Browser Games</h1>
     </header>
     
-    <main>
+    <div class="container">
         <section class="about">
             <h2>About Us</h2>
             <p>Welcome to <strong>CasualBrowserGames.com</strong>, your ultimate destination for <strong>free online games</strong>! We offer a massive collection of <strong>browser-based games</strong> that you can play instantly—no downloads, no installations, just pure fun! Whether you're into <strong>action games, puzzle games, strategy games, racing games, or classic arcade games</strong>, we've got something for every gamer.</p>
@@ -30,7 +85,7 @@
             
             <p>Start playing now and explore the best <strong>online browser games</strong> at <strong>CasualBrowserGames.com</strong>—where gaming is always <strong>fast, free, and fun!</strong></p>
         </section>
-    </main>
+    </div>
     
     <footer>
         <p>&copy; 2025 CasualBrowserGames.com | All Rights Reserved</p>
