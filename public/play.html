@@ -6,7 +6,7 @@
     <title>Play Game</title>
     <style>
         body { margin: 0; text-align: center; }
-        iframe { width: 100vw; height: 100vh; border: none; }
+        iframe { border: none; }
         .back-btn {
             position: absolute;
             top: 10px;
@@ -23,7 +23,7 @@
 </head>
 <body>
     <button class="back-btn" onclick="goBack()">⬅️ Back</button>
-    <iframe id="gameFrame" src="" allowfullscreen></iframe>
+    <iframe id="gameFrame" allowfullscreen></iframe>
 
     <script>
         function getQueryParam(param) {
@@ -36,8 +36,20 @@
         }
 
         const gameUrl = getQueryParam('game');
+        const orientation = getQueryParam('orientation');
+        const width = getQueryParam('width');
+        const height = getQueryParam('height');
+        const gameFrame = document.getElementById('gameFrame');
+
         if (gameUrl) {
-            document.getElementById('gameFrame').src = gameUrl;
+            gameFrame.src = gameUrl;
+            if (orientation === 'landscape') {
+                gameFrame.style.width = '100vw';
+                gameFrame.style.height = 'calc(100vh - 20px)';
+            } else {
+                gameFrame.style.width = width ? `${width}px` : '100%';
+                gameFrame.style.height = height ? `${height}px` : '100vh';
+            }
         } else {
             document.body.innerHTML = "<h1>Game not found!</h1>";
         }
