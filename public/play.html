@@ -12,6 +12,9 @@
             background: #f4f4f4;
             color: #333;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
         }
         header {
             padding: 20px;
@@ -20,10 +23,15 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-        .back-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #222;
+            color: white;
+        }
+        .back-btn, .mode-toggle {
             background: #ff9800;
             color: white;
             padding: 10px 15px;
@@ -34,11 +42,10 @@
         }
         iframe {
             border: none;
+            flex: 1;
             width: 100%;
-            height: calc(100vh - 140px);
         }
         footer {
-            margin-top: 10px;
             padding: 20px;
             background: #222;
             color: white;
@@ -52,13 +59,23 @@
         footer a:hover {
             text-decoration: underline;
         }
+        .dark-mode {
+            background: #333;
+            color: white;
+        }
+        .dark-mode header, .dark-mode .top-bar, .dark-mode footer {
+            background: #111;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Casual Browser Games</h1>
     </header>
-    <button class="back-btn" onclick="goBack()">⬅️ Back</button>
+    <div class="top-bar">
+        <button class="back-btn" onclick="goBack()">⬅️ Back</button>
+        <button class="mode-toggle" onclick="toggleMode()">🌙 Dark Mode</button>
+    </div>
     <iframe id="gameFrame" allowfullscreen></iframe>
     <footer>
         <a href="faq.html">FAQs</a> | <a href="about.html">About Us</a> | 
@@ -72,6 +89,16 @@
 
         function goBack() {
             window.history.back();
+        }
+
+        function toggleMode() {
+            document.body.classList.toggle("dark-mode");
+            const modeBtn = document.querySelector(".mode-toggle");
+            if (document.body.classList.contains("dark-mode")) {
+                modeBtn.textContent = "☀️ Light Mode";
+            } else {
+                modeBtn.textContent = "🌙 Dark Mode";
+            }
         }
 
         const gameUrl = getQueryParam('game');
