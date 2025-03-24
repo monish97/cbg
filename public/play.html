@@ -5,32 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Play Game</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
             background: #f4f4f4;
             color: #333;
             text-align: center;
             display: flex;
             flex-direction: column;
             height: 100vh;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
+            overflow: hidden;
         }
         header {
-            padding: 20px;
+            padding: 15px;
             background: #222;
             color: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
             width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
+            z-index: 100;
         }
         .header-title {
             margin: 0 auto;
@@ -38,15 +42,12 @@
         .toggle-container {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-right: 20px;
-            background: #ff9800;
             width: 50px;
             height: 24px;
+            background: #ff9800;
             border-radius: 12px;
             position: relative;
             cursor: pointer;
-            padding: 2px;
         }
         .toggle-slider {
             position: absolute;
@@ -61,29 +62,39 @@
         .dark-mode .toggle-slider {
             transform: translateX(26px);
         }
-        .toggle-container span {
-            font-size: 16px;
+        .toggle-container::before {
+            content: '☀️';
             position: absolute;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 5px;
-            align-items: center;
+            left: 5px;
+            font-size: 16px;
+        }
+        .toggle-container::after {
+            content: '🌙';
+            position: absolute;
+            right: 5px;
+            font-size: 16px;
+        }
+        .dark-mode .toggle-container::before {
+            content: '🌙';
+        }
+        .dark-mode .toggle-container::after {
+            content: '☀️';
         }
         iframe {
             border: none;
-            max-width: 100%;
-            max-height: 80vh;
+            width: 100vw;
+            height: calc(100vh - 120px);
             margin-top: 60px;
         }
         footer {
-            padding: 20px;
+            padding: 15px;
             background: #222;
             color: white;
             text-align: center;
             width: 100%;
-            position: absolute;
+            position: fixed;
             bottom: 0;
+            left: 0;
         }
         footer a {
             color: #ff9800;
@@ -106,9 +117,7 @@
     <header>
         <h1 class="header-title">Casual Browser Games</h1>
         <div class="toggle-container" onclick="toggleMode()">
-            <span>🌙</span>
             <div class="toggle-slider"></div>
-            <span>☀️</span>
         </div>
     </header>
     <iframe id="gameFrame" allowfullscreen></iframe>
@@ -136,10 +145,10 @@
             gameFrame.src = gameUrl;
             if (orientation === 'landscape') {
                 gameFrame.style.width = '100vw';
-                gameFrame.style.height = '80vh';
+                gameFrame.style.height = 'calc(100vh - 120px)';
             } else {
                 gameFrame.style.width = width ? `${width}px` : '100%';
-                gameFrame.style.height = height ? `${height}px` : '80vh';
+                gameFrame.style.height = height ? `${height}px` : 'calc(100vh - 120px)';
             }
         } else {
             document.body.innerHTML = "<h1>Game not found!</h1>";
