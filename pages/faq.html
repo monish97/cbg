@@ -1,11 +1,145 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAQs</title>
+    <title>FAQs - Casual Browser Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #333;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header {
+            padding: 15px;
+            background: #222;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+        .header-title {
+            margin: 0 auto;
+            cursor: pointer;
+        }
+        main {
+            margin-top: 80px;
+            width: 90%;
+            max-width: 800px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .faq h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #ff9800;
+            text-align: center;
+        }
+        .faq-item {
+            margin-bottom: 20px;
+        }
+        .faq-item h3 {
+            font-size: 18px;
+            color: #333;
+            cursor: pointer;
+            padding: 10px;
+            background: #eee;
+            border-radius: 5px;
+        }
+        .faq-item p {
+            font-size: 16px;
+            line-height: 1.6;
+            display: none;
+            padding: 10px;
+            background: #fff;
+            border-left: 3px solid #ff9800;
+        }
+        footer {
+            padding: 15px;
+            background: #222;
+            color: white;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+        footer a {
+            color: #ff9800;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Frequently Asked Questions</h1>
-    <p>Coming soon...</p>
+    <header>
+        <h1 class="header-title" onclick="location.href='index.html'">Casual Browser Games</h1>
+    </header>
+    
+    <main>
+        <section class="faq">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <h3 onclick="toggleAnswer(this)">What are browser games?</h3>
+                <p>Browser games are online games that run directly in your web browser without needing to download or install anything.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3 onclick="toggleAnswer(this)">Are all the games free to play?</h3>
+                <p>Yes! All games on CasualBrowserGames.com are free to play and accessible without any subscriptions.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3 onclick="toggleAnswer(this)">Do I need an account to play?</h3>
+                <p>No, you can play all our games without creating an account. Just open a game and start playing instantly.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3 onclick="toggleAnswer(this)">Do these games work on mobile devices?</h3>
+                <p>Yes! Most of our games are built using HTML5 and are fully compatible with mobile devices.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3 onclick="toggleAnswer(this)">How often are new games added?</h3>
+                <p>We update our collection regularly, adding new games every week. Check back often for new titles!</p>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <a href="faq.html">FAQs</a> | <a href="about.html">About Us</a> | 
+        <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
+    </footer>
+    
+    <script>
+        function toggleAnswer(element) {
+            let answer = element.nextElementSibling;
+            answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
 </body>
 </html>
