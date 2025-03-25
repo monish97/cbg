@@ -12,15 +12,9 @@
             background: #f4f4f4;
             color: #333;
             text-align: center;
-            transition: background 0.3s, color 0.3s;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            overflow: hidden;
-        }
-        .dark-mode {
-            background: #222;
-            color: #fff;
         }
         .container {
             width: 90%;
@@ -31,61 +25,30 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
         }
         header {
             padding: 20px;
             background: #222;
             color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
-        .games-wrapper {
-            width: 100%;
-            overflow: hidden;
-            position: relative;
-        }
-        .games-container {
+        .categories-container {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
-            padding: 20px 0;
-            position: relative;
-            transition: transform 0.5s ease-in-out;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 40px 0;
         }
-        .game-card {
+        .category-card {
             background: white;
-            padding: 10px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
             transition: transform 0.2s;
-            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
         }
-        .game-card:hover {
+        .category-card:hover {
             transform: scale(1.05);
-        }
-        img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-        }
-        .pagination {
-            margin-top: 20px;
-        }
-        .pagination button {
-            padding: 10px 20px;
-            margin: 5px;
-            border: none;
-            background: #ff9800;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .pagination button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
         }
         footer {
             padding: 20px;
@@ -108,87 +71,24 @@
         <h1>Casual Browser Games</h1>
     </header>
     <div class="container">
-        <div class="category">
-            <h2>🔥 Popular Games 🔥</h2>
-            <div class="games-wrapper">
-                <div class="games-container" id="games-container"></div>
-            </div>
-            <div class="pagination">
-                <button id="prev-btn" onclick="prevPage()" disabled>Previous</button>
-                <button id="next-btn" onclick="nextPage()">Next</button>
-            </div>
+        <h2>Game Categories</h2>
+        <div class="categories-container">
+            <div class="category-card">🔥 Popular Games 🔥</div>
+            <div class="category-card">IO Games</div>
+            <div class="category-card">Action Games</div>
+            <div class="category-card">Racing Games</div>
+            <div class="category-card">Girls Games</div>
+            <div class="category-card">Shooting Games</div>
+            <div class="category-card">Clicker Games</div>
+            <div class="category-card">Hypercasual Games</div>
+            <div class="category-card">Multiplayer Games</div>
+            <div class="category-card">Puzzle Games</div>
+            <div class="category-card">Sports Games</div>
         </div>
     </div>
     <footer>
         <a href="faq.html">FAQs</a> | <a href="about.html">About Us</a> | 
         <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
     </footer>
-    <script>
-        let games = [];
-        let currentPage = 0;
-        const gamesPerPage = 18;
-        let initialLoad = true;
-
-        async function fetchGames() {
-            try {
-                const response = await fetch('Wizard_Data (1).json');
-                const data = await response.json();
-                games = data.segments[0].hits;
-                renderGames();
-            } catch (error) {
-                console.error("Error fetching games:", error);
-            }
-        }
-
-        function renderGames(slideDirection = "none") {
-            const gamesContainer = document.getElementById("games-container");
-            if (!initialLoad) {
-                gamesContainer.style.transition = "transform 0.5s ease-in-out";
-                gamesContainer.style.transform = `translateX(${slideDirection === "next" ? "100%" : "-100%"})`;
-            }
-            setTimeout(() => {
-                gamesContainer.innerHTML = "";
-                const start = currentPage * gamesPerPage;
-                const end = start + gamesPerPage;
-                const paginatedGames = games.slice(start, end);
-                
-                paginatedGames.forEach((game) => {
-                    const gameCard = document.createElement("div");
-                    gameCard.classList.add("game-card");
-                    gameCard.innerHTML = `
-                        <img src='${game.Assets[0]}' alt='${game.Title}'>
-                        <p>${game.Title}</p>
-                    `;
-                    gameCard.onclick = () => window.location.href = game["Game URL"];
-                    gamesContainer.appendChild(gameCard);
-                });
-                
-                setTimeout(() => {
-                    gamesContainer.style.transition = "transform 0.5s ease-in-out";
-                    gamesContainer.style.transform = "translateX(0)";
-                }, 50);
-                initialLoad = false;
-            }, initialLoad ? 0 : 500);
-            
-            document.getElementById("prev-btn").disabled = currentPage === 0;
-            document.getElementById("next-btn").disabled = end >= games.length;
-        }
-
-        function nextPage() {
-            if ((currentPage + 1) * gamesPerPage < games.length) {
-                currentPage++;
-                renderGames("next");
-            }
-        }
-
-        function prevPage() {
-            if (currentPage > 0) {
-                currentPage--;
-                renderGames("prev");
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", fetchGames);
-    </script>
 </body>
 </html>
