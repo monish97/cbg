@@ -27,8 +27,6 @@
             padding: 20px;
             background: #222;
             color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -36,40 +34,45 @@
         .toggle-container {
             display: flex;
             align-items: center;
+            width: 70px;
+            height: 30px;
+            background: #ff9800;
+            border-radius: 15px;
+            position: relative;
             cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 20px;
-            background: #444;
         }
-        .toggle-container span {
-            padding: 5px;
-            font-size: 18px;
+        .toggle-slider {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 3px;
+            transition: transform 0.3s;
         }
-        .dark-mode header {
-            background: #111;
+        .dark-mode .toggle-slider {
+            transform: translateX(40px);
         }
-        .category {
-            margin-top: 30px;
-        }
-        h2 {
-            border-bottom: 3px solid #ff9800;
-            padding-bottom: 10px;
-            display: inline-block;
-            text-align: center;
+        .toggle-icons {
+            display: flex;
+            justify-content: space-between;
             width: 100%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            padding: 0 5px;
         }
         .games-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 10px;
             padding: 20px 0;
-            justify-content: center;
         }
         .game-card {
             background: white;
             padding: 10px;
-            text-align: center;
-            cursor: pointer;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s;
@@ -77,26 +80,19 @@
         .game-card:hover {
             transform: scale(1.05);
         }
-        .game-card img {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            object-fit: cover;
+        .dark-mode header, .dark-mode footer {
+            background: #111;
         }
         footer {
             margin-top: 40px;
             padding: 20px;
             background: #222;
             color: white;
-            text-align: center;
         }
         footer a {
             color: #ff9800;
             text-decoration: none;
             margin: 0 10px;
-        }
-        footer a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
@@ -104,8 +100,11 @@
     <header>
         <h1>Casual Browser Games</h1>
         <div class="toggle-container" onclick="toggleMode()">
-            <span id="light-icon">☀️</span>
-            <span id="dark-icon" style="display: none;">🌙</span>
+            <div class="toggle-icons">
+                <span>☀️</span>
+                <span>🌙</span>
+            </div>
+            <div class="toggle-slider"></div>
         </div>
     </header>
     <div class="container">
@@ -121,45 +120,15 @@
     <script>
         function toggleMode() {
             document.body.classList.toggle("dark-mode");
-            const isDarkMode = document.body.classList.contains("dark-mode");
-            localStorage.setItem("darkMode", isDarkMode);
-            document.getElementById("light-icon").style.display = isDarkMode ? "none" : "inline";
-            document.getElementById("dark-icon").style.display = isDarkMode ? "inline" : "none";
+            localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
         }
         function loadMode() {
-            const darkMode = localStorage.getItem("darkMode") === "true";
-            if (darkMode) {
+            if (localStorage.getItem("darkMode") === "true") {
                 document.body.classList.add("dark-mode");
-                document.getElementById("light-icon").style.display = "none";
-                document.getElementById("dark-icon").style.display = "inline";
             }
-        }
-        async function fetchGames() {
-            try {
-                const response = await fetch("https://feeds.gamepix.com/v2/json?sid=4B22B&pagination=96&page=1");
-                const data = await response.json();
-                const games = data.items;
-                const gamesContainer = document.getElementById("games-container");
-                games.forEach((game) => {
-                    const gameCard = document.createElement("div");
-                    gameCard.classList.add("game-card");
-                    gameCard.innerHTML = `
-                        <img src='${game.image}' alt='${game.title}'>
-                        <p>${game.title}</p>
-                    `;
-                    gameCard.onclick = () => playGame(game.url, game.orientation, game.width, game.height);
-                    gamesContainer.appendChild(gameCard);
-                });
-            } catch (error) {
-                console.error("Error fetching games:", error);
-            }
-        }
-        function playGame(url, orientation, width, height) {
-            window.location.href = `play.html?game=${encodeURIComponent(url)}&orientation=${orientation}&width=${width}&height=${height}`;
         }
         document.addEventListener("DOMContentLoaded", () => {
             loadMode();
-            fetchGames();
         });
     </script>
 </body>
