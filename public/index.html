@@ -16,6 +16,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            overflow: hidden;
         }
         .dark-mode {
             background: #222;
@@ -26,6 +27,11 @@
             max-width: 1200px;
             margin: auto;
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
         header {
             padding: 20px;
@@ -35,12 +41,17 @@
             justify-content: space-between;
             align-items: center;
         }
+        .games-wrapper {
+            width: 100%;
+            overflow: hidden;
+        }
         .games-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 10px;
             padding: 20px 0;
             transition: transform 0.5s ease-in-out;
+            position: relative;
         }
         .game-card {
             background: white;
@@ -75,15 +86,14 @@
             background: #ccc;
             cursor: not-allowed;
         }
-        .dark-mode header, .dark-mode footer {
-            background: #111;
-        }
         footer {
             padding: 20px;
             background: #222;
             color: white;
             text-align: center;
             width: 100%;
+            position: absolute;
+            bottom: 0;
         }
         footer a {
             color: #ff9800;
@@ -99,7 +109,9 @@
     <div class="container">
         <div class="category">
             <h2>🔥 Popular Games 🔥</h2>
-            <div class="games-container" id="games-container"></div>
+            <div class="games-wrapper">
+                <div class="games-container" id="games-container"></div>
+            </div>
             <div class="pagination">
                 <button id="prev-btn" onclick="prevPage()" disabled>Previous</button>
                 <button id="next-btn" onclick="nextPage()">Next</button>
@@ -113,7 +125,8 @@
     <script>
         let games = [];
         let currentPage = 0;
-        const gamesPerPage = 18; // 6 columns x 3 rows
+        const gamesPerPage = 18;
+        let initialLoad = true;
 
         async function fetchGames() {
             try {
@@ -126,15 +139,17 @@
             }
         }
 
-        function renderGames() {
+        function renderGames(slideDirection = "none") {
             const gamesContainer = document.getElementById("games-container");
-            gamesContainer.style.transform = "translateX(-100%)";
+            if (!initialLoad) {
+                gamesContainer.style.transform = `translateX(${slideDirection === "next" ? "100%" : "-100%"})`;
+            }
             setTimeout(() => {
                 gamesContainer.innerHTML = "";
                 const start = currentPage * gamesPerPage;
                 const end = start + gamesPerPage;
                 const paginatedGames = games.slice(start, end);
-
+                
                 paginatedGames.forEach((game) => {
                     const gameCard = document.createElement("div");
                     gameCard.classList.add("game-card");
@@ -145,8 +160,11 @@
                     gameCard.onclick = () => window.location.href = game["Game URL"];
                     gamesContainer.appendChild(gameCard);
                 });
-                gamesContainer.style.transform = "translateX(0)";
-            }, 300);
+                if (!initialLoad) {
+                    gamesContainer.style.transform = "translateX(0)";
+                }
+                initialLoad = false;
+            }, initialLoad ? 0 : 500);
             
             document.getElementById("prev-btn").disabled = currentPage === 0;
             document.getElementById("next-btn").disabled = end >= games.length;
@@ -155,14 +173,14 @@
         function nextPage() {
             if ((currentPage + 1) * gamesPerPage < games.length) {
                 currentPage++;
-                renderGames();
+                renderGames("next");
             }
         }
 
         function prevPage() {
             if (currentPage > 0) {
                 currentPage--;
-                renderGames();
+                renderGames("prev");
             }
         }
 
