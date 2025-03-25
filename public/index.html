@@ -163,8 +163,10 @@
                     gamesContainer.appendChild(gameCard);
                 });
                 
-                gamesContainer.style.transition = "none";
-                gamesContainer.style.transform = "translateX(0)";
+                setTimeout(() => {
+                    gamesContainer.style.transition = "transform 0.5s ease-in-out";
+                    gamesContainer.style.transform = "translateX(0)";
+                }, 50);
                 initialLoad = false;
             }, initialLoad ? 0 : 500);
             
