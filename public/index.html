@@ -126,22 +126,7 @@
         <div class="toggle-mode">🌙</div>
     </header>
     <aside class="sidebar">
-        <ul class="category-list" id="category-list">
-            <li><img src="icon.png" alt="">Recently Played</li>
-            <li><img src="icon.png" alt="">Popular</li>
-            <li><img src="icon.png" alt="">New</li>
-            <li><img src="icon.png" alt="">Trending</li>
-            <li><img src="icon.png" alt="">.io</li>
-            <li><img src="icon.png" alt="">Action</li>
-            <li><img src="icon.png" alt="">Racing</li>
-            <li><img src="icon.png" alt="">Girls</li>
-            <li><img src="icon.png" alt="">Shooting</li>
-            <li><img src="icon.png" alt="">Clicker</li>
-            <li><img src="icon.png" alt="">Hypercasual</li>
-            <li><img src="icon.png" alt="">Multiplayer</li>
-            <li><img src="icon.png" alt="">Puzzle</li>
-            <li><img src="icon.png" alt="">Sports</li>
-        </ul>
+        <ul class="category-list" id="category-list"></ul>
     </aside>
     <main class="content">
         <h2 id="category-title">Popular Games</h2>
@@ -152,12 +137,26 @@
         <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
     </footer>
     <script>
-        async function loadGames(category = "popular") {
-            const response = await fetch(`https://html5.gamemonetize.com/feed_api.php?category=${category}`);
+        async function loadCategories() {
+            const response = await fetch('games.json');
             const data = await response.json();
+            const categoryList = document.getElementById("category-list");
+            categoryList.innerHTML = "";
+            
+            Object.keys(data).forEach(category => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `<img src="icon.png" alt=""> ${category}`;
+                listItem.onclick = () => loadGames(category, data[category]);
+                categoryList.appendChild(listItem);
+            });
+        }
+
+        function loadGames(category, games) {
+            document.getElementById("category-title").textContent = category;
             const gamesContainer = document.getElementById("games-container");
             gamesContainer.innerHTML = "";
-            data.forEach(game => {
+            
+            games.slice(0, 5).forEach(game => {
                 const gameCard = document.createElement("div");
                 gameCard.classList.add("game-card");
                 gameCard.innerHTML = `
@@ -168,14 +167,8 @@
                 gamesContainer.appendChild(gameCard);
             });
         }
-        document.querySelectorAll(".category-list li").forEach(item => {
-            item.addEventListener("click", () => {
-                const category = item.textContent.trim().toLowerCase().replace(" ", "");
-                document.getElementById("category-title").textContent = item.textContent;
-                loadGames(category);
-            });
-        });
-        document.addEventListener("DOMContentLoaded", () => loadGames());
+
+        document.addEventListener("DOMContentLoaded", loadCategories);
     </script>
 </body>
 </html>
