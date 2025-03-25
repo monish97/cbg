@@ -53,6 +53,23 @@
             height: auto;
             border-radius: 10px;
         }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background: #ff9800;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .pagination button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
         .dark-mode header, .dark-mode footer {
             background: #111;
         }
@@ -77,6 +94,10 @@
         <div class="category">
             <h2>🔥 Popular Games 🔥</h2>
             <div class="games-container" id="games-container"></div>
+            <div class="pagination">
+                <button id="prev-btn" onclick="prevPage()" disabled>Previous</button>
+                <button id="next-btn" onclick="nextPage()">Next</button>
+            </div>
         </div>
     </div>
     <footer>
@@ -84,28 +105,57 @@
         <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
     </footer>
     <script>
+        let games = [];
+        let currentPage = 0;
+        const gamesPerPage = 18; // 6 columns x 3 rows
+
         async function fetchGames() {
             try {
-                const response = await fetch('Wizard_Data (1).json'); // Load local JSON file
+                const response = await fetch('Wizard_Data (1).json');
                 const data = await response.json();
-                const games = data.segments[0].hits;
-                const gamesContainer = document.getElementById("games-container");
-                gamesContainer.innerHTML = "";
-                
-                games.forEach((game) => {
-                    const gameCard = document.createElement("div");
-                    gameCard.classList.add("game-card");
-                    gameCard.innerHTML = `
-                        <img src='${game.Assets[0]}' alt='${game.Title}'>
-                        <p>${game.Title}</p>
-                    `;
-                    gameCard.onclick = () => window.location.href = game["Game URL"];
-                    gamesContainer.appendChild(gameCard);
-                });
+                games = data.segments[0].hits;
+                renderGames();
             } catch (error) {
                 console.error("Error fetching games:", error);
             }
         }
+
+        function renderGames() {
+            const gamesContainer = document.getElementById("games-container");
+            gamesContainer.innerHTML = "";
+            const start = currentPage * gamesPerPage;
+            const end = start + gamesPerPage;
+            const paginatedGames = games.slice(start, end);
+
+            paginatedGames.forEach((game) => {
+                const gameCard = document.createElement("div");
+                gameCard.classList.add("game-card");
+                gameCard.innerHTML = `
+                    <img src='${game.Assets[0]}' alt='${game.Title}'>
+                    <p>${game.Title}</p>
+                `;
+                gameCard.onclick = () => window.location.href = game["Game URL"];
+                gamesContainer.appendChild(gameCard);
+            });
+
+            document.getElementById("prev-btn").disabled = currentPage === 0;
+            document.getElementById("next-btn").disabled = end >= games.length;
+        }
+
+        function nextPage() {
+            if ((currentPage + 1) * gamesPerPage < games.length) {
+                currentPage++;
+                renderGames();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                renderGames();
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", fetchGames);
     </script>
 </body>
