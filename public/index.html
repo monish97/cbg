@@ -13,6 +13,9 @@
             color: #333;
             text-align: center;
             transition: background 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         .dark-mode {
             background: #222;
@@ -22,6 +25,7 @@
             width: 90%;
             max-width: 1200px;
             margin: auto;
+            flex: 1;
         }
         header {
             padding: 20px;
@@ -36,6 +40,7 @@
             grid-template-columns: repeat(6, 1fr);
             gap: 10px;
             padding: 20px 0;
+            transition: transform 0.5s ease-in-out;
         }
         .game-card {
             background: white;
@@ -74,10 +79,11 @@
             background: #111;
         }
         footer {
-            margin-top: 40px;
             padding: 20px;
             background: #222;
             color: white;
+            text-align: center;
+            width: 100%;
         }
         footer a {
             color: #ff9800;
@@ -122,22 +128,26 @@
 
         function renderGames() {
             const gamesContainer = document.getElementById("games-container");
-            gamesContainer.innerHTML = "";
-            const start = currentPage * gamesPerPage;
-            const end = start + gamesPerPage;
-            const paginatedGames = games.slice(start, end);
+            gamesContainer.style.transform = "translateX(-100%)";
+            setTimeout(() => {
+                gamesContainer.innerHTML = "";
+                const start = currentPage * gamesPerPage;
+                const end = start + gamesPerPage;
+                const paginatedGames = games.slice(start, end);
 
-            paginatedGames.forEach((game) => {
-                const gameCard = document.createElement("div");
-                gameCard.classList.add("game-card");
-                gameCard.innerHTML = `
-                    <img src='${game.Assets[0]}' alt='${game.Title}'>
-                    <p>${game.Title}</p>
-                `;
-                gameCard.onclick = () => window.location.href = game["Game URL"];
-                gamesContainer.appendChild(gameCard);
-            });
-
+                paginatedGames.forEach((game) => {
+                    const gameCard = document.createElement("div");
+                    gameCard.classList.add("game-card");
+                    gameCard.innerHTML = `
+                        <img src='${game.Assets[0]}' alt='${game.Title}'>
+                        <p>${game.Title}</p>
+                    `;
+                    gameCard.onclick = () => window.location.href = game["Game URL"];
+                    gamesContainer.appendChild(gameCard);
+                });
+                gamesContainer.style.transform = "translateX(0)";
+            }, 300);
+            
             document.getElementById("prev-btn").disabled = currentPage === 0;
             document.getElementById("next-btn").disabled = end >= games.length;
         }
