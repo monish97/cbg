@@ -40,6 +40,7 @@
             border-radius: 15px;
             position: relative;
             cursor: pointer;
+            padding: 2px;
         }
         .toggle-slider {
             position: absolute;
@@ -47,12 +48,13 @@
             height: 26px;
             background: white;
             border-radius: 50%;
-            top: 2px;
+            top: 50%;
             left: 3px;
+            transform: translateY(-50%);
             transition: transform 0.3s;
         }
         .dark-mode .toggle-slider {
-            transform: translateX(40px);
+            transform: translate(40px, -50%);
         }
         .toggle-icons {
             display: flex;
@@ -62,7 +64,7 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 16px;
-            padding: 0 5px;
+            padding: 0 8px;
         }
         .games-container {
             display: grid;
@@ -127,8 +129,32 @@
                 document.body.classList.add("dark-mode");
             }
         }
+        async function fetchGames() {
+            try {
+                const response = await fetch("https://games.gamepix.com/casual-browser-games.json");
+                const games = await response.json();
+                const gamesContainer = document.getElementById("games-container");
+                gamesContainer.innerHTML = "";
+                games.forEach((game) => {
+                    const gameCard = document.createElement("div");
+                    gameCard.classList.add("game-card");
+                    gameCard.innerHTML = `
+                        <img src='${game.image}' alt='${game.title}'>
+                        <p>${game.title}</p>
+                    `;
+                    gameCard.onclick = () => playGame(game.url);
+                    gamesContainer.appendChild(gameCard);
+                });
+            } catch (error) {
+                console.error("Error fetching games:", error);
+            }
+        }
+        function playGame(url) {
+            window.location.href = `play.html?game=${encodeURIComponent(url)}`;
+        }
         document.addEventListener("DOMContentLoaded", () => {
             loadMode();
+            fetchGames();
         });
     </script>
 </body>
