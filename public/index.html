@@ -44,14 +44,15 @@
         .games-wrapper {
             width: 100%;
             overflow: hidden;
+            position: relative;
         }
         .games-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 10px;
             padding: 20px 0;
-            transition: transform 0.5s ease-in-out;
             position: relative;
+            transition: transform 0.5s ease-in-out;
         }
         .game-card {
             background: white;
@@ -142,7 +143,8 @@
         function renderGames(slideDirection = "none") {
             const gamesContainer = document.getElementById("games-container");
             if (!initialLoad) {
-                gamesContainer.style.transform = `translateX(${slideDirection === "next" ? "100%" : "-100%"})`;
+                gamesContainer.style.transition = "transform 0.5s ease-in-out";
+                gamesContainer.style.transform = `translateX(${slideDirection === "next" ? "-100%" : "100%"})`;
             }
             setTimeout(() => {
                 gamesContainer.innerHTML = "";
@@ -160,9 +162,9 @@
                     gameCard.onclick = () => window.location.href = game["Game URL"];
                     gamesContainer.appendChild(gameCard);
                 });
-                if (!initialLoad) {
-                    gamesContainer.style.transform = "translateX(0)";
-                }
+                
+                gamesContainer.style.transition = "none";
+                gamesContainer.style.transform = "translateX(0)";
                 initialLoad = false;
             }, initialLoad ? 0 : 500);
             
