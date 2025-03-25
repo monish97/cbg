@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #333;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+        }
+        header {
+            padding: 15px;
+            background: #222;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+        .header-title {
+            margin: 0 auto;
+        }
+        .header-title a {
+            color: white;
+            text-decoration: none;
+        }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            width: 70px;
+            height: 30px;
+            background: #ff9800;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+        }
+        .toggle-slider {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 3px;
+            transition: transform 0.3s;
+        }
+        .dark-mode .toggle-slider {
+            transform: translateX(40px);
+        }
+        .toggle-icons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            padding: 0 5px;
+        }
+        .toggle-icons span:first-child {
+            order: 1;
+        }
+        .toggle-icons span:last-child {
+            order: 2;
+        }
+        iframe {
+            border: none;
+            width: 100vw;
+            height: calc(100vh - 120px);
+            margin-top: 60px;
+        }
+        footer {
+            padding: 15px;
+            background: #222;
+            color: white;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+        footer a {
+            color: #ff9800;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .dark-mode {
+            background: #333;
+            color: white;
+        }
+        .dark-mode header, .dark-mode footer {
+            background: #111;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="header-title"><a href="index.html">Casual Browser Games</a></h1>
+        <div class="toggle-container" onclick="toggleMode()">
+            <div class="toggle-icons">
+                <span>☀️</span>
+                <span>🌙</span>
+            </div>
+            <div class="toggle-slider"></div>
+        </div>
+    </header>
+    <iframe id="gameFrame" allowfullscreen></iframe>
+    <footer>
+        <a href="faq.html">FAQs</a> | <a href="about.html">About Us</a> | 
+        <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
+    </footer>
+    <script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function toggleMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        const gameUrl = getQueryParam('game');
+        const orientation = getQueryParam('orientation');
+        const width = getQueryParam('width');
+        const height = getQueryParam('height');
+        const gameFrame = document.getElementById('gameFrame');
+
+        if (gameUrl) {
+            gameFrame.src = gameUrl;
+            if (orientation === 'landscape') {
+                gameFrame.style.width = '100vw';
+                gameFrame.style.height = 'calc(100vh - 120px)';
+            } else {
+                gameFrame.style.width = width ? `${width}px` : '100%';
+                gameFrame.style.height = height ? `${height}px` : 'calc(100vh - 120px)';
+            }
+        } else {
+            document.body.innerHTML = "<h1>Game not found!</h1>";
+        }
+    </script>
+</body>
+</html>
