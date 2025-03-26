@@ -93,7 +93,7 @@
             justify-content: center;
         }
         .game-card {
-            background: white;
+            background: #d3d3d3;
             padding: 10px;
             text-align: center;
             cursor: pointer;
@@ -109,6 +109,13 @@
             height: 100px;
             border-radius: 10px;
             object-fit: cover;
+        }
+        .game-card p {
+            color: black;
+            transition: color 0.3s;
+        }
+        .dark-mode .game-card p {
+            color: white;
         }
         footer {
             padding: 20px;
@@ -175,7 +182,6 @@
                     gameCard.innerHTML = `
                         <img src='${game.image}' alt='${game.title}'>
                         <p><strong>${game.title}</strong></p>
-                        
                     `;
                     gameCard.onclick = () => window.location.href = `play.html?game=${encodeURIComponent(game.url)}&title=${encodeURIComponent(game.title)}&desc=${encodeURIComponent(game.description)}&width=${game.width}&height=${game.height}`;
                     gamesContainer.appendChild(gameCard);
