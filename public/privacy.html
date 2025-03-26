@@ -5,16 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - Casual Browser Games</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color, #f9f9f9);
+            color: var(--text-color, #333);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: var(--header-bg, #222);
+            color: var(--header-text, #fff);
+        }
+        .header-title {
+            cursor: pointer;
+            font-size: 24px;
+        }
+        .toggle-container {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .privacy {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: var(--content-bg, #fff);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+        h2, h3 {
+            color: var(--accent-color, #007bff);
+        }
+        ul {
+            padding-left: 20px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--footer-bg, #222);
+            color: var(--footer-text, #fff);
+            margin-top: 40px;
+        }
+        a {
+            color: var(--accent-color, #007bff);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+        .dark-mode {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --header-bg: #1e1e1e;
+            --header-text: #fff;
+            --content-bg: #222;
+            --accent-color: #66b2ff;
+            --footer-bg: #1e1e1e;
+            --footer-text: #fff;
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1 class="header-title" onclick="location.href='index.html'">Casual Browser Games</h1>
         <div class="toggle-container" onclick="toggleMode()">
-            <div class="toggle-icons">
-                <span>🌙</span>
-                <span>☀️</span>
-            </div>
-            <div class="toggle-slider"></div>
+            <span>🌙</span>
+            <span>☀️</span>
         </div>
     </header>
     
@@ -24,14 +88,12 @@
             <p>Welcome to <strong>Casual Browser Games</strong>. Your privacy is important to us. This Privacy Policy outlines how we collect, use, and protect your personal information.</p>
             
             <h3>1. Information We Collect</h3>
-            <p>We may collect the following types of information when you visit our website:</p>
             <ul>
                 <li>Non-personal data such as browser type, device information, and IP address.</li>
                 <li>Personal data if voluntarily provided, such as when you contact us.</li>
             </ul>
             
             <h3>2. How We Use Your Information</h3>
-            <p>We use collected data for the following purposes:</p>
             <ul>
                 <li>To improve website functionality and user experience.</li>
                 <li>To communicate with users regarding support or inquiries.</li>
