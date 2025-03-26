@@ -183,16 +183,29 @@
                         <img src='${game.image}' alt='${game.title}'>
                         <p><strong>${game.title}</strong></p>
                     `;
-                    gameCard.onclick = () => window.location.href = `play.html?game=${encodeURIComponent(game.url)}&title=${encodeURIComponent(game.title)}&desc=${encodeURIComponent(game.description)}&width=${game.width}&height=${game.height}`;
+                    gameCard.onclick = () => window.location.href = `play.html?game=${encodeURIComponent(game.url)}&title=${encodeURIComponent(game.title)}&width=${game.width}&height=${game.height}`;
                     gamesContainer.appendChild(gameCard);
                 });
             } catch (error) {
                 console.error("Error fetching games:", error);
             }
         }
+        function detectAdBlock() {
+            const ad = document.createElement("div");
+            ad.innerHTML = "&nbsp;";
+            ad.style.display = "block";
+            ad.style.position = "absolute";
+            ad.style.visibility = "hidden";
+            document.body.appendChild(ad);
+            if (ad.offsetHeight === 0) {
+                alert("Our website relies on ad revenue to stay free and accessible. We minimize ads as much as possible for a better experience. Please consider disabling your ad blocker to support us!");
+            }
+            document.body.removeChild(ad);
+        }
         document.addEventListener("DOMContentLoaded", () => {
             loadMode();
             fetchGames();
+            detectAdBlock();
         });
     </script>
 </body>
