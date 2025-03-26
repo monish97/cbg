@@ -13,6 +13,9 @@
             color: #333;
             text-align: center;
             transition: background 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         .dark-mode {
             background: #222;
@@ -22,6 +25,7 @@
             width: 90%;
             max-width: 1200px;
             margin: auto;
+            flex: 1;
         }
         header {
             padding: 15px;
@@ -68,18 +72,18 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 16px;
-            padding: 0 5px;
+            padding: 0 10px;
         }
         .toggle-icons span {
-            width: 20px;
+            flex: 1;
             text-align: center;
         }
         footer {
-            margin-top: 40px;
             padding: 20px;
             background: #222;
             color: white;
             text-align: center;
+            margin-top: auto;
         }
         footer a {
             color: #ff9800;
