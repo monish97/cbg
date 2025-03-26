@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Casual Browser Games</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            font-family: Arial, sans-serif;
             background: #f4f4f4;
             color: #333;
             text-align: center;
@@ -16,6 +19,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            overflow-x: hidden;
         }
         .dark-mode {
             background: #222;
@@ -72,7 +76,7 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 16px;
-            padding: 0 10px;
+            padding: 0 5px;
         }
         .toggle-icons span {
             flex: 1;
