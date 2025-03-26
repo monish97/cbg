@@ -27,49 +27,51 @@
             font-size: 24px;
         }
         .toggle-container {
-            cursor: pointer;
             display: flex;
             align-items: center;
+            width: 70px;
+            height: 30px;
+            background: #ff9800;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
         }
-        .privacy {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background: var(--content-bg, #fff);
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            transition: background 0.3s ease;
+        .toggle-slider {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 3px;
+            transition: transform 0.3s;
         }
-        h2, h3 {
-            color: var(--accent-color, #007bff);
+        .dark-mode .toggle-slider {
+            transform: translateX(40px);
         }
-        ul {
-            padding-left: 20px;
+        .toggle-icons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            padding: 0 5px;
         }
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: var(--footer-bg, #222);
-            color: var(--footer-text, #fff);
-            margin-top: 40px;
+        .toggle-icons span:first-child {
+            order: 1;
         }
-        a {
-            color: var(--accent-color, #007bff);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        a:hover {
-            color: #0056b3;
+        .toggle-icons span:last-child {
+            order: 2;
         }
         .dark-mode {
-            --bg-color: #121212;
-            --text-color: #e0e0e0;
+            background: #121212;
+            color: #e0e0e0;
             --header-bg: #1e1e1e;
             --header-text: #fff;
-            --content-bg: #222;
-            --accent-color: #66b2ff;
-            --footer-bg: #1e1e1e;
-            --footer-text: #fff;
+            --bg-color: #222;
+            --text-color: #fff;
         }
     </style>
 </head>
@@ -77,8 +79,11 @@
     <header>
         <h1 class="header-title" onclick="location.href='index.html'">Casual Browser Games</h1>
         <div class="toggle-container" onclick="toggleMode()">
-            <span>🌙</span>
-            <span>☀️</span>
+            <div class="toggle-icons">
+                <span>☀️</span>
+                <span>🌙</span>
+            </div>
+            <div class="toggle-slider"></div>
         </div>
     </header>
     
@@ -127,7 +132,16 @@
     <script>
         function toggleMode() {
             document.body.classList.toggle("dark-mode");
+            const isDarkMode = document.body.classList.contains("dark-mode");
+            localStorage.setItem("darkMode", isDarkMode);
         }
+        function loadMode() {
+            const darkMode = localStorage.getItem("darkMode") === "true";
+            if (darkMode) {
+                document.body.classList.add("dark-mode");
+            }
+        }
+        document.addEventListener("DOMContentLoaded", loadMode);
     </script>
 </body>
 </html>
