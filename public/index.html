@@ -47,7 +47,7 @@
                     data.items.forEach(game => {
                         const gameCard = document.createElement("div");
                         gameCard.classList.add("game-card");
-                        gameCard.innerHTML = `<img src="${game.image}" alt="${game.title}"><p>${game.title}</p>`;
+                        gameCard.innerHTML = `<img src="${game.banner_image}" alt="${game.title}"><p>${game.title}</p>`;
                         gameCard.addEventListener("click", () => window.open(game.url, "_blank"));
                         gamesContainer.appendChild(gameCard);
                     });
