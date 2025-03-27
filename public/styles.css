@@ -80,17 +80,17 @@
         }
         .games-container {
             display: grid;
-           grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Creates equal columns */
-           gap: 15px; /* Space between cards */
-           justify-content: center;
-           align-items: start; /* Ensures cards start from the top */
-           padding: 20px;
-           background: #fff;
-           border-radius: 10px;
-           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-           overflow-y: auto;
-           max-height: calc(100vh - 60px);
-           scrollbar-width: none;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ensures proper spacing */
+            gap: 15px; /* Space between cards */
+            justify-content: center;
+            align-items: start; /* Aligns items from the top */
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: calc(100vh - 60px);
+            scrollbar-width: none;
         }
         .games-container::-webkit-scrollbar {
             display: none;
@@ -101,8 +101,8 @@
            text-align: center;
            cursor: pointer;
            border-radius: 10px;
-           box-shadow: none;
            transition: transform 0.2s;
+           max-width: 220px; /* Prevents cards from stretching */
            width: 100%;
            overflow: hidden;
        }
