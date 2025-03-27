@@ -3,98 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casual Browser Games - Play Free Online Games</title>
-    <meta name="description" content="Play the best casual browser games for free! Enjoy a variety of categories, including puzzle, racing, shooting, and more. No downloads required!">
+    <title>Casual Browser Games</title>
+    <meta name="description" content="Play fun and casual browser games online for free. No downloads, just click and play!">
+    <meta property="og:title" content="Casual Browser Games">
+    <meta property="og:description" content="Enjoy a collection of free-to-play casual games.">
+    <meta property="og:image" content="logo.png">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Sidebar with Categories -->
+    <header>
+        <h1>Casual Browser Games</h1>
+    </header>
+    
     <div class="sidebar">
         <h2>Categories</h2>
         <div id="category-grid" class="category-grid"></div>
     </div>
 
-    <!-- Main Content -->
     <div class="content">
-        <h1>Casual Browser Games</h1> <!-- ✅ SEO-friendly H1 -->
         <h2 id="category-title">🔥 Popular Games 🔥</h2>
         <div class="games-container" id="games-container"></div>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", async function () {
-            await loadGameData();
-        });
-
-        async function loadGameData() {
+        async function loadGames(category = "") {
             try {
-                const response = await fetch('/api/fetchGames');
-                if (!response.ok) throw new Error('Failed to fetch games');
-                
+                const response = await fetch("api/games.json");
                 const games = await response.json();
-                if (!games || games.length === 0) {
-                    console.error('No games found.');
+                const gamesContainer = document.getElementById("games-container");
+                gamesContainer.innerHTML = "";
+
+                // Filter games by category
+                const filteredGames = category ? games.filter(game => game.category === category) : games;
+
+                if (filteredGames.length === 0) {
+                    gamesContainer.innerHTML = "<p>No games found for this category.</p>";
                     return;
                 }
 
-                initializeCategories(games);
-                displayGames(games);
-            } catch (error) {
-                console.error('Error loading game data:', error);
-            }
-        }
+                filteredGames.forEach(game => {
+                    const gameCard = document.createElement("div");
+                    gameCard.classList.add("game-card");
 
-        function initializeCategories(games) {
-            const categoryGrid = document.getElementById("category-grid");
-            if (!categoryGrid) {
-                console.error("categoryGrid element not found.");
-                return;
-            }
+                    gameCard.innerHTML = `
+                        <img src="thumbnails/${game.id}.jpg" alt="${game.title}" onerror="this.onerror=null; this.src='default-placeholder.png';">
+                        <p>${game.title}</p>
+                    `;
 
-            categoryGrid.innerHTML = ""; // Clear previous content
-            const categories = [...new Set(games.map(game => game.category))];
+                    gameCard.addEventListener("click", () => {
+                        window.location.href = `play.html?id=${game.id}`;
+                    });
 
-            categories.forEach(category => {
-                let div = document.createElement("div");
-                div.classList.add("category-button");
-                div.textContent = category;
-                div.style.color = getRandomBrightColor(); // Apply random bright colors
-                div.addEventListener("click", () => displayGames(games, category));
-                categoryGrid.appendChild(div);
-            });
-        }
-
-        function displayGames(games, category = '') {
-            const gamesContainer = document.getElementById("games-container");
-            gamesContainer.innerHTML = '';
-            const filteredGames = category ? games.filter(game => game.category === category) : games;
-
-            filteredGames.forEach(game => {
-                const gameCard = document.createElement("div");
-                gameCard.classList.add("game-card");
-
-                // ✅ Check if image URL is valid, else use a placeholder
-                const imageUrl = game.thumbnail && game.thumbnail.startsWith('http') ? game.thumbnail : 'default-placeholder.png';
-
-                // ✅ Set game card with a link to play.html
-                gameCard.innerHTML = `
-                    <img src="${imageUrl}" alt="${game.title}" onerror="this.src='default-placeholder.png'">
-                    <p>${game.title}</p>
-                `;
-                gameCard.addEventListener("click", () => {
-                    window.location.href = `play.html?gameUrl=${encodeURIComponent(game.url)}`;
+                    gamesContainer.appendChild(gameCard);
                 });
-
-                gamesContainer.appendChild(gameCard);
-            });
-
-            document.getElementById("category-title").textContent = category ? category : "🔥 Popular Games 🔥";
+            } catch (error) {
+                console.error("Error loading game data:", error);
+            }
         }
 
-        function getRandomBrightColor() {
-            const colors = ["#FF5733", "#FFBD33", "#33FF57", "#33FFBD", "#3357FF", "#FF33A8", "#A833FF"];
-            return colors[Math.floor(Math.random() * colors.length)];
+        async function loadCategories() {
+            try {
+                const response = await fetch("api/games.json");
+                const games = await response.json();
+                const categories = [...new Set(games.map(game => game.category))];
+
+                const categoryGrid = document.getElementById("category-grid");
+                categoryGrid.innerHTML = "";
+
+                categories.forEach(category => {
+                    const button = document.createElement("div");
+                    button.classList.add("category-button");
+                    button.textContent = category;
+                    button.style.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+
+                    button.addEventListener("click", () => {
+                        document.getElementById("category-title").textContent = category;
+                        loadGames(category);
+                    });
+
+                    categoryGrid.appendChild(button);
+                });
+            } catch (error) {
+                console.error("Error loading categories:", error);
+            }
         }
+
+        loadCategories();
+        loadGames();
     </script>
 </body>
 </html>
