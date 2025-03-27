@@ -72,7 +72,7 @@
         <div class="games-container" id="games-container"></div>
     </div>
     <script>
-        const categories = ["2048", "Action", "Adventure", "Arcade", "Puzzle", "Racing", "Shooter", "Sports", "Zombie"];
+        const categories = ["2048", "Action", "Addictive", "Adventure", "Airplane", "Animal", "Anime", "Arcade", "Archery", "Baby", "Ball", "Barbie", "Baseball", "Basketball", "Battle", "Battle Royale", "Bejeweled", "Bike", "Block", "Board", "Bowling", "Boxing", "Brain", "Bubble Shooter", "Building", "Car", "Card", "Casual", "Cats", "Checkers", "Chess", "Christmas", "City Building", "Classics", "Clicker", "Coding", "Coloring", "Cooking", "Cool", "Crazy", "Cricket", "Dinosaur", "Dirt Bike", "Dragons", "Drawing", "Dress Up", "Drifting", "Driving", "Educational", "Escape", "Family", "Farming", "Fashion", "Fighting", "Fire And Water", "First Person Shooter", "Fishing", "Flash", "Flight", "Fun", "Games For Girls", "Gangster", "Gdevelop", "Golf", "Granny", "Gun", "Hair Salon", "Halloween", "Helicopter", "Hidden Object", "Hocky", "Horror", "Horse", "Hunting", "Hyper Casual", "Idle", "Io", "Jewel", "Jigsaw Puzzles", "Jumping", "Junior", "Kids", "Knight", "Mahajong", "Makeup", "Management", "Mario", "Match 3", "Math", "Memory", "Mermaid", "Minecraft", "Mining", "Mmorpg", "Mobile", "Money", "Monster", "Multiplayer", "Music", "Naval", "Ninja", "Ninja Turtle", "Offroad", "Open World", "Parking", "Parkour", "Piano", "Pirates", "Pixel", "Platformer", "Police", "Pool", "Princess", "Puzzle", "Racing", "Restaurant", "Retro", "Robots", "Rpg", "Runner", "Scary", "Scrabble", "Sharks", "Shooter", "Simulation", "Skateboard", "Skibidi Toilet", "Skill", "Snake", "Sniper", "Soccer", "Solitaire", "Spinner", "Sports", "Stickman", "Strategy", "Surgery", "Survival", "Sword", "Tanks", "Tap", "Tetris", "Trivia", "Truck", "Two Players", "Tycoon", "War", "Word", "World Cup", "Worm", "Wrestling", "Zombie"];
         const categoryList = document.getElementById("category-list");
         
         categories.forEach(category => {
@@ -84,7 +84,7 @@
         
         function loadGames(category = "") {
             const apiUrl = category ? 
-                `https://feeds.gamepix.com/v2/json?sid=4B22B&category=${category}&pagination=96&page=1` : 
+                `https://feeds.gamepix.com/v2/json?sid=4B22B&category=${encodeURIComponent(category)}&pagination=96&page=1` : 
                 "https://feeds.gamepix.com/v2/json?sid=4B22B&pagination=96&page=1";
             document.getElementById("category-title").textContent = category ? category : "🔥 Popular Games 🔥";
             fetch(apiUrl)
@@ -99,7 +99,8 @@
                         gameCard.addEventListener("click", () => window.open(game.url, "_blank"));
                         gamesContainer.appendChild(gameCard);
                     });
-                });
+                })
+                .catch(error => console.error("Error fetching games:", error));
         }
         
         loadGames();
