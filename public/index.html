@@ -36,6 +36,7 @@
             padding: 10px;
             cursor: pointer;
             border-bottom: 1px solid #444;
+            text-transform: capitalize;
         }
         .sidebar li:hover {
             background: #444;
@@ -89,8 +90,9 @@
         });
         
         function loadGames(category = "") {
+            const formattedCategory = category.toLowerCase().replace(/\s+/g, '-');
             const apiUrl = category ? 
-                `https://feeds.gamepix.com/v2/json?sid=4B22B&category=${encodeURIComponent(category)}&pagination=96&page=1` : 
+                `https://feeds.gamepix.com/v2/json?sid=4B22B&category=${encodeURIComponent(formattedCategory)}&pagination=96&page=1` : 
                 "https://feeds.gamepix.com/v2/json?sid=4B22B&pagination=96&page=1";
             document.getElementById("category-title").textContent = category ? category : "🔥 Popular Games 🔥";
             fetch(apiUrl)
