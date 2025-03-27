@@ -79,32 +79,27 @@
             overflow-y: auto;
         }
         .games-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ensures proper spacing */
-            gap: 15px; /* Space between cards */
-            justify-content: center;
-            align-items: start; /* Aligns items from the top */
-            padding: 20px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            max-height: calc(100vh - 60px);
-            scrollbar-width: none;
+            isplay: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Aligns cards to the top */
+    align-items: flex-start;
+    gap: 15px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: calc(100vh - 60px);
+    scrollbar-width: none;
         }
         .games-container::-webkit-scrollbar {
             display: none;
         }
         .game-card {
-           background: none;
-           padding: 0;
-           text-align: center;
-           cursor: pointer;
-           border-radius: 10px;
-           transition: transform 0.2s;
-           max-width: 220px; /* Prevents cards from stretching */
-           width: 100%;
-           overflow: hidden;
+           flex: 1 1 calc(20% - 15px); /* Ensures five cards per row while maintaining spacing */
+    max-width: 220px;
+    cursor: pointer;
+    transition: transform 0.2s;
        }
         .game-card:hover {
             transform: scale(1.05);
