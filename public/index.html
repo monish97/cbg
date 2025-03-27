@@ -50,18 +50,21 @@
             background: #444;
         }
         .content {
-            flex: 1;
+            flex-grow: 1;
             padding: 20px;
             margin-left: 250px;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
             max-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden;
         }
         .games-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 15px;
             justify-content: center;
+            flex-grow: 1;
+            overflow-y: auto;
         }
         .game-card {
             background: #d3d3d3;
