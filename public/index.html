@@ -72,8 +72,19 @@
             filteredGames.forEach(game => {
                 const gameCard = document.createElement("div");
                 gameCard.classList.add("game-card");
-                gameCard.innerHTML = `<img src="${game.thumbnail}" alt="${game.title}"><p>${game.title}</p>`;
-                gameCard.addEventListener("click", () => window.open(game.url, "_blank"));
+
+                // ✅ Check if image URL is valid, else use a placeholder
+                const imageUrl = game.thumbnail && game.thumbnail.startsWith('http') ? game.thumbnail : 'default-placeholder.png';
+
+                // ✅ Set game card with a link to play.html
+                gameCard.innerHTML = `
+                    <img src="${imageUrl}" alt="${game.title}" onerror="this.src='default-placeholder.png'">
+                    <p>${game.title}</p>
+                `;
+                gameCard.addEventListener("click", () => {
+                    window.location.href = `play.html?gameUrl=${encodeURIComponent(game.url)}`;
+                });
+
                 gamesContainer.appendChild(gameCard);
             });
 
