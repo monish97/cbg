@@ -81,7 +81,7 @@
         .games-container {
             display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start; /* Aligns cards to the top */
+    justify-content: center; /* Center align the cards */
     align-items: flex-start;
     gap: 15px;
     padding: 20px;
@@ -96,7 +96,7 @@
             display: none;
         }
         .game-card {
-           flex: 1 1 calc(20% - 15px); /* Ensures five cards per row while maintaining spacing */
+           width: calc(20% - 15px); /* Adjust width for 5 cards per row */
     max-width: 220px;
     cursor: pointer;
     transition: transform 0.2s;
