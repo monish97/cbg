@@ -16,13 +16,17 @@
         <div class="games-container" id="games-container"></div>
     </div>
     <script>
-        const categories = ["2048", "Action", "Addictive", "Adventure", "Airplane", "Animal", "Arcade", "Archery", "Ball", "Basketball", "Battle", "Bejeweled", "Bike", "Block", "Board", "Brain", "Bubble Shooter", "Building", "Car", "Card", "Casual", "Cats", "Checkers", "Chess", "Christmas", "Classics", "Clicker", "Coloring", "Cooking", "Dinosaur", "Drawing", "Dress Up", "Driving", "Educational", "Escape", "Farming", "Fashion", "Fighting", "First Person Shooter", "Fishing", "Flight", "Fun", "Games For Girls", "Gangster", "Gun", "Halloween", "Hidden Object", "Horror", "Hyper Casual", "Idle", "Io", "Jewel", "Jigsaw Puzzles", "Jumping", "Junior", "Kids", "Management", "Match 3", "Math", "Memory", "Minecraft", "Mining", "Money", "Monster", "Multiplayer", "Music", "Naval", "Ninja", "Parking", "Parkour", "Pixel", "Platformer", "Puzzle", "Racing", "Retro", "Robots", "Runner", "Shooter", "Simulation", "Skibidi Toilet", "Skill", "Snake", "Sniper", "Soccer", "Solitaire", "Sports", "Stickman", "Strategy", "Survival", "Tanks", "Tap", "Tetris", "Trivia", "War", "Word", "Zombie"];
+        const categories = [
+            "2 Player", "Baseball", "Basketball", "Board", "BMX", "Car", "Cats", "Card", "Cool", 
+            "Dress Up", "Escape", "Fighting", "Flash", "Fun", "Gun", ".io", "Kids", "Mahjong", "Mario", 
+            "Math", "Puzzle", "Racing", "RPG", "Shooter", "Solitaire", "Snake", "Soccer", "War", "Word", "Zombie"
+        ];
         const categoryGrid = document.getElementById("category-grid");
         
         categories.forEach(category => {
             let div = document.createElement("div");
             div.classList.add("category-button");
-            div.innerHTML = `<span>${category}</span>`;
+            div.innerHTML = `<img src="icons/${category.toLowerCase().replace(/\s+/g, '-')}.png" alt="${category} icon"> <span>${category}</span>`;
             div.addEventListener("click", () => loadGames(category));
             categoryGrid.appendChild(div);
         });
