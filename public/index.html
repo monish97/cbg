@@ -17,6 +17,7 @@
             text-align: center;
             display: flex;
             min-height: 100vh;
+            overflow: hidden;
         }
         .dark-mode {
             background: #222;
@@ -29,9 +30,15 @@
             padding: 15px;
             overflow-y: auto;
             max-height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
         }
         .sidebar ul {
             list-style: none;
+            max-height: calc(100vh - 50px);
+            overflow-y: auto;
         }
         .sidebar li {
             padding: 10px;
@@ -45,6 +52,9 @@
         .content {
             flex: 1;
             padding: 20px;
+            margin-left: 250px;
+            overflow-y: auto;
+            max-height: 100vh;
         }
         .games-container {
             display: grid;
