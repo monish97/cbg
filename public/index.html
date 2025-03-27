@@ -59,12 +59,13 @@
             overflow: hidden;
         }
         .games-container {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 15px;
-            justify-content: center;
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 10px;
+            padding: 10px 0;
+            white-space: nowrap;
             flex-grow: 1;
-            overflow-y: auto;
         }
         .game-card {
             background: #d3d3d3;
@@ -72,6 +73,8 @@
             border-radius: 10px;
             cursor: pointer;
             transition: transform 0.2s;
+            display: inline-block;
+            min-width: 200px;
         }
         .game-card:hover {
             transform: scale(1.05);
