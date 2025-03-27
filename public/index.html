@@ -95,12 +95,13 @@
             document.getElementById("category-title").textContent = category ? category : "🔥 Popular Games 🔥";
             fetch(apiUrl)
                 .then(response => response.json())
-                    .then(data => {
+                .then(data => {
                     console.log("API Response:", data);
+                    console.log("Items:", data.items);
                     const gamesContainer = document.getElementById("games-container");
                     gamesContainer.innerHTML = "";
     
-                    if (!data.items || !Array.isArray(data.items)) {
+                    if (!data.items || !Array.isArray(data.items) || data.items.length === 0) {
                         gamesContainer.innerHTML = "<p>No games found for this category.</p>";
                         return;
                     }
@@ -113,7 +114,6 @@
                         gamesContainer.appendChild(gameCard);
                     });
                 })
-
                 .catch(error => console.error("Error fetching games:", error));
         }
         
