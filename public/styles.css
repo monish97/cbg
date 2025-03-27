@@ -79,7 +79,7 @@
             overflow-y: auto;
         }
         .games-container {
-            isplay: flex;
+            display: flex;
     flex-wrap: wrap;
     justify-content: flex-start; /* Aligns cards to the top */
     align-items: flex-start;
