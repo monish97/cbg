@@ -54,11 +54,17 @@
             background: #d3d3d3;
             padding: 10px;
             border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .game-card:hover {
+            transform: scale(1.05);
         }
         .game-card img {
             width: 100px;
             height: 100px;
             border-radius: 10px;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -90,8 +96,13 @@
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
+                    console.log("API Response:", data);
                     const gamesContainer = document.getElementById("games-container");
                     gamesContainer.innerHTML = "";
+                    if (!data.games || !Array.isArray(data.games)) {
+                        gamesContainer.innerHTML = "<p>No games found for this category.</p>";
+                        return;
+                    }
                     data.games.forEach(game => {
                         const gameCard = document.createElement("div");
                         gameCard.classList.add("game-card");
