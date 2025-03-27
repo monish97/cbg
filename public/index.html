@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,159 +15,94 @@
             background: #f4f4f4;
             color: #333;
             text-align: center;
-            transition: background 0.3s, color 0.3s;
             display: flex;
-            flex-direction: column;
             min-height: 100vh;
-            overflow-x: hidden;
         }
         .dark-mode {
             background: #222;
             color: #fff;
         }
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: auto;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        header {
-            padding: 15px;
+        .sidebar {
+            width: 250px;
             background: #222;
             color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 15px;
+            overflow-y: auto;
         }
-        .header-title {
-            margin: 0 auto;
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar li {
+            padding: 10px;
             cursor: pointer;
+            border-bottom: 1px solid #444;
         }
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            width: 70px;
-            height: 30px;
-            background: #ff9800;
-            border-radius: 15px;
-            position: relative;
-            cursor: pointer;
+        .sidebar li:hover {
+            background: #444;
         }
-        .toggle-slider {
-            position: absolute;
-            width: 26px;
-            height: 26px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 3px;
-            transition: transform 0.3s;
-        }
-        .dark-mode .toggle-slider {
-            transform: translateX(38px);
-        }
-        .toggle-icons {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 16px;
-            padding: 0 5px;
-        }
-        .toggle-icons span {
+        .content {
             flex: 1;
-            text-align: center;
+            padding: 20px;
         }
         .games-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 15px;
-            padding: 20px;
             justify-content: center;
         }
         .game-card {
             background: #d3d3d3;
             padding: 10px;
-            text-align: center;
-            cursor: pointer;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s;
-        }
-        .game-card:hover {
-            transform: scale(1.05);
         }
         .game-card img {
             width: 100px;
             height: 100px;
             border-radius: 10px;
-            object-fit: cover;
-        }
-        .game-card p {
-            color: black;
-            transition: color 0.3s;
-        }
-        .dark-mode .game-card p {
-            color: white;
-        }
-        footer {
-            padding: 20px;
-            background: #222;
-            color: white;
-            text-align: center;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-        }
-        footer a {
-            color: #ff9800;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-        footer a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1 class="header-title" onclick="location.href='index.html'">Casual Browser Games</h1>
-        <div class="toggle-container" onclick="toggleMode()">
-            <div class="toggle-icons">
-                <span>☀️</span>
-                <span>🌙</span>
-            </div>
-            <div class="toggle-slider"></div>
-        </div>
-    </header>
-    <div class="container">
-        <div class="category">
-            <h2>🔥 Popular Games 🔥</h2>
-            <div class="games-container" id="games-container"></div>
-        </div>
+    <div class="sidebar">
+        <h2>Categories</h2>
+        <ul id="category-list"></ul>
     </div>
-    <footer>
-        <a href="faq.html">FAQs</a> | <a href="about.html">About Us</a> | 
-        <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a>
-    </footer>
+    <div class="content">
+        <h2 id="category-title">🔥 Popular Games 🔥</h2>
+        <div class="games-container" id="games-container"></div>
+    </div>
     <script>
-        function detectAdBlock() {
-            const script = document.createElement('script');
-            script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-            script.onerror = function() {
-                alert("Our website relies on ad revenue to stay free and accessible. We minimize ads as much as possible for a better experience. Please consider disabling your ad blocker to support us!");
-            };
-            document.head.appendChild(script);
+        const categories = ["2048", "Action", "Adventure", "Arcade", "Puzzle", "Racing", "Shooter", "Sports", "Zombie"];
+        const categoryList = document.getElementById("category-list");
+        
+        categories.forEach(category => {
+            let li = document.createElement("li");
+            li.textContent = category;
+            li.addEventListener("click", () => loadGames(category));
+            categoryList.appendChild(li);
+        });
+        
+        function loadGames(category = "") {
+            const apiUrl = category ? 
+                `https://feeds.gamepix.com/v2/json?sid=4B22B&category=${category}&pagination=96&page=1` : 
+                "https://feeds.gamepix.com/v2/json?sid=4B22B&pagination=96&page=1";
+            document.getElementById("category-title").textContent = category ? category : "🔥 Popular Games 🔥";
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const gamesContainer = document.getElementById("games-container");
+                    gamesContainer.innerHTML = "";
+                    data.games.forEach(game => {
+                        const gameCard = document.createElement("div");
+                        gameCard.classList.add("game-card");
+                        gameCard.innerHTML = `<img src="${game.thumbnail}" alt="${game.title}"><p>${game.title}</p>`;
+                        gameCard.addEventListener("click", () => window.open(game.url, "_blank"));
+                        gamesContainer.appendChild(gameCard);
+                    });
+                });
         }
-        document.addEventListener("DOMContentLoaded", detectAdBlock);
+        
+        loadGames();
     </script>
 </body>
 </html>
