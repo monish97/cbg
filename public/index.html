@@ -28,7 +28,7 @@
     <script>
         async function loadGames(category = "") {
             try {
-                const response = await fetch("api/games.json");
+                const response = await fetch("games.json");
                 const games = await response.json();
                 const gamesContainer = document.getElementById("games-container");
                 gamesContainer.innerHTML = "";
