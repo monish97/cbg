@@ -1,70 +1,48 @@
-<!DOCTYPE html> 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casual Browser Games - Play Free Online Games</title>
-    <meta name="description" content="Play free casual browser games online. Enjoy a variety of fun games including puzzles, racing, RPGs, shooters, and more. No downloads required!">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <h1>Casual Browser Games - Play Free Online Games</h1>
-    
-    <div class="sidebar">
-        <h2>Categories</h2>
-        <div id="category-grid" class="category-grid"></div>
-    </div>
-    
-    <div class="content">
-        <h2 id="category-title">🔥 Popular Games 🔥</h2>
-        <div class="games-container" id="games-container"></div>
-    </div>
-    
-    <script>
-        const categories = [
-            "2 Player", "Baseball", "Basketball", "Board", "BMX", "Car", "Cats", "Card", "Cool", 
-            "Dress Up", "Escape", "Fighting", "Flash", "Fun", "Gun", ".io", "Kids", "Mahjong", "Mario", 
-            "Math", "Puzzle", "Racing", "RPG", "Shooter", "Solitaire", "Snake", "Soccer", "War", "Word", "Zombie"
-        ];
-        const categoryGrid = document.getElementById("category-grid");
-        
+<script>
+    async function loadGameData() {
+        try {
+            const response = await fetch('/api/fetchGames'); // Fetch from Vercel API
+            const games = await response.json();
+            
+            initializeCategories(games);
+            displayGames(games);
+        } catch (error) {
+            console.error('Error loading game data:', error);
+        }
+    }
+
+    function initializeCategories(games) {
+        const categories = [...new Set(games.map(game => game.category))];
+        const categoryGrid = document.getElementById('category-grid');
+        categoryGrid.innerHTML = ""; // Clear previous content
+
         categories.forEach(category => {
-            let div = document.createElement("div");
-            div.classList.add("category-button");
-            div.innerHTML = `<img src="icons/${category.toLowerCase().replace(/\s+/g, '-')}.png" alt="${category} icon"> <span>${category}</span>`;
-            div.addEventListener("click", () => loadGames(category));
+            let div = document.createElement('div');
+            div.classList.add('category-button');
+            div.textContent = category;
+            div.addEventListener('click', () => displayGames(games, category));
             categoryGrid.appendChild(div);
         });
-        
-        function loadGames(category = "") {
-            const formattedCategory = category.toLowerCase().replace(/\s+/g, '-');
-            const apiUrl = category ? 
-                `https://feeds.gamepix.com/v2/json?sid=4B22B&category=${encodeURIComponent(formattedCategory)}&pagination=96&page=1` : 
-                "https://feeds.gamepix.com/v2/json?sid=4B22B&pagination=96&page=1";
-            document.getElementById("category-title").textContent = category ? category : "🔥 Popular Games 🔥";
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    const gamesContainer = document.getElementById("games-container");
-                    gamesContainer.innerHTML = "";
-    
-                    if (!data.items || !Array.isArray(data.items) || data.items.length === 0) {
-                        gamesContainer.innerHTML = "<p>No games found for this category.</p>";
-                        return;
-                    }
-                
-                    data.items.forEach(game => {
-                        const gameCard = document.createElement("div");
-                        gameCard.classList.add("game-card");
-                        gameCard.innerHTML = `<img src="${game.banner_image}" alt="${game.title}">`;
-                        gameCard.addEventListener("click", () => window.open(game.url, "_blank"));
-                        gamesContainer.appendChild(gameCard);
-                    });
-                })
-                .catch(error => console.error("Error fetching games:", error));
-        }
-        
-        loadGames();
-    </script>
-</body>
-</html>
+    }
+
+    function displayGames(games, category = '') {
+        const gamesContainer = document.getElementById('games-container');
+        gamesContainer.innerHTML = '';
+        const filteredGames = category ? games.filter(game => game.category === category) : games;
+
+        filteredGames.forEach(game => {
+            const gameCard = document.createElement('div');
+            gameCard.classList.add('game-card');
+            gameCard.innerHTML = `
+                <img src="${game.thumbnail}" alt="${game.title}">
+                <p>${game.title}</p>
+            `;
+            gameCard.addEventListener('click', () => window.open(game.url, '_blank'));
+            gamesContainer.appendChild(gameCard);
+        });
+
+        document.getElementById('category-title').textContent = category ? category : '🔥 Popular Games 🔥';
+    }
+
+    window.onload = loadGameData;
+</script>
