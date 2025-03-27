@@ -96,7 +96,7 @@
             display: none;
         }
         .game-card {
-            background: transparent;
+            background: none;
             padding: 15px;
             text-align: center;
             cursor: pointer;
