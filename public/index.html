@@ -4,92 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Casual Browser Games</title>
-    <meta name="description" content="Play fun and casual browser games online for free. No downloads, just click and play!">
-    <meta property="og:title" content="Casual Browser Games">
-    <meta property="og:description" content="Enjoy a collection of free-to-play casual games.">
-    <meta property="og:image" content="logo.png">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h1>Casual Browser Games</h1>
     </header>
-    
-    <div class="sidebar">
-        <h2>Categories</h2>
-        <div id="category-grid" class="category-grid"></div>
-    </div>
-
-    <div class="content">
-        <h2 id="category-title">🔥 Popular Games 🔥</h2>
-        <div class="games-container" id="games-container"></div>
-    </div>
-
+    <main>
+        <div id="categoryGrid"></div>
+        <div class="games-container" id="gamesContainer"></div>
+    </main>
     <script>
-        async function loadGames(category = "") {
+        async function loadGameData() {
             try {
-                const response = await fetch("games.json");
-                const games = await response.json();
-                const gamesContainer = document.getElementById("games-container");
-                gamesContainer.innerHTML = "";
-
-                // Filter games by category
-                const filteredGames = category ? games.filter(game => game.category === category) : games;
-
-                if (filteredGames.length === 0) {
-                    gamesContainer.innerHTML = "<p>No games found for this category.</p>";
-                    return;
+                const response = await fetch('/games.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-
-                filteredGames.forEach(game => {
-                    const gameCard = document.createElement("div");
-                    gameCard.classList.add("game-card");
-
-                    gameCard.innerHTML = `
-                        <img src="thumbnails/${game.id}.jpg" alt="${game.title}" onerror="this.onerror=null; this.src='default-placeholder.png';">
-                        <p>${game.title}</p>
-                    `;
-
-                    gameCard.addEventListener("click", () => {
-                        window.location.href = `play.html?id=${game.id}`;
-                    });
-
-                    gamesContainer.appendChild(gameCard);
-                });
+                const games = await response.json();
+                displayGames(games);
             } catch (error) {
                 console.error("Error loading game data:", error);
             }
         }
-
-        async function loadCategories() {
-            try {
-                const response = await fetch("api/games.json");
-                const games = await response.json();
-                const categories = [...new Set(games.map(game => game.category))];
-
-                const categoryGrid = document.getElementById("category-grid");
-                categoryGrid.innerHTML = "";
-
-                categories.forEach(category => {
-                    const button = document.createElement("div");
-                    button.classList.add("category-button");
-                    button.textContent = category;
-                    button.style.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
-
-                    button.addEventListener("click", () => {
-                        document.getElementById("category-title").textContent = category;
-                        loadGames(category);
-                    });
-
-                    categoryGrid.appendChild(button);
+        
+        function displayGames(games) {
+            const container = document.getElementById("gamesContainer");
+            container.innerHTML = "";
+            
+            games.forEach(game => {
+                const gameCard = document.createElement("div");
+                gameCard.classList.add("game-card");
+                gameCard.innerHTML = `
+                    <img src="${game.thumb}" alt="${game.title}" onerror="this.onerror=null;this.src='/default-placeholder.png';">
+                    <p>${game.title}</p>
+                `;
+                gameCard.addEventListener("click", () => {
+                    window.location.href = `play.html?game=${encodeURIComponent(game.url)}`;
                 });
-            } catch (error) {
-                console.error("Error loading categories:", error);
-            }
+                container.appendChild(gameCard);
+            });
         }
-
-        loadCategories();
-        loadGames();
+        
+        loadGameData();
     </script>
 </body>
 </html>
