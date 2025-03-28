@@ -82,6 +82,12 @@ body {
     border-radius: 5px;
 }
 
+.search-results span {
+    font-size: 1em;
+    font-weight: bold;
+    color: black;
+}
+
 #dark-mode-toggle {
     background: none;
     border: none;
