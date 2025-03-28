@@ -1,103 +1,25 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
-    background: #eceff1;
-    color: #333;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
 }
 
+/* Header Styles */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #1e1e1e;
+    background-color: #222;
     color: white;
-    padding: 10px 20px;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1000;
+    padding: 15px;
 }
 
 .logo {
     font-size: 1.5em;
     font-weight: bold;
-}
-
-.search-container {
-    position: relative;
-    flex-grow: 1;
-    margin: 0 20px;
-}
-
-#search-bar {
-    width: 100%;
-    padding: 8px;
-    border-radius: 5px;
-    border: none;
-}
-
-.search-results {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    display: none;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.search-results div {
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    cursor: pointer;
-    border-bottom: 1px solid #ddd;
-}
-
-.search-results div img {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-}
-
-#dark-mode-toggle {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.2em;
-    cursor: pointer;
-}
-
-.game-container {
-    margin-top: 60px; /* Adjust for fixed header */
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.game-card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin: 10px;
-    padding: 10px;
-    width: 200px;
-    text-align: center;
-    cursor: pointer;
-}
-
-.game-card img {
-    width: 100%;
-    border-radius: 5px;
-}
-
-.game-card:hover {
-    transform: scale(1.05);
-    transition: 0.3s;
 }
 
 .search-container {
@@ -114,7 +36,7 @@ body {
     width: 100%;
     background: white;
     border: 1px solid #ccc;
-    display: none; /* Initially hidden */
+    display: none;
     max-height: 300px;
     overflow-y: auto;
     z-index: 1000;
@@ -126,6 +48,7 @@ body {
     padding: 10px;
     cursor: pointer;
     border-bottom: 1px solid #eee;
+    color: black; /* Ensure game names appear in black */
 }
 
 .search-results div:hover {
@@ -137,4 +60,36 @@ body {
     height: 40px;
     margin-right: 10px;
     border-radius: 5px;
+}
+
+#dark-mode-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+/* Game Card Styles */
+.game-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.game-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.game-card h3 {
+    font-size: 1em;
+    margin-top: 5px;
+    color: #333;
 }
