@@ -7,46 +7,77 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Casual Browser Games</h1>
+    <header class="header">
+        <div class="logo">Casual Browser Games</div>
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search games...">
+            <div class="search-results" id="search-results"></div>
+        </div>
+        <button id="dark-mode-toggle">🌙</button>
     </header>
+    
     <main>
         <div id="categoryGrid"></div>
-        <div class="games-container" id="gamesContainer"></div>
     </main>
+    
     <script>
-        async function loadGameData() {
+        document.addEventListener("DOMContentLoaded", async () => {
+            const categoryGrid = document.getElementById("categoryGrid");
+            const searchBar = document.getElementById("search-bar");
+            const searchResults = document.getElementById("search-results");
+            
             try {
-                const response = await fetch('/games.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+                const response = await fetch("/games.json");
                 const games = await response.json();
+                
                 displayGames(games);
+                
+                searchBar.addEventListener("input", () => searchGames(games));
             } catch (error) {
                 console.error("Error loading game data:", error);
             }
-        }
-        
-        function displayGames(games) {
-            const container = document.getElementById("gamesContainer");
-            container.innerHTML = "";
             
-            games.forEach(game => {
-                const gameCard = document.createElement("div");
-                gameCard.classList.add("game-card");
-                gameCard.innerHTML = `
-                    <img src="${game.thumb}" alt="${game.title}" onerror="this.onerror=null;this.src='/default-placeholder.png';">
-                    <p>${game.title}</p>
-                `;
-                gameCard.addEventListener("click", () => {
-                    window.location.href = `play.html?game=${encodeURIComponent(game.url)}`;
+            function displayGames(games) {
+                categoryGrid.innerHTML = "";
+                games.forEach(game => {
+                    const gameCard = document.createElement("div");
+                    gameCard.classList.add("game-card");
+                    gameCard.innerHTML = `
+                        <img src="${game.thumb}" alt="${game.title}">
+                        <h3>${game.title}</h3>
+                    `;
+                    gameCard.addEventListener("click", () => {
+                        window.location.href = `play.html?id=${game.id}`;
+                    });
+                    categoryGrid.appendChild(gameCard);
                 });
-                container.appendChild(gameCard);
-            });
-        }
-        
-        loadGameData();
+            }
+            
+            function searchGames(games) {
+                const query = searchBar.value.toLowerCase();
+                searchResults.innerHTML = "";
+                
+                if (!query) {
+                    searchResults.style.display = "none";
+                    return;
+                }
+                
+                const filteredGames = games.filter(game => game.title.toLowerCase().includes(query));
+                searchResults.style.display = "block";
+                
+                filteredGames.forEach(game => {
+                    const resultItem = document.createElement("div");
+                    resultItem.innerHTML = `
+                        <img src="${game.thumb}" alt="${game.title}">
+                        <span>${game.title}</span>
+                    `;
+                    resultItem.addEventListener("click", () => {
+                        window.location.href = `play.html?id=${game.id}`;
+                    });
+                    searchResults.appendChild(resultItem);
+                });
+            }
+        });
     </script>
 </body>
 </html>
