@@ -7,77 +7,81 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
     <header class="header">
         <div class="logo">Casual Browser Games</div>
         <div class="search-container">
-            <input type="text" id="search-bar" placeholder="Search games...">
+            <input type="text" id="search-bar" class="search-bar" placeholder="Search games...">
             <div class="search-results" id="search-results"></div>
         </div>
         <button id="dark-mode-toggle">🌙</button>
     </header>
-    
-    <main>
-        <div id="categoryGrid"></div>
+
+    <main class="game-container" id="game-container">
+        <!-- Games will be dynamically loaded here -->
     </main>
-    
+
     <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            const categoryGrid = document.getElementById("categoryGrid");
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("games.json")
+                .then(response => response.json())
+                .then(data => {
+                    const gameContainer = document.getElementById("game-container");
+                    data.forEach(game => {
+                        const gameCard = document.createElement("div");
+                        gameCard.classList.add("game-card");
+                        gameCard.innerHTML = `
+                            <img src="${game.thumb}" alt="${game.title}">
+                            <h3>${game.title}</h3>
+                        `;
+                        gameCard.addEventListener("click", () => {
+                            window.location.href = game.url;
+                        });
+                        gameContainer.appendChild(gameCard);
+                    });
+                })
+                .catch(error => console.error("Error loading game data:", error));
+
             const searchBar = document.getElementById("search-bar");
             const searchResults = document.getElementById("search-results");
-            
-            try {
-                const response = await fetch("/games.json");
-                const games = await response.json();
-                
-                displayGames(games);
-                
-                searchBar.addEventListener("input", () => searchGames(games));
-            } catch (error) {
-                console.error("Error loading game data:", error);
-            }
-            
-            function displayGames(games) {
-                categoryGrid.innerHTML = "";
-                games.forEach(game => {
-                    const gameCard = document.createElement("div");
-                    gameCard.classList.add("game-card");
-                    gameCard.innerHTML = `
-                        <img src="${game.thumb}" alt="${game.title}">
-                        <h3>${game.title}</h3>
-                    `;
-                    gameCard.addEventListener("click", () => {
-                        window.location.href = `play.html?id=${game.id}`;
-                    });
-                    categoryGrid.appendChild(gameCard);
-                });
-            }
-            
-            function searchGames(games) {
-                const query = searchBar.value.toLowerCase();
-                searchResults.innerHTML = "";
-                
-                if (!query) {
+
+            searchBar.addEventListener("input", function () {
+                const query = this.value.toLowerCase();
+                if (query.length === 0) {
                     searchResults.style.display = "none";
                     return;
                 }
-                
-                const filteredGames = games.filter(game => game.title.toLowerCase().includes(query));
-                searchResults.style.display = "block";
-                
-                filteredGames.forEach(game => {
-                    const resultItem = document.createElement("div");
-                    resultItem.innerHTML = `
-                        <img src="${game.thumb}" alt="${game.title}">
-                        <span>${game.title}</span>
-                    `;
-                    resultItem.addEventListener("click", () => {
-                        window.location.href = `play.html?id=${game.id}`;
+                fetch("games.json")
+                    .then(response => response.json())
+                    .then(data => {
+                        searchResults.innerHTML = "";
+                        const filteredGames = data.filter(game => game.title.toLowerCase().includes(query));
+                        filteredGames.forEach(game => {
+                            const resultItem = document.createElement("div");
+                            resultItem.innerHTML = `
+                                <img src="${game.thumb}" alt="${game.title}">
+                                <span>${game.title}</span>
+                            `;
+                            resultItem.addEventListener("click", () => {
+                                window.location.href = game.url;
+                            });
+                            searchResults.appendChild(resultItem);
+                        });
+                        searchResults.style.display = filteredGames.length ? "block" : "none";
                     });
-                    searchResults.appendChild(resultItem);
-                });
-            }
+            });
+
+            document.addEventListener("click", (event) => {
+                if (!document.querySelector(".search-container").contains(event.target)) {
+                    searchResults.style.display = "none";
+                }
+            });
+
+            document.getElementById("dark-mode-toggle").addEventListener("click", () => {
+                document.body.classList.toggle("dark-mode");
+            });
         });
     </script>
+
 </body>
 </html>
