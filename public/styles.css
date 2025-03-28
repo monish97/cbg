@@ -1,20 +1,101 @@
-.category-button,body,html{display:flex;text-align:center}body,html{font-family:Arial,sans-serif;background:#eceff1;color:#333;min-height:100vh;overflow:hidden}.dark-mode{background:#222;color:#fff}.sidebar{width:250px;background:#1e1e1e;color:#fff;padding:20px;overflow-y:auto;max-height:100vh;position:fixed;left:0;top:0;bottom:0;box-shadow:2px 0 5px rgba(0,0,0,.2);scrollbar-width:none}.sidebar::-webkit-scrollbar{display:none}.sidebar h2{margin-bottom:15px;font-size:1.5em}
+body {
+    font-family: Arial, sans-serif;
+    background: #eceff1;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
 
-.category-grid{display:flex;flex-direction:column;gap:10px;padding:10px} /* Categories in a single column */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1e1e1e;
+    color: white;
+    padding: 10px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
 
-.category-button{display:block;text-align:left;padding:5px 10px;font-size:16px;font-weight:700;cursor:pointer;transition:.3s;width:100%;text-transform:capitalize} /* Text-only buttons */
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
 
-.category-button:hover{transform:scale(1.05);text-decoration:underline} /* Hover effect with text underline */
+.search-container {
+    position: relative;
+    flex-grow: 1;
+    margin: 0 20px;
+}
 
-.category-button:nth-child(1) {color:#ff4d4d;}   /* Red */
-.category-button:nth-child(2) {color:#ff9933;}  /* Orange */
-.category-button:nth-child(3) {color:#ffcc00;}  /* Yellow */
-.category-button:nth-child(4) {color:#33cc33;}  /* Green */
-.category-button:nth-child(5) {color:#3399ff;}  /* Blue */
-.category-button:nth-child(6) {color:#9966ff;}  /* Purple */
-.category-button:nth-child(7) {color:#ff66b2;}  /* Pink */
-.category-button:nth-child(8) {color:#ff5050;}  /* Coral */
-.category-button:nth-child(9) {color:#33cccc;}  /* Cyan */
-.category-button:nth-child(10) {color:#ff6600;} /* Deep Orange */
+#search-bar {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+}
 
-.content,.games-container{display:flex;padding:20px;overflow-y:auto}.content{flex-grow:1;margin-left:250px;flex-direction:column;max-height:100vh}.games-container{flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:15px;background:#fff;border-radius:10px;box-shadow:0 4px 8px rgba(0,0,0,.1);max-height:calc(100vh - 60px);scrollbar-width:none}.games-container::-webkit-scrollbar{display:none}.game-card{width:calc(20% - 15px);max-width:220px;cursor:pointer;transition:transform .2s}.game-card:hover{transform:scale(1.05);box-shadow:0 6px 12px rgba(0,0,0,.3)}.game-card img{width:100%;border-radius:10px;display:block}.game-card p{margin-top:10px;font-weight:700}
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.search-results div {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+}
+
+.search-results div img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+#dark-mode-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.game-container {
+    margin-top: 60px; /* Adjust for fixed header */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.game-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 10px;
+    padding: 10px;
+    width: 200px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.game-card img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.game-card:hover {
+    transform: scale(1.05);
+    transition: 0.3s;
+}
