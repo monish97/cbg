@@ -34,7 +34,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50%;
+    width: 60%;
 }
 
 .search-bar {
@@ -44,6 +44,7 @@ body {
     border-radius: 25px;
     font-size: 1.1em;
     outline: none;
+    text-align: center;
 }
 
 .search-results {
@@ -100,7 +101,8 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     padding: 80px 20px 20px;
-    justify-items: center;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Game Card Styles */
@@ -135,6 +137,9 @@ body {
 }
 
 /* Close search results when clicking outside */
-body:active .search-results {
-    display: none;
-}
+document.addEventListener('click', function(event) {
+    const searchResults = document.querySelector('.search-results');
+    if (!document.querySelector('.search-container').contains(event.target)) {
+        searchResults.style.display = 'none';
+    }
+});
