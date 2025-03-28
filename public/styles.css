@@ -34,7 +34,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 60%;
+    width: 50%;
 }
 
 .search-bar {
@@ -122,7 +122,12 @@ body {
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
     width: 100%;
-    max-width: 180px;
+    max-width: 150px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .game-card:hover {
@@ -131,15 +136,21 @@ body {
 }
 
 .game-card img {
-    max-width: 100%;
-    height: auto;
+    width: 100px;
+    height: 100px;
     border-radius: 10px;
+    object-fit: cover;
 }
 
 .game-card h3 {
     font-size: 0.9em;
     margin-top: 8px;
     color: #333;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 
 /* Close search results when clicking outside */
