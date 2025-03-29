@@ -52,10 +52,17 @@
         }
 
         .game-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            padding: 20px 0;
+        }
+
+        .recent-games-container {
             display: flex;
-            flex-wrap: wrap;
             justify-content: flex-start;
             gap: 10px;
+            flex-wrap: wrap;
             padding: 20px 0;
         }
 
@@ -121,7 +128,7 @@
             </div>
             <div class="game-section">
                 <h2>Recently Played</h2>
-                <div class="game-container" id="recent-games"></div>
+                <div class="recent-games-container" id="recent-games"></div>
             </div>
             <div class="game-section">
                 <h2>New Games</h2>
