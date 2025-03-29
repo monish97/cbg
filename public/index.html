@@ -189,30 +189,24 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            function saveRecentlyPlayed(game) {
-                let recentlyPlayed = JSON.parse(localStorage.getItem("recentlyPlayed")) || [];
-                recentlyPlayed = recentlyPlayed.filter(g => g.url !== game.url);
-                recentlyPlayed.unshift(game);
-                if (recentlyPlayed.length > 10) recentlyPlayed.pop();
-                localStorage.setItem("recentlyPlayed", JSON.stringify(recentlyPlayed));
-            }
-
             function loadGames() {
                 fetch("games.json")
                     .then(response => response.json())
                     .then(data => {
-                        document.getElementById("popular-games").innerHTML = data.popular.map(renderGameCard).join('');
-                        document.getElementById("new-games").innerHTML = data.new.map(renderGameCard).join('');
+                        document.getElementById("popular-games").innerHTML = (data.popular || []).map(renderGameCard).join('');
+                        document.getElementById("new-games").innerHTML = (data.new || []).map(renderGameCard).join('');
                         document.getElementById("recent-games").innerHTML = (JSON.parse(localStorage.getItem("recentlyPlayed")) || []).map(renderGameCard).join('');
-                    });
+                    })
+                    .catch(error => console.error("Error loading game data:", error));
             }
 
             function renderGameCard(game) {
-                return `<div class="game-card" onclick="window.location.href='${game.url}'; saveRecentlyPlayed(${JSON.stringify(game)})">
+                return `<div class="game-card" onclick="window.location.href='${game.url}';">
                             <img src="${game.thumb}" alt="${game.title}">
                             <h3>${game.title}</h3>
                         </div>`;
             }
+
             loadGames();
         });
     </script>
