@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Casual Browser Games</title>
     <style>
-        /* General Styles */
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
             margin: 0;
@@ -16,7 +15,6 @@
             flex-direction: column;
         }
 
-        /* Header Styles */
         .header {
             position: fixed;
             top: 0;
@@ -32,43 +30,12 @@
             z-index: 1000;
         }
 
-        .logo {
-            font-size: 1.8em;
-            font-weight: bold;
-        }
-
-        .search-container {
-            display: flex;
-            align-items: center;
-            width: 50%;
-        }
-
-        .search-bar {
-            width: 100%;
-            padding: 10px;
-            border-radius: 20px;
-            border: none;
-            font-size: 1em;
-            outline: none;
-            text-align: center;
-        }
-
-        #dark-mode-toggle {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.4em;
-            cursor: pointer;
-        }
-
-        /* Layout Styles */
         .container {
             display: flex;
             margin-top: 60px;
             height: calc(100vh - 60px);
         }
 
-        /* Sidebar Styles */
         .sidebar {
             width: 10%;
             background-color: #333;
@@ -78,40 +45,20 @@
             overflow-y: auto;
         }
 
-        .category {
-            padding: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid #444;
-            transition: background 0.3s;
-        }
-
-        .category:hover {
-            background: #444;
-        }
-
-        /* Main Content Styles */
         .main-content {
             width: 90%;
             padding: 20px;
             overflow-y: auto;
         }
 
-        .game-section {
-            margin-bottom: 20px;
-        }
-
-        .game-section h2 {
-            margin-bottom: 10px;
-        }
-
         .game-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
             gap: 10px;
-            padding: 20px;
+            padding: 20px 0;
         }
 
-        /* Game Card Styles */
         .game-card {
             border: 1px solid #ddd;
             padding: 5px;
@@ -121,8 +68,7 @@
             box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
-            width: 100%;
-            max-width: 100px;
+            width: 100px;
             height: 140px;
             display: flex;
             flex-direction: column;
@@ -132,31 +78,16 @@
         }
 
         .game-card img {
-            width: 100%;
+            width: 100px;
             height: 80px;
             object-fit: cover;
             border-radius: 5px;
-        }
-
-        .game-card h3 {
-            font-size: 0.9em;
-            margin: 5px 0 0;
-            text-align: center;
-        }
-
-        .game-card:hover {
-            transform: scale(1.05);
-            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="logo">Casual Browser Games</div>
-        <div class="search-container">
-            <input type="text" id="search-bar" class="search-bar" placeholder="Search games...">
-        </div>
-        <button id="dark-mode-toggle">🌙</button>
     </header>
 
     <div class="container">
@@ -184,35 +115,49 @@
         </aside>
 
         <div class="main-content">
-            <div class="game-container" id="game-container"></div>
+            <div class="game-section">
+                <h2>Popular Games</h2>
+                <div class="game-container" id="popular-games"></div>
+            </div>
             <div class="game-section">
                 <h2>Recently Played</h2>
                 <div class="game-container" id="recent-games"></div>
+            </div>
+            <div class="game-section">
+                <h2>New Games</h2>
+                <div class="game-container" id="new-games"></div>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const gameContainer = document.getElementById("game-container");
+            const popularGamesContainer = document.getElementById("popular-games");
             const recentGamesContainer = document.getElementById("recent-games");
+            const newGamesContainer = document.getElementById("new-games");
 
             fetch("games.json")
                 .then(response => response.json())
                 .then(data => {
-                    data.forEach(game => {
-                        const gameCard = document.createElement("div");
-                        gameCard.classList.add("game-card");
-                        gameCard.innerHTML = `<img src="${game.thumb}" alt="${game.title}"><h3>${game.title}</h3>`;
-                        gameCard.addEventListener("click", () => {
-                            saveRecentGame(game);
-                            window.location.href = game.url;
-                        });
-                        gameContainer.appendChild(gameCard);
-                    });
+                    const popularGames = data.popular.slice(0, 10);
+                    const newGames = data.new.slice(0, 10);
+                    
+                    popularGames.forEach(game => addGameCard(game, popularGamesContainer));
+                    newGames.forEach(game => addGameCard(game, newGamesContainer));
                     loadRecentGames();
                 })
                 .catch(error => console.error("Error loading game data:", error));
+
+            function addGameCard(game, container) {
+                const gameCard = document.createElement("div");
+                gameCard.classList.add("game-card");
+                gameCard.innerHTML = `<img src="${game.thumb}" alt="${game.title}"><h3>${game.title}</h3>`;
+                gameCard.addEventListener("click", () => {
+                    saveRecentGame(game);
+                    window.location.href = game.url;
+                });
+                container.appendChild(gameCard);
+            }
 
             function saveRecentGame(game) {
                 let recentGames = JSON.parse(localStorage.getItem("recentGames")) || [];
@@ -226,13 +171,7 @@
             function loadRecentGames() {
                 recentGamesContainer.innerHTML = "";
                 const recentGames = JSON.parse(localStorage.getItem("recentGames")) || [];
-                recentGames.forEach(game => {
-                    const gameCard = document.createElement("div");
-                    gameCard.classList.add("game-card");
-                    gameCard.innerHTML = `<img src="${game.thumb}" alt="${game.title}"><h3>${game.title}</h3>`;
-                    gameCard.onclick = () => (window.location.href = game.url);
-                    recentGamesContainer.appendChild(gameCard);
-                });
+                recentGames.forEach(game => addGameCard(game, recentGamesContainer));
             }
         });
     </script>
