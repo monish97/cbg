@@ -128,6 +128,20 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .game-card h3 {
+            font-size: 0.9em;
+            margin: 5px 0 0;
+            text-align: center;
         }
 
         .game-card:hover {
@@ -204,19 +218,20 @@
                 let recentGames = JSON.parse(localStorage.getItem("recentGames")) || [];
                 recentGames = recentGames.filter(g => g.url !== game.url);
                 recentGames.unshift(game);
-                if (recentGames.length > 5) recentGames.pop();
+                if (recentGames.length > 10) recentGames.pop();
                 localStorage.setItem("recentGames", JSON.stringify(recentGames));
                 loadRecentGames();
             }
 
             function loadRecentGames() {
                 recentGamesContainer.innerHTML = "";
-                (JSON.parse(localStorage.getItem("recentGames")) || []).forEach(game => {
-                    const gameDiv = document.createElement("div");
-                    gameDiv.classList.add("recent-game");
-                    gameDiv.textContent = game.title;
-                    gameDiv.onclick = () => (window.location.href = game.url);
-                    recentGamesContainer.appendChild(gameDiv);
+                const recentGames = JSON.parse(localStorage.getItem("recentGames")) || [];
+                recentGames.forEach(game => {
+                    const gameCard = document.createElement("div");
+                    gameCard.classList.add("game-card");
+                    gameCard.innerHTML = `<img src="${game.thumb}" alt="${game.title}"><h3>${game.title}</h3>`;
+                    gameCard.onclick = () => (window.location.href = game.url);
+                    recentGamesContainer.appendChild(gameCard);
                 });
             }
         });
