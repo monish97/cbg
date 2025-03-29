@@ -35,11 +35,9 @@
         .logo {
             font-size: 1.8em;
             font-weight: bold;
-            letter-spacing: 1px;
         }
 
         .search-container {
-            position: relative;
             display: flex;
             align-items: center;
             width: 50%;
@@ -89,6 +87,31 @@
 
         .category:hover {
             background: #444;
+        }
+
+        .recently-played {
+            margin-bottom: 20px;
+        }
+
+        .recently-played h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            border-bottom: 2px solid white;
+            padding-bottom: 5px;
+        }
+
+        .recent-game {
+            font-size: 0.9em;
+            padding: 8px;
+            cursor: pointer;
+            background: #444;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .recent-game:hover {
+            background: #555;
         }
 
         /* Main Content Styles */
@@ -154,6 +177,11 @@
 
     <div class="container">
         <aside class="sidebar">
+            <div class="recently-played">
+                <h3>Recently Played</h3>
+                <div id="recent-games"></div>
+            </div>
+
             <h2>Categories</h2>
             <div class="category">.IO</div>
             <div class="category">2 Player</div>
@@ -185,21 +213,47 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            const gameContainer = document.getElementById("game-container");
+            const recentGamesContainer = document.getElementById("recent-games");
+
+            // Load games
             fetch("games.json")
                 .then(response => response.json())
                 .then(data => {
-                    const gameContainer = document.getElementById("game-container");
                     data.forEach(game => {
                         const gameCard = document.createElement("div");
                         gameCard.classList.add("game-card");
                         gameCard.innerHTML = `<img src="${game.thumb}" alt="${game.title}"><h3>${game.title}</h3>`;
                         gameCard.addEventListener("click", () => {
+                            saveRecentGame(game);
                             window.location.href = game.url;
                         });
                         gameContainer.appendChild(gameCard);
                     });
+                    loadRecentGames();
                 })
                 .catch(error => console.error("Error loading game data:", error));
+
+            function saveRecentGame(game) {
+                let recentGames = JSON.parse(localStorage.getItem("recentGames")) || [];
+                recentGames = recentGames.filter(g => g.url !== game.url);
+                recentGames.unshift(game);
+                if (recentGames.length > 5) recentGames.pop();
+                localStorage.setItem("recentGames", JSON.stringify(recentGames));
+                loadRecentGames();
+            }
+
+            function loadRecentGames() {
+                recentGamesContainer.innerHTML = "";
+                const recentGames = JSON.parse(localStorage.getItem("recentGames")) || [];
+                recentGames.forEach(game => {
+                    const gameDiv = document.createElement("div");
+                    gameDiv.classList.add("recent-game");
+                    gameDiv.textContent = game.title;
+                    gameDiv.onclick = () => (window.location.href = game.url);
+                    recentGamesContainer.appendChild(gameDiv);
+                });
+            }
         });
     </script>
 </body>
