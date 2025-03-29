@@ -106,8 +106,8 @@
 
         .game-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
             padding: 20px;
         }
 
@@ -122,8 +122,8 @@
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             width: 100%;
-            max-width: 150px;
-            height: 200px;
+            max-width: 120px;
+            height: 160px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -189,48 +189,31 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            fetch("games.json")
-                .then(response => response.json())
-                .then(data => {
-                    const popularGames = document.getElementById("popular-games");
-                    const newGames = document.getElementById("new-games");
-                    const recentGamesContainer = document.getElementById("recent-games");
+            function saveRecentlyPlayed(game) {
+                let recentlyPlayed = JSON.parse(localStorage.getItem("recentlyPlayed")) || [];
+                recentlyPlayed = recentlyPlayed.filter(g => g.url !== game.url);
+                recentlyPlayed.unshift(game);
+                if (recentlyPlayed.length > 10) recentlyPlayed.pop();
+                localStorage.setItem("recentlyPlayed", JSON.stringify(recentlyPlayed));
+            }
 
-                    data.slice(0, 10).forEach(game => {
-                        popularGames.appendChild(createGameCard(game));
+            function loadGames() {
+                fetch("games.json")
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("popular-games").innerHTML = data.popular.map(renderGameCard).join('');
+                        document.getElementById("new-games").innerHTML = data.new.map(renderGameCard).join('');
+                        document.getElementById("recent-games").innerHTML = (JSON.parse(localStorage.getItem("recentlyPlayed")) || []).map(renderGameCard).join('');
                     });
-                    data.slice(-10).forEach(game => {
-                        newGames.appendChild(createGameCard(game));
-                    });
-                    loadRecentGames();
-                });
-
-            function createGameCard(game) {
-                const card = document.createElement("div");
-                card.classList.add("game-card");
-                card.innerHTML = `<img src="${game.thumb}" alt="${game.title}"><h3>${game.title}</h3>`;
-                card.addEventListener("click", () => {
-                    saveRecentGame(game);
-                    window.location.href = game.url;
-                });
-                return card;
             }
 
-            function saveRecentGame(game) {
-                let recentGames = JSON.parse(localStorage.getItem("recentGames")) || [];
-                recentGames = recentGames.filter(g => g.url !== game.url);
-                recentGames.unshift(game);
-                if (recentGames.length > 10) recentGames.pop();
-                localStorage.setItem("recentGames", JSON.stringify(recentGames));
-                loadRecentGames();
+            function renderGameCard(game) {
+                return `<div class="game-card" onclick="window.location.href='${game.url}'; saveRecentlyPlayed(${JSON.stringify(game)})">
+                            <img src="${game.thumb}" alt="${game.title}">
+                            <h3>${game.title}</h3>
+                        </div>`;
             }
-
-            function loadRecentGames() {
-                recentGamesContainer.innerHTML = "";
-                (JSON.parse(localStorage.getItem("recentGames")) || []).forEach(game => {
-                    recentGamesContainer.appendChild(createGameCard(game));
-                });
-            }
+            loadGames();
         });
     </script>
 </body>
