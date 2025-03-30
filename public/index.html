@@ -4,219 +4,180 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Casual Browser Games</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        /* General Styles */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
         body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
+            background-color: #1e1e1e;
+            color: white;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
         }
-
-        /* Header Styles */
-        .header {
+        header, footer {
+            background-color: #2c2c2c;
+            position: fixed;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+        }
+        header {
+            top: 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #222;
-            color: white;
-            padding: 15px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1000;
+            padding: 10px 20px;
         }
-
-        .logo {
-            font-size: 1.8em;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        .search-container {
-            position: relative;
+        footer {
+            bottom: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 50%;
-        }
-
-        .search-bar {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 25px;
-            font-size: 1.1em;
-            outline: none;
-            text-align: center;
-        }
-
-        .search-results {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background: white;
-            border-radius: 5px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            display: none;
-            max-height: 300px;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-        .search-results div {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            cursor: pointer;
-            border-bottom: 1px solid #eee;
-            transition: background 0.3s;
-            color: black;
-        }
-
-        .search-results div:hover {
-            background: #f8f8f8;
-        }
-
-        .search-results img {
-            width: 50px;
-            height: 50px;
-            margin-right: 15px;
-            border-radius: 5px;
-        }
-
-        .search-results span {
-            font-size: 1em;
-            font-weight: bold;
-            color: black;
-        }
-
-        #dark-mode-toggle {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.4em;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        #dark-mode-toggle:hover {
-            color: #f0a500;
-        }
-
-        /* Game Grid Layout */
-        .game-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            justify-content: center;
             gap: 15px;
-            padding: 80px 20px 20px;
-            justify-content: center;
-            align-items: center;
         }
-
-        /* Game Card Styles */
-        .game-card {
-            border: 1px solid #ddd;
-            padding: 5px;
-            text-align: center;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            width: 100%;
-            max-width: 150px;
-            height: 200px;
+        main {
             display: flex;
-            flex-direction: column;
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+        aside {
+            width: 15%;
+            padding: 10px;
+            background-color: #3a3a3a;
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+        }
+        #game-area {
+            width: 85%;
+            padding: 20px;
+            margin-left: 15%;
+        }
+        ul#categories {
+            list-style: none;
+            padding: 0;
+        }
+        ul#categories li {
+            padding: 3px 10px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 10px;
+            color: hsl(calc(360 * var(--index) / 20), 80%, 50%);
         }
-
-        .game-card:hover {
-            transform: scale(1.05);
-            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+        ul#categories li::before {
+            content: '▶';
+            color: white;
         }
-
-        .game-card img {
-            width: 100px;
-            height: 100px;
+        ul#categories li.active, ul#categories li:hover {
+            text-decoration: underline;
+        }
+        .game-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .game-card {
+            background-color: #2c2c2c;
+            padding: 10px;
             border-radius: 10px;
-            object-fit: cover;
-        }
-
-        .game-card h3 {
-            font-size: 0.9em;
-            margin-top: 8px;
-            color: #333;
             text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            width: 150px;
+            cursor: pointer;
+        }
+        .game-card img {
             width: 100%;
+            border-radius: 5px;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <header class="header">
+    <header>
         <div class="logo">Casual Browser Games</div>
-        <div class="search-container">
-            <input type="text" id="search-bar" class="search-bar" placeholder="Search games...">
-            <div class="search-results" id="search-results"></div>
-        </div>
-        <button id="dark-mode-toggle">🌙</button>
+        <input type="text" id="search" placeholder="Search games...">
+        <button id="theme-toggle">🌙</button>
     </header>
 
-    <main class="game-container" id="game-container"></main>
+    <main>
+        <aside>
+            <ul id="categories"></ul>
+        </aside>
+        <section id="game-area">
+            <div id="home-view">
+                <h2>Hot Games</h2>
+                <div class="game-list" id="hot-games"></div>
+                <h2>Recently Played</h2>
+                <div class="game-list" id="recently-played"></div>
+                <h2>New Games</h2>
+                <div class="game-list" id="new-games"></div>
+            </div>
+            <div id="category-view" class="hidden">
+                <h2 id="category-title"></h2>
+                <div class="game-list" id="filtered-games"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a href="#privacy">Privacy Policy</a>
+        <a href="#faq">FAQ</a>
+    </footer>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            fetch("games.json")
-                .then(response => response.json())
-                .then(data => {
-                    const gameContainer = document.getElementById("game-container");
-                    data.forEach(game => {
-                        const gameCard = document.createElement("div");
-                        gameCard.classList.add("game-card");
-                        gameCard.innerHTML = `<img src="${game.thumb}" alt="${game.title}"><h3>${game.title}</h3>`;
-                        gameCard.addEventListener("click", () => {
-                            window.location.href = game.url;
-                        });
-                        gameContainer.appendChild(gameCard);
-                    });
-                })
-                .catch(error => console.error("Error loading game data:", error));
-
-            const searchBar = document.getElementById("search-bar");
-            const searchResults = document.getElementById("search-results");
-
-            searchBar.addEventListener("input", function () {
-                const query = this.value.toLowerCase();
-                if (!query) {
-                    searchResults.style.display = "none";
-                    return;
-                }
-                fetch("games.json")
-                    .then(response => response.json())
-                    .then(data => {
-                        searchResults.innerHTML = "";
-                        const filteredGames = data.filter(game => game.title.toLowerCase().includes(query));
-                        filteredGames.forEach(game => {
-                            const resultItem = document.createElement("div");
-                            resultItem.innerHTML = `<img src="${game.thumb}" alt="${game.title}"><span>${game.title}</span>`;
-                            resultItem.addEventListener("click", () => {
-                                window.location.href = game.url;
-                            });
-                            searchResults.appendChild(resultItem);
-                        });
-                        searchResults.style.display = filteredGames.length ? "block" : "none";
-                    });
+        async function fetchGames() {
+            try {
+                let response = await fetch('GMGameData.json');
+                if (!response.ok) throw new Error('Failed to fetch game data');
+                let games = await response.json();
+                displayGames(games, 'hot-games');
+                displayGames(games, 'new-games');
+            } catch (error) {
+                console.error('Error loading games:', error);
+            }
+        }
+        
+        function displayGames(games, containerId) {
+            let container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            games.forEach(game => {
+                let card = document.createElement('div');
+                card.classList.add('game-card');
+                card.innerHTML = `<img src="${game.thumbnail}" alt="${game.title}"><p>${game.title}</p>`;
+                card.onclick = () => window.location.href = `play.html?title=${encodeURIComponent(game.title)}&desc=${encodeURIComponent(game.description)}&width=${game.width}&height=${game.height}&tags=${encodeURIComponent(game.tags)}`;
+                container.appendChild(card);
             });
-        });
+        }
+
+        async function loadCategories() {
+            let categories = ["Home", ".IO", "2 Player", "3D", "Action", "Adventure", "Arcade", "Baby", "Bejeweled", "Boys", "Clicker", "Cooking", "Fighting", "Girls", "Hypercasual", "Multiplayer", "Puzzles", "Racing", "Shooting", "Soccer", "Sports"];
+            let categoryList = document.getElementById('categories');
+            categoryList.innerHTML = '';
+            categories.forEach((category, index) => {
+                let li = document.createElement('li');
+                li.textContent = category;
+                li.style.setProperty('--index', index);
+                li.onclick = () => {
+                    if (category.toLowerCase() === "home") {
+                        document.getElementById('home-view').classList.remove('hidden');
+                        document.getElementById('category-view').classList.add('hidden');
+                    } else {
+                        document.getElementById('category-title').textContent = category.toUpperCase();
+                        document.getElementById('category-view').classList.remove('hidden');
+                        document.getElementById('home-view').classList.add('hidden');
+                    }
+                };
+                categoryList.appendChild(li);
+            });
+        }
+
+        loadCategories();
+        fetchGames();
     </script>
 </body>
 </html>
