@@ -71,14 +71,26 @@
             <li onclick="filterGames('sports')">Sports</li>
         </ul>
     </div>
-    <div class="content" id="gameList">
-        <div class="game io show">Game 1 - .IO</div>
-        <div class="game action show">Game 2 - Action</div>
-        <div class="game adventure show">Game 3 - Adventure</div>
-        <div class="game sports show">Game 4 - Sports</div>
-        <div class="game racing show">Game 5 - Racing</div>
-    </div>
+    <div class="content" id="gameList"></div>
     <script>
+        async function fetchGames() {
+            try {
+                let response = await fetch('games.json');
+                let games = await response.json();
+                let gameList = document.getElementById('gameList');
+                gameList.innerHTML = '';
+                games.forEach(game => {
+                    let gameDiv = document.createElement('div');
+                    gameDiv.classList.add('game', game.category);
+                    gameDiv.innerText = game.name;
+                    gameList.appendChild(gameDiv);
+                });
+                filterGames('all');
+            } catch (error) {
+                console.error('Error fetching games:', error);
+            }
+        }
+        
         function filterGames(category) {
             let games = document.querySelectorAll('.game');
             games.forEach(game => {
@@ -89,6 +101,8 @@
                 }
             });
         }
+        
+        window.onload = fetchGames;
     </script>
 </body>
 </html>
