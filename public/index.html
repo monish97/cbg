@@ -131,7 +131,7 @@
     <script>
         async function fetchGames() {
             try {
-                let response = await fetch('games.json');
+                let response = await fetch('GMGameData.json');
                 if (!response.ok) throw new Error('Failed to fetch game data');
                 let games = await response.json();
                 displayGames(games, 'hot-games');
@@ -148,7 +148,7 @@
             games.forEach(game => {
                 let card = document.createElement('div');
                 card.classList.add('game-card');
-                card.innerHTML = `<img src="${game.thumbnail}" alt="${game.title}"><p>${game.title}</p>`;
+                card.innerHTML = `<img src="thumbnails/${game.thumbnail}" alt="${game.title}"><p>${game.title}</p>`;
                 card.onclick = () => window.location.href = `play.html?title=${encodeURIComponent(game.title)}&desc=${encodeURIComponent(game.description)}&width=${game.width}&height=${game.height}&tags=${encodeURIComponent(game.tags)}`;
                 container.appendChild(card);
             });
