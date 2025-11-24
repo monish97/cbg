@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-    /* Reset */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
@@ -32,7 +31,6 @@
         --border: #444;
     }
 
-    /* Top Ribbon */
     header {
         position: fixed;
         top: 0;
@@ -75,7 +73,6 @@
         border-radius: 6px;
     }
 
-    /* Layout */
     .container {
         display: flex;
         width: 100%;
@@ -83,7 +80,6 @@
         height: calc(100vh - 50px);
     }
 
-    /* Sidebar */
     .sidebar {
         width: 220px;
         background: var(--card);
@@ -92,23 +88,18 @@
         padding: 10px;
     }
 
-    .sidebar h3 {
-        font-size: 16px;
-        margin-bottom: 10px;
-    }
-
     .sidebar div {
         padding: 10px;
         cursor: pointer;
         border-radius: 5px;
+        font-size: 15px;
+        margin-bottom: 5px;
     }
-
     .sidebar div:hover,
     .sidebar .active {
         background: var(--border);
     }
 
-    /* Main Content */
     .content {
         flex: 1;
         padding: 20px;
@@ -124,37 +115,45 @@
         display: flex;
         gap: 15px;
         overflow-x: auto;
-        padding-bottom: 10px;
+        flex-wrap: wrap;
     }
 
     .game-card {
         width: 150px;
-        height: 120px;
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
         cursor: pointer;
+        overflow: hidden;
+        transition: transform 0.2s;
     }
 
-    /* Footer */
+    .game-card:hover {
+        transform: scale(1.05);
+    }
+
+    .game-card img {
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+    }
+
+    .game-card div {
+        padding: 8px;
+        font-size: 14px;
+    }
+
     footer {
         text-align: center;
-        padding: 10px 0;
+        padding: 15px 0;
         margin-top: 20px;
         border-top: 1px solid var(--border);
-        color: var(--text);
     }
-
 </style>
 </head>
 
 <body>
 
-<!-- TOP RIBBON -->
 <header>
     <div class="title">My Game Site</div>
     <div class="search">
@@ -165,39 +164,29 @@
 
 <div class="container">
 
-    <!-- LEFT PANE -->
+    <!-- LEFT SIDEBAR -->
     <div class="sidebar">
         <div class="active" onclick="loadPage('main', this)">Main Page</div>
-        <div onclick="loadPage('action', this)">Action</div>
-        <div onclick="loadPage('adventure', this)">Adventure</div>
-        <div onclick="loadPage('puzzle', this)">Puzzle</div>
-        <div onclick="loadPage('sports', this)">Sports</div>
-        <div onclick="loadPage('racing', this)">Racing</div>
     </div>
 
-    <!-- RIGHT PANE -->
+    <!-- RIGHT CONTENT -->
     <div class="content" id="contentArea">
 
-        <!-- DEFAULT MAIN PAGE -->
+        <!-- Default Main Page -->
         <h2 class="section-title">Top Games</h2>
-        <div class="game-row">
-            <div class="game-card">Game 1</div>
-            <div class="game-card">Game 2</div>
-            <div class="game-card">Game 3</div>
+        <div class="game-row" id="topGamesPlaceholder">
+            <div class="game-card">Loading...</div>
         </div>
 
         <h2 class="section-title">Editor's Picks</h2>
         <div class="game-row">
             <div class="game-card">Pick 1</div>
             <div class="game-card">Pick 2</div>
-            <div class="game-card">Pick 3</div>
         </div>
 
         <h2 class="section-title">New Games</h2>
-        <div class="game-row">
-            <div class="game-card">New 1</div>
-            <div class="game-card">New 2</div>
-            <div class="game-card">New 3</div>
+        <div class="game-row" id="newGamesPlaceholder">
+            <div class="game-card">Loading...</div>
         </div>
 
         <footer>
@@ -210,72 +199,141 @@
 
 </div>
 
-
 <script>
-    // Sidebar category switching
-    function loadPage(page, element) {
 
-        // Highlight active category
-        document.querySelectorAll('.sidebar div').forEach(div => div.classList.remove('active'));
-        element.classList.add('active');
+// Dark Mode
+function toggleTheme() {
+    document.body.classList.toggle("dark");
+}
 
-        // Load content
-        const content = document.getElementById("contentArea");
+// Fetch Games from GameMonetize
+async function loadGameFeed() {
+    const url = "https://gamemonetize.com/feed.php?format=0&page=1";
 
-        if (page === "main") {
-            content.innerHTML = `
-                <h2 class="section-title">Top Games</h2>
-                <div class="game-row">
-                    <div class="game-card">Game 1</div>
-                    <div class="game-card">Game 2</div>
-                    <div class="game-card">Game 3</div>
-                </div>
+    try {
+        const response = await fetch(url);
+        const xmlText = await response.text();
 
-                <h2 class="section-title">Editor's Picks</h2>
-                <div class="game-row">
-                    <div class="game-card">Pick 1</div>
-                    <div class="game-card">Pick 2</div>
-                    <div class="game-card">Pick 3</div>
-                </div>
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(xmlText, "text/xml");
 
-                <h2 class="section-title">New Games</h2>
-                <div class="game-row">
-                    <div class="game-card">New 1</div>
-                    <div class="game-card">New 2</div>
-                    <div class="game-card">New 3</div>
-                </div>
+        const items = [...xml.getElementsByTagName("item")];
 
-                <footer>
-                    <a href="#">About</a> • 
-                    <a href="#">Privacy Policy</a> • 
-                    <a href="#">Feedback</a>
-                </footer>
-            `;
-            return;
-        }
+        const games = items.map(item => ({
+            title: item.getElementsByTagName("title")[0].textContent,
+            thumbnail: item.getElementsByTagName("thumbnail")[0]?.textContent || "",
+            category: item.getElementsByTagName("category")[0]?.textContent || "Other",
+            url: item.getElementsByTagName("link")[0]?.textContent,
+        }));
 
-        // Category content template
-        content.innerHTML = `
-            <h2 class="section-title">${page.charAt(0).toUpperCase() + page.slice(1)} Games</h2>
-            <div class="game-grid">
-                <div class="game-card">Game A</div>
-                <div class="game-card">Game B</div>
-                <div class="game-card">Game C</div>
-                <div class="game-card">Game D</div>
+        populateCategories(games);
+        populateMainPage(games);
+
+    } catch (err) {
+        console.error("Feed load failed:", err);
+    }
+}
+
+// Add categories to sidebar
+function populateCategories(games) {
+    const sidebar = document.querySelector(".sidebar");
+
+    // Remove all except main page
+    sidebar.innerHTML = "";
+    const mainDiv = document.createElement("div");
+    mainDiv.classList.add("active");
+    mainDiv.innerText = "Main Page";
+    mainDiv.onclick = () => loadPage("main", mainDiv);
+    sidebar.appendChild(mainDiv);
+
+    // Group games by category
+    const categoryMap = {};
+    games.forEach(game => {
+        if (!categoryMap[game.category]) categoryMap[game.category] = [];
+        categoryMap[game.category].push(game);
+    });
+
+    // Create category links
+    Object.keys(categoryMap).forEach(cat => {
+        const div = document.createElement("div");
+        div.innerText = cat;
+        div.onclick = () => loadCategory(cat, categoryMap[cat], div);
+        sidebar.appendChild(div);
+    });
+}
+
+// Load category page
+function loadCategory(name, games, element) {
+
+    document.querySelectorAll(".sidebar div").forEach(div => div.classList.remove("active"));
+    element.classList.add("active");
+
+    const content = document.getElementById("contentArea");
+
+    let html = `
+        <h2 class="section-title">${name}</h2>
+        <div class="game-grid">`;
+
+    games.forEach(game => {
+        html += `
+            <div class="game-card" onclick="window.open('${game.url}', '_blank')">
+                <img src="${game.thumbnail}">
+                <div>${game.title}</div>
+            </div>`;
+    });
+
+    html += `</div>
+        <footer>
+            <a href="#">About</a> • <a href="#">Privacy Policy</a> • <a href="#">Feedback</a>
+        </footer>
+    `;
+
+    content.innerHTML = html;
+}
+
+// Populate main page sections
+function populateMainPage(games) {
+    let topGames = games.slice(0, 10);
+    let newGames = games.slice(-10);
+
+    const topContainer = document.getElementById("topGamesPlaceholder");
+    const newContainer = document.getElementById("newGamesPlaceholder");
+
+    topContainer.innerHTML = "";
+    newContainer.innerHTML = "";
+
+    topGames.forEach(game => {
+        topContainer.innerHTML += `
+            <div class="game-card" onclick="window.open('${game.url}', '_blank')">
+                <img src="${game.thumbnail}">
+                <div>${game.title}</div>
             </div>
-
-            <footer>
-                <a href="#">About</a> • 
-                <a href="#">Privacy Policy</a> • 
-                <a href="#">Feedback</a>
-            </footer>
         `;
-    }
+    });
 
-    // Dark mode toggle
-    function toggleTheme() {
-        document.body.classList.toggle("dark");
-    }
+    newGames.forEach(game => {
+        newContainer.innerHTML += `
+            <div class="game-card" onclick="window.open('${game.url}', '_blank')">
+                <img src="${game.thumbnail}">
+                <div>${game.title}</div>
+            </div>
+        `;
+    });
+}
+
+// Switch back to default main layout
+function loadPage(page, element) {
+    if (page !== "main") return;
+
+    document.querySelectorAll(".sidebar div").forEach(div => div.classList.remove("active"));
+    element.classList.add("active");
+
+    location.reload(); // easiest clean reset
+}
+
+// Load feed on page start
+loadGameFeed();
+
 </script>
 
 </body>
