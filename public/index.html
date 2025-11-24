@@ -1,340 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>My Game Site</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Game Loader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f2f2f2;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
 
-<style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
 
-    body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        height: 100vh;
-        overflow: hidden;
-        background: var(--bg);
-        color: var(--text);
-        transition: 0.3s;
-    }
+        .game-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: 0.2s;
+        }
 
-    :root {
-        --bg: #ffffff;
-        --text: #222;
-        --card: #f3f3f3;
-        --border: #ddd;
-    }
-    body.dark {
-        --bg: #1e1e1e;
-        --text: #f0f0f0;
-        --card: #2a2a2a;
-        --border: #444;
-    }
+        .game-card:hover {
+            transform: scale(1.03);
+        }
 
-    header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 50px;
-        background: var(--card);
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        padding: 0 15px;
-        z-index: 100;
-    }
+        .game-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
 
-    header .title {
-        font-size: 20px;
-        font-weight: bold;
-    }
-
-    header .search {
-        margin-left: 20px;
-        flex: 1;
-    }
-
-    header input {
-        width: 70%;
-        padding: 6px 10px;
-        border-radius: 6px;
-        border: 1px solid var(--border);
-        background: var(--bg);
-        color: var(--text);
-    }
-
-    header button {
-        margin-left: auto;
-        padding: 6px 12px;
-        cursor: pointer;
-        border: none;
-        background: var(--border);
-        border-radius: 6px;
-    }
-
-    .container {
-        display: flex;
-        width: 100%;
-        margin-top: 50px;
-        height: calc(100vh - 50px);
-    }
-
-    .sidebar {
-        width: 220px;
-        background: var(--card);
-        border-right: 1px solid var(--border);
-        overflow-y: auto;
-        padding: 10px;
-    }
-
-    .sidebar div {
-        padding: 10px;
-        cursor: pointer;
-        border-radius: 5px;
-        font-size: 15px;
-        margin-bottom: 5px;
-    }
-    .sidebar div:hover,
-    .sidebar .active {
-        background: var(--border);
-    }
-
-    .content {
-        flex: 1;
-        padding: 20px;
-        overflow-y: auto;
-    }
-
-    .section-title {
-        font-size: 20px;
-        margin: 15px 0 10px;
-    }
-
-    .game-row, .game-grid {
-        display: flex;
-        gap: 15px;
-        overflow-x: auto;
-        flex-wrap: wrap;
-    }
-
-    .game-card {
-        width: 150px;
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        cursor: pointer;
-        overflow: hidden;
-        transition: transform 0.2s;
-    }
-
-    .game-card:hover {
-        transform: scale(1.05);
-    }
-
-    .game-card img {
-        width: 100%;
-        height: 100px;
-        object-fit: cover;
-    }
-
-    .game-card div {
-        padding: 8px;
-        font-size: 14px;
-    }
-
-    footer {
-        text-align: center;
-        padding: 15px 0;
-        margin-top: 20px;
-        border-top: 1px solid var(--border);
-    }
-</style>
+        .game-title {
+            padding: 8px;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
+    <h1>All Games</h1>
+    <div id="games" class="game-grid"></div>
 
-<header>
-    <div class="title">My Game Site</div>
-    <div class="search">
-        <input type="text" placeholder="Search games...">
-    </div>
-    <button onclick="toggleTheme()">🌙</button>
-</header>
+    <script>
+        async function loadGames() {
+            const url = "https://gamemonetize.com/feed.php?format=0&page=1";
 
-<div class="container">
+            try {
+                const res = await fetch(url);
+                const xmlText = await res.text();
 
-    <!-- LEFT SIDEBAR -->
-    <div class="sidebar">
-        <div class="active" onclick="loadPage('main', this)">Main Page</div>
-    </div>
+                const parser = new DOMParser();
+                const xml = parser.parseFromString(xmlText, "text/xml");
 
-    <!-- RIGHT CONTENT -->
-    <div class="content" id="contentArea">
+                const items = [...xml.getElementsByTagName("item")];
 
-        <!-- Default Main Page -->
-        <h2 class="section-title">Top Games</h2>
-        <div class="game-row" id="topGamesPlaceholder">
-            <div class="game-card">Loading...</div>
-        </div>
+                const games = items.map(item => ({
+                    title: item.getElementsByTagName("title")[0]?.textContent || "No Title",
+                    thumbnail: item.getElementsByTagName("thumbnail")[0]?.textContent || "",
+                    link: item.getElementsByTagName("link")[0]?.textContent || "#"
+                }));
 
-        <h2 class="section-title">Editor's Picks</h2>
-        <div class="game-row">
-            <div class="game-card">Pick 1</div>
-            <div class="game-card">Pick 2</div>
-        </div>
+                const container = document.getElementById("games");
 
-        <h2 class="section-title">New Games</h2>
-        <div class="game-row" id="newGamesPlaceholder">
-            <div class="game-card">Loading...</div>
-        </div>
+                games.forEach(g => {
+                    const card = document.createElement("div");
+                    card.className = "game-card";
+                    card.onclick = () => window.open(g.link, "_blank");
 
-        <footer>
-            <a href="#">About</a> • 
-            <a href="#">Privacy Policy</a> • 
-            <a href="#">Feedback</a>
-        </footer>
+                    card.innerHTML = `
+                        <img src="${g.thumbnail}">
+                        <div class="game-title">${g.title}</div>
+                    `;
 
-    </div>
+                    container.appendChild(card);
+                });
 
-</div>
+            } catch (e) {
+                console.error("Error loading feed:", e);
+            }
+        }
 
-<script>
-
-// Dark Mode
-function toggleTheme() {
-    document.body.classList.toggle("dark");
-}
-
-// Fetch Games from GameMonetize
-async function loadGameFeed() {
-    const url = "https://gamemonetize.com/feed.php?format=0&page=1";
-
-    try {
-        const response = await fetch(url);
-        const xmlText = await response.text();
-
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(xmlText, "text/xml");
-
-        const items = [...xml.getElementsByTagName("item")];
-
-        const games = items.map(item => ({
-            title: item.getElementsByTagName("title")[0].textContent,
-            thumbnail: item.getElementsByTagName("thumbnail")[0]?.textContent || "",
-            category: item.getElementsByTagName("category")[0]?.textContent || "Other",
-            url: item.getElementsByTagName("link")[0]?.textContent,
-        }));
-
-        populateCategories(games);
-        populateMainPage(games);
-
-    } catch (err) {
-        console.error("Feed load failed:", err);
-    }
-}
-
-// Add categories to sidebar
-function populateCategories(games) {
-    const sidebar = document.querySelector(".sidebar");
-
-    // Remove all except main page
-    sidebar.innerHTML = "";
-    const mainDiv = document.createElement("div");
-    mainDiv.classList.add("active");
-    mainDiv.innerText = "Main Page";
-    mainDiv.onclick = () => loadPage("main", mainDiv);
-    sidebar.appendChild(mainDiv);
-
-    // Group games by category
-    const categoryMap = {};
-    games.forEach(game => {
-        if (!categoryMap[game.category]) categoryMap[game.category] = [];
-        categoryMap[game.category].push(game);
-    });
-
-    // Create category links
-    Object.keys(categoryMap).forEach(cat => {
-        const div = document.createElement("div");
-        div.innerText = cat;
-        div.onclick = () => loadCategory(cat, categoryMap[cat], div);
-        sidebar.appendChild(div);
-    });
-}
-
-// Load category page
-function loadCategory(name, games, element) {
-
-    document.querySelectorAll(".sidebar div").forEach(div => div.classList.remove("active"));
-    element.classList.add("active");
-
-    const content = document.getElementById("contentArea");
-
-    let html = `
-        <h2 class="section-title">${name}</h2>
-        <div class="game-grid">`;
-
-    games.forEach(game => {
-        html += `
-            <div class="game-card" onclick="window.open('${game.url}', '_blank')">
-                <img src="${game.thumbnail}">
-                <div>${game.title}</div>
-            </div>`;
-    });
-
-    html += `</div>
-        <footer>
-            <a href="#">About</a> • <a href="#">Privacy Policy</a> • <a href="#">Feedback</a>
-        </footer>
-    `;
-
-    content.innerHTML = html;
-}
-
-// Populate main page sections
-function populateMainPage(games) {
-    let topGames = games.slice(0, 10);
-    let newGames = games.slice(-10);
-
-    const topContainer = document.getElementById("topGamesPlaceholder");
-    const newContainer = document.getElementById("newGamesPlaceholder");
-
-    topContainer.innerHTML = "";
-    newContainer.innerHTML = "";
-
-    topGames.forEach(game => {
-        topContainer.innerHTML += `
-            <div class="game-card" onclick="window.open('${game.url}', '_blank')">
-                <img src="${game.thumbnail}">
-                <div>${game.title}</div>
-            </div>
-        `;
-    });
-
-    newGames.forEach(game => {
-        newContainer.innerHTML += `
-            <div class="game-card" onclick="window.open('${game.url}', '_blank')">
-                <img src="${game.thumbnail}">
-                <div>${game.title}</div>
-            </div>
-        `;
-    });
-}
-
-// Switch back to default main layout
-function loadPage(page, element) {
-    if (page !== "main") return;
-
-    document.querySelectorAll(".sidebar div").forEach(div => div.classList.remove("active"));
-    element.classList.add("active");
-
-    location.reload(); // easiest clean reset
-}
-
-// Load feed on page start
-loadGameFeed();
-
-</script>
+        loadGames();
+    </script>
 
 </body>
 </html>
