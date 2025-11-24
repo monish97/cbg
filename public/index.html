@@ -1,29 +1,282 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>We'll be back</title>
-    <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #fef1de;
-        }
-        img {
-            max-width: 90%;
-            height: auto;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>My Game Site</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--text);
+        transition: 0.3s;
+    }
+
+    :root {
+        --bg: #ffffff;
+        --text: #222;
+        --card: #f3f3f3;
+        --border: #ddd;
+    }
+    body.dark {
+        --bg: #1e1e1e;
+        --text: #f0f0f0;
+        --card: #2a2a2a;
+        --border: #444;
+    }
+
+    /* Top Ribbon */
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        z-index: 100;
+    }
+
+    header .title {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    header .search {
+        margin-left: 20px;
+        flex: 1;
+    }
+
+    header input {
+        width: 70%;
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        color: var(--text);
+    }
+
+    header button {
+        margin-left: auto;
+        padding: 6px 12px;
+        cursor: pointer;
+        border: none;
+        background: var(--border);
+        border-radius: 6px;
+    }
+
+    /* Layout */
+    .container {
+        display: flex;
+        width: 100%;
+        margin-top: 50px;
+        height: calc(100vh - 50px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 220px;
+        background: var(--card);
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .sidebar h3 {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .sidebar div {
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .sidebar div:hover,
+    .sidebar .active {
+        background: var(--border);
+    }
+
+    /* Main Content */
+    .content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .section-title {
+        font-size: 20px;
+        margin: 15px 0 10px;
+    }
+
+    .game-row, .game-grid {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+
+    .game-card {
+        width: 150px;
+        height: 120px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    /* Footer */
+    footer {
+        text-align: center;
+        padding: 10px 0;
+        margin-top: 20px;
+        border-top: 1px solid var(--border);
+        color: var(--text);
+    }
+
+</style>
 </head>
+
 <body>
-    <img src="Error.png" alt="We'll be back" />
+
+<!-- TOP RIBBON -->
+<header>
+    <div class="title">My Game Site</div>
+    <div class="search">
+        <input type="text" placeholder="Search games...">
+    </div>
+    <button onclick="toggleTheme()">🌙</button>
+</header>
+
+<div class="container">
+
+    <!-- LEFT PANE -->
+    <div class="sidebar">
+        <div class="active" onclick="loadPage('main', this)">Main Page</div>
+        <div onclick="loadPage('action', this)">Action</div>
+        <div onclick="loadPage('adventure', this)">Adventure</div>
+        <div onclick="loadPage('puzzle', this)">Puzzle</div>
+        <div onclick="loadPage('sports', this)">Sports</div>
+        <div onclick="loadPage('racing', this)">Racing</div>
+    </div>
+
+    <!-- RIGHT PANE -->
+    <div class="content" id="contentArea">
+
+        <!-- DEFAULT MAIN PAGE -->
+        <h2 class="section-title">Top Games</h2>
+        <div class="game-row">
+            <div class="game-card">Game 1</div>
+            <div class="game-card">Game 2</div>
+            <div class="game-card">Game 3</div>
+        </div>
+
+        <h2 class="section-title">Editor's Picks</h2>
+        <div class="game-row">
+            <div class="game-card">Pick 1</div>
+            <div class="game-card">Pick 2</div>
+            <div class="game-card">Pick 3</div>
+        </div>
+
+        <h2 class="section-title">New Games</h2>
+        <div class="game-row">
+            <div class="game-card">New 1</div>
+            <div class="game-card">New 2</div>
+            <div class="game-card">New 3</div>
+        </div>
+
+        <footer>
+            <a href="#">About</a> • 
+            <a href="#">Privacy Policy</a> • 
+            <a href="#">Feedback</a>
+        </footer>
+
+    </div>
+
+</div>
+
+
+<script>
+    // Sidebar category switching
+    function loadPage(page, element) {
+
+        // Highlight active category
+        document.querySelectorAll('.sidebar div').forEach(div => div.classList.remove('active'));
+        element.classList.add('active');
+
+        // Load content
+        const content = document.getElementById("contentArea");
+
+        if (page === "main") {
+            content.innerHTML = `
+                <h2 class="section-title">Top Games</h2>
+                <div class="game-row">
+                    <div class="game-card">Game 1</div>
+                    <div class="game-card">Game 2</div>
+                    <div class="game-card">Game 3</div>
+                </div>
+
+                <h2 class="section-title">Editor's Picks</h2>
+                <div class="game-row">
+                    <div class="game-card">Pick 1</div>
+                    <div class="game-card">Pick 2</div>
+                    <div class="game-card">Pick 3</div>
+                </div>
+
+                <h2 class="section-title">New Games</h2>
+                <div class="game-row">
+                    <div class="game-card">New 1</div>
+                    <div class="game-card">New 2</div>
+                    <div class="game-card">New 3</div>
+                </div>
+
+                <footer>
+                    <a href="#">About</a> • 
+                    <a href="#">Privacy Policy</a> • 
+                    <a href="#">Feedback</a>
+                </footer>
+            `;
+            return;
+        }
+
+        // Category content template
+        content.innerHTML = `
+            <h2 class="section-title">${page.charAt(0).toUpperCase() + page.slice(1)} Games</h2>
+            <div class="game-grid">
+                <div class="game-card">Game A</div>
+                <div class="game-card">Game B</div>
+                <div class="game-card">Game C</div>
+                <div class="game-card">Game D</div>
+            </div>
+
+            <footer>
+                <a href="#">About</a> • 
+                <a href="#">Privacy Policy</a> • 
+                <a href="#">Feedback</a>
+            </footer>
+        `;
+    }
+
+    // Dark mode toggle
+    function toggleTheme() {
+        document.body.classList.toggle("dark");
+    }
+</script>
+
 </body>
 </html>
-
-
-
-
