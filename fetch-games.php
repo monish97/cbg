@@ -2,7 +2,7 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-$url = 'https://gamemonetize.com/feed.php?format=0&page=1';
+$url = 'https://gamemonetize.com/feed.php?format=1&page=1';
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
@@ -12,3 +12,4 @@ curl_close($ch);
 
 echo $games;
 ?>
+
