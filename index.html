@@ -249,8 +249,14 @@
                 document.getElementById('errorMsg').innerHTML = 
                     '<strong>Failed to load games.</strong><br><br>' +
                     'Error: ' + error.message + '<br><br>' +
-                    'The CORS proxy might be down. For a production site, you need to set up PHP on your server or use a backend solution.';
+                    '<strong>Troubleshooting:</strong><br>' +
+                    '1. Make sure you created the file: <code>api/games.js</code><br>' +
+                    '2. Push changes to GitHub<br>' +
+                    '3. Wait for Vercel to redeploy<br>' +
+                    '4. Check Vercel deployment logs for errors<br><br>' +
+                    'Open browser console (F12) for more details.';
                 console.error('Error fetching games:', error);
+                console.error('Full error details:', text);
             }
         }
 
