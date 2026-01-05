@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameHub - Play Free Browser Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .tagline {
+            text-align: center;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            text-align: center;
+        }
+
+        .category-section {
+            margin: 40px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .category-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-left: 5px solid #ffd700;
+            padding-left: 15px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            color: #333;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-thumbnail {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        .game-info {
+            padding: 15px;
+        }
+
+        .game-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .game-description {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .game-page {
+            display: none;
+            background: #1a1a2e;
+            min-height: 100vh;
+        }
+
+        .game-page.active {
+            display: block;
+        }
+
+        .back-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            padding: 12px 25px;
+            font-size: 1em;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 20px;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .game-frame {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 10px;
+            background: #000;
+        }
+
+        .game-details {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .game-frame {
+                height: 400px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="homePage">
+        <div class="header">
+            <div class="container">
+                <h1>🎮 GameHub</h1>
+                <p class="tagline">Play thousands of free games directly in your browser</p>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div id="loadingMsg" class="loading">Loading awesome games...</div>
+            <div id="errorMsg" class="error" style="display: none;"></div>
+            <div id="categoriesContainer"></div>
+        </div>
+    </div>
+
+    <div id="gamePage" class="game-page">
+        <button class="back-button" onclick="goBack()">← Back to Games</button>
+        <div class="game-container">
+            <iframe id="gameFrame" class="game-frame" allowfullscreen></iframe>
+            <div class="game-details">
+                <h2 id="gameTitle"></h2>
+                <p id="gameDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://gamemonetize.com/feed.php?format=1&page=1';
+        const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+        let gamesData = [];
+
+        async function fetchGames() {
+            try {
+                const response = await fetch(CORS_PROXY + encodeURIComponent(API_URL));
+                const data = await response.json();
+                
+                // GameMonetize format=1 returns JSON array of games
+                const games = data.map(game => ({
+                    title: game.title || 'Untitled',
+                    description: game.description || '',
+                    url: game.url || '',
+                    thumb: game.thumb || game.thumbnail || '',
+                    category: game.category || 'Other'
+                }));
+                
+                gamesData = games;
+                displayGames(games);
+            } catch (error) {
+                document.getElementById('loadingMsg').style.display = 'none';
+                document.getElementById('errorMsg').style.display = 'block';
+                document.getElementById('errorMsg').textContent = 
+                    'Failed to load games. Please check your connection and try again.';
+                console.error('Error fetching games:', error);
+            }
+        }
+
+        function displayGames(games) {
+            document.getElementById('loadingMsg').style.display = 'none';
+            
+            const categories = {};
+            games.forEach(game => {
+                const cat = game.category || 'Other';
+                if (!categories[cat]) {
+                    categories[cat] = [];
+                }
+                categories[cat].push(game);
+            });
+
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
+
+            Object.keys(categories).sort().forEach(category => {
+                const section = document.createElement('div');
+                section.className = 'category-section';
+                
+                const title = document.createElement('h2');
+                title.className = 'category-title';
+                title.textContent = category;
+                section.appendChild(title);
+
+                const grid = document.createElement('div');
+                grid.className = 'games-grid';
+
+                categories[category].forEach(game => {
+                    const card = document.createElement('div');
+                    card.className = 'game-card';
+                    card.onclick = () => playGame(game);
+
+                    card.innerHTML = `
+                        <img src="${game.thumb}" alt="${game.title}" class="game-thumbnail" 
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22250%22 height=%22180%22%3E%3Crect fill=%22%23ddd%22 width=%22250%22 height=%22180%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22%3ENo Image%3C/text%3E%3C/svg%3E'">
+                        <div class="game-info">
+                            <div class="game-title">${game.title}</div>
+                            <div class="game-description">${game.description || 'No description available'}</div>
+                        </div>
+                    `;
+                    
+                    grid.appendChild(card);
+                });
+
+                section.appendChild(grid);
+                container.appendChild(section);
+            });
+        }
+
+        function playGame(game) {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('gamePage').classList.add('active');
+            document.getElementById('gameFrame').src = game.url;
+            document.getElementById('gameTitle').textContent = game.title;
+            document.getElementById('gameDescription').textContent = 
+                game.description || 'Enjoy playing this game!';
+            window.scrollTo(0, 0);
+        }
+
+        function goBack() {
+            document.getElementById('gamePage').classList.remove('active');
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('gameFrame').src = '';
+            window.scrollTo(0, 0);
+        }
+
+        fetchGames();
+    </script>
+</body>
+</html>
