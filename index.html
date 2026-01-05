@@ -214,14 +214,23 @@
     </div>
 
     <script>
-        const API_URL = 'fetch-games.php';
-        const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+        // Vercel serverless function endpoint
+        const API_URL = '/api/games';
         let gamesData = [];
 
         async function fetchGames() {
             try {
-                const response = await fetch(CORS_PROXY + encodeURIComponent(API_URL));
-                const data = await response.json();
+                const response = await fetch(API_URL);
+                const text = await response.text();
+                
+                console.log('Response status:', response.status);
+                console.log('Response text:', text);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = JSON.parse(text);
                 
                 // GameMonetize format=1 returns JSON array of games
                 const games = data.map(game => ({
@@ -237,8 +246,10 @@
             } catch (error) {
                 document.getElementById('loadingMsg').style.display = 'none';
                 document.getElementById('errorMsg').style.display = 'block';
-                document.getElementById('errorMsg').textContent = 
-                    'Failed to load games. Please check your connection and try again.';
+                document.getElementById('errorMsg').innerHTML = 
+                    '<strong>Failed to load games.</strong><br><br>' +
+                    'Error: ' + error.message + '<br><br>' +
+                    'The CORS proxy might be down. For a production site, you need to set up PHP on your server or use a backend solution.';
                 console.error('Error fetching games:', error);
             }
         }
