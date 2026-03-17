@@ -247,3 +247,16 @@ body {
 .search-bar input:focus {
   background: #334155;
 }
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #38bdf8;
+}
