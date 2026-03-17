@@ -52,7 +52,7 @@ export default function Layout({ children }) {
             alt="Casual Browser Games"
             width={300}
             height={60}
-          />          
+          />
         </Link>
       </header>
               
