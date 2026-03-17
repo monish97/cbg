@@ -72,7 +72,7 @@ export default function Home({ games, page, category }) {
   };
 
   const [searchQuery, setSearchQuery] = useState("");
-  const featuredGames = games.slice(0, 10);
+  
   const filteredGames = games.filter((game) =>
       game.title.toLowerCase().includes(searchQuery.toLowerCase())
       );
@@ -123,24 +123,6 @@ export default function Home({ games, page, category }) {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-
-        {/* 🔥 FEATURED SECTION */}
-        <section className="featured">
-          <h2>🔥 Featured Games</h2>
-        
-          <div className="featured-row">
-            {featuredGames.map((game) => (
-              <div
-                key={game.id}
-                className="featured-card"
-                onClick={() => router.push(`/game/${game.slug}`)}
-              >
-                <img src={game.thumbnail} alt={game.title} />
-                <p>{game.title}</p>
-              </div>
-            ))}
-          </div>
-        </section>
       
         <div className="grid">
           {filteredGames.map((game) => (
