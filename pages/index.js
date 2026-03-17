@@ -10,19 +10,23 @@ export default function Home({ games, page, category }) {
   const [selectedCategory, setSelectedCategory] = useState(category);
 
   // ✅ Fixed category list (matches GamePix API)
-  const categories = [
-    "All",
-    "action",
-    "adventure",
-    "arcade",
-    "puzzle",
-    "sports",
-    "racing",
-    "strategy",
-    "shooting",
-    "multiplayer",
-    "2048"
-  ];
+ const categories = [
+  "All",
+  "action",
+  "arcade",
+  "puzzle",
+  "racing",
+  "sports",
+  "shooter",
+  "multiplayer",
+  "adventure",
+  "strategy",
+  "simulation",
+  "idle",
+  "hyper casual",
+  "match 3",
+  "platformer"
+];
 
   // ✅ Pagination navigation (preserve category)
   const goToPage = (newPage) => {
