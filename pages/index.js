@@ -1,90 +1,179 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
+import GameCard from "../components/GameCard";
+import { getGames } from "../lib/api";
 
-export default function Home() {
+export default function Home({ games, page, category }) {
   const router = useRouter();
-  const { category } = router.query;
 
-  const [games, setGames] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // ✅ Sync category with URL
+  const [selectedCategory, setSelectedCategory] = useState(category);
 
-  // Fetch games
-  useEffect(() => {
-    async function fetchGames() {
-      try {
-        setLoading(true);
+  // ✅ Fixed category list (matches GamePix API)
+ const categories = [
+  "All",
+  "action",
+  "arcade",
+  "puzzle",
+  "racing",
+  "sports",
+  "shooter",
+  "multiplayer",
+  "adventure",
+  "strategy",
+  "simulation",
+  "idle",
+  "hyper casual",
+  "match 3",
+  "platformer"
+];
 
-        let url = "https://feed.gamepix.com/v2/json?sid=demo";
+  const categoryIcons = {
+  All: "🎮",
+  action: "⚔️",
+  adventure: "🗺️",
+  arcade: "🕹️",
+  puzzle: "🧩",
+  sports: "🏅",
+  racing: "🏎️",
+  strategy: "♟️",
+  shooting: "🔫",
+  multiplayer: "👥",
+  "2048": "🔢",
+  idle: "⏳",
+  "hyper casual": "🎯",
+  "match 3": "💎",
+  platformer: "🧱"
+};
+  
+  // ✅ Pagination navigation (preserve category)
+  const goToPage = (newPage) => {
+    router.push(`/?page=${newPage}&category=${selectedCategory}`);
+  };
 
-        // If category selected, filter by tag
-        if (category) {
-          url += `&tags=${category}`;
-        }
+  // ✅ Dynamic pagination numbers
+  const getPageNumbers = () => {
+    const totalVisible = 5;
+    const pages = [];
 
-        const res = await fetch(url);
-        const data = await res.json();
+    let start = Math.max(1, page - 2);
+    let end = start + totalVisible - 1;
 
-        setGames(data || []);
-      } catch (err) {
-        console.error("Error fetching games:", err);
-      } finally {
-        setLoading(false);
-      }
+    if (page <= 3) {
+      start = 1;
+      end = totalVisible;
     }
 
-    fetchGames();
-  }, [category]);
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
 
+    return pages;
+  };
+
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  const filteredGames = games.filter((game) =>
+      game.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+  
   return (
-    <div>
-      <h1 style={{ marginBottom: "20px" }}>
-        {category ? `${category.toUpperCase()} Games` : "Casual Browser Games"}
-      </h1>
+    <div className="container">
 
-      {loading ? (
-        <p>Loading games...</p>
-      ) : (
-        <div className="games">
-          {games.map((game) => (
-            <div key={game.id} className="game-card">
-              <img src={game.thumbnail} alt={game.title} />
-              <p>{game.title}</p>
-            </div>
+      {/* Sidebar */}
+      <aside className="sidebar">
+        <h2>Categories</h2>
+        {categories.map((cat) => (
+          <button
+  key={cat}
+  className={`category-btn ${
+    selectedCategory === cat ? "active" : ""
+  }`}
+  onClick={() => {
+    setSelectedCategory(cat);
+    router.push(`/?page=1&category=${cat}`);
+  }}
+>
+  <span className="category-content">
+    <span className="icon">{categoryIcons[cat] || "🎲"}</span>
+    <span className="label">
+      {cat === "All"
+        ? "All"
+        : cat.charAt(0).toUpperCase() + cat.slice(1)}
+    </span>
+  </span>
+</button>
+        ))}
+      </aside>
+
+      {/* Main */}
+      <main className="main">
+        <h1>
+          {selectedCategory === "All"
+            ? "All Games"
+            : `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Games`}
+        </h1>
+
+        {/* 🔍 SEARCH BAR */}
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Search games..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      
+        <div className="grid">
+          {filteredGames.map((game) => (
+            <GameCard key={game.id} game={game} />
           ))}
         </div>
-      )}
 
-      <style jsx>{`
-        .games {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-          gap: 20px;
-        }
+        {/* Pagination */}
+        <div className="pagination">
+          <button
+            onClick={() => goToPage(page - 1)}
+            disabled={page <= 1}
+          >
+            Prev
+          </button>
 
-        .game-card {
-          background: #020617;
-          padding: 10px;
-          border-radius: 10px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
+          {getPageNumbers().map((p) => (
+            <button
+              key={p}
+              className={p === page ? "active" : ""}
+              onClick={() => goToPage(p)}
+            >
+              {p}
+            </button>
+          ))}
 
-        .game-card:hover {
-          transform: scale(1.05);
-          background: #1e293b;
-        }
+          <button onClick={() => goToPage(page + 1)}>
+            Next
+          </button>
+        </div>
 
-        img {
-          width: 100%;
-          border-radius: 8px;
-        }
+      </main>
 
-        p {
-          margin-top: 8px;
-          font-size: 14px;
-          color: #cbd5f5;
-        }
-      `}</style>
     </div>
   );
+}
+
+// ✅ SSR (page + category)
+export async function getServerSideProps(context) {
+  const page = parseInt(context.query.page || "1");
+  const category = context.query.category || "All";
+
+  const apiCategory = category === "All" ? null : category;
+
+  const games = await getGames(page, apiCategory);
+
+  return {
+    props: {
+      games,
+      page,
+      category,
+    },
+  };
 }
