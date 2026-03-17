@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import Footer from "../components/Footer";
+import Layout from "../components/Layout";
 
 export default function MyApp({ Component, pageProps }) {
   return (
@@ -7,7 +8,9 @@ export default function MyApp({ Component, pageProps }) {
       <header className="header">
         <h1>🎮 Casual Browser Games</h1>
       </header>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
       <Footer />
     </>
   );
