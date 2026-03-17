@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
 import Footer from "./Footer";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -43,6 +45,18 @@ export default function Layout({ children }) {
   return (
     <div className="page">
 
+      <header className="header">
+        <Link href="/?page=1&category=All" className="logo-wrapper">
+          <Image
+            src="/logo.png"
+            alt="Casual Browser Games"
+            width={40}
+            height={40}
+          />
+          <span className="logo-text">Casual Browser Games</span>
+        </Link>
+      </header>
+              
       <div className="container">
         {/* Sidebar */}
         <aside className="sidebar">
@@ -79,6 +93,32 @@ export default function Layout({ children }) {
       <Footer />
 
       <style jsx>{`
+
+        .header {
+          background: #020617;
+          border-bottom: 1px solid #1e293b;
+          padding: 12px 20px;
+          display: flex;
+          align-items: center;
+        }
+        
+        .logo-wrapper {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          text-decoration: none;
+        }
+        
+        .logo-text {
+          font-size: 20px;
+          font-weight: bold;
+          color: #38bdf8;
+        }
+        
+        .logo-wrapper:hover .logo-text {
+          color: #0ea5e9;
+        }
+        
         .page {
           display: flex;
           flex-direction: column;
