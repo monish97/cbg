@@ -28,6 +28,24 @@ export default function Home({ games, page, category }) {
   "platformer"
 ];
 
+  const categoryIcons = {
+  All: "🎮",
+  action: "⚔️",
+  adventure: "🗺️",
+  arcade: "🕹️",
+  puzzle: "🧩",
+  sports: "🏅",
+  racing: "🏎️",
+  strategy: "♟️",
+  shooting: "🔫",
+  multiplayer: "👥",
+  "2048": "🔢",
+  idle: "⏳",
+  "hyper casual": "🎯",
+  "match 3": "💎",
+  platformer: "🧱"
+};
+  
   // ✅ Pagination navigation (preserve category)
   const goToPage = (newPage) => {
     router.push(`/?page=${newPage}&category=${selectedCategory}`);
@@ -61,19 +79,24 @@ export default function Home({ games, page, category }) {
         <h2>Categories</h2>
         {categories.map((cat) => (
           <button
-            key={cat}
-            className={`category-btn ${
-              selectedCategory === cat ? "active" : ""
-            }`}
-            onClick={() => {
-              setSelectedCategory(cat);
-              router.push(`/?page=1&category=${cat}`);
-            }}
-          >
-            {cat === "All"
-              ? "All"
-              : cat.charAt(0).toUpperCase() + cat.slice(1)}
-          </button>
+  key={cat}
+  className={`category-btn ${
+    selectedCategory === cat ? "active" : ""
+  }`}
+  onClick={() => {
+    setSelectedCategory(cat);
+    router.push(`/?page=1&category=${cat}`);
+  }}
+>
+  <span className="category-content">
+    <span className="icon">{categoryIcons[cat] || "🎲"}</span>
+    <span className="label">
+      {cat === "All"
+        ? "All"
+        : cat.charAt(0).toUpperCase() + cat.slice(1)}
+    </span>
+  </span>
+</button>
         ))}
       </aside>
 
