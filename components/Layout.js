@@ -50,8 +50,8 @@ export default function Layout({ children }) {
           <Image
             src="/logo.png"
             alt="Casual Browser Games"
-            width={40}
-            height={40}
+            width={160}
+            height={50}
           />
           <span className="logo-text">Casual Browser Games</span>
         </Link>
