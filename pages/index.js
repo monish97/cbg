@@ -10,7 +10,19 @@ export default function Home({ games, page, category }) {
   const [selectedCategory, setSelectedCategory] = useState(category);
 
   // ✅ Extract categories
-  const categories = ["All", ...new Set(games.map((g) => g.category))];
+  const categories = [
+  "All",
+  "action",
+  "adventure",
+  "arcade",
+  "puzzle",
+  "sports",
+  "racing",
+  "strategy",
+  "shooting",
+  "multiplayer",
+  "2048"
+];
 
   // ✅ Filter games
   const filteredGames =
