@@ -7,6 +7,7 @@ export default function MyApp({ Component, pageProps }) {
         <h1>🎮 Casual Browser Games</h1>
       </header>
       <Component {...pageProps} />
+      <Footer />
     </>
   );
 }
