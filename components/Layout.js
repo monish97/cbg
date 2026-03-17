@@ -88,6 +88,7 @@ export default function Layout({ children }) {
         .container {
           display: flex;
           flex: 1;
+          flex-direction: row;
         }
 
         .sidebar {
