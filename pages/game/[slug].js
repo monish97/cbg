@@ -27,3 +27,13 @@ export default function GamePage({ game }) {
     </>
   );
 }
+
+export async function getServerSideProps(context) {
+  const games = await getGames();
+
+  const game = games.find((g) => g.slug === context.params.slug);
+
+  return {
+    props: { game: game || null },
+  };
+}
