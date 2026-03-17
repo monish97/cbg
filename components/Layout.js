@@ -76,35 +76,30 @@ export default function Layout({ children }) {
         <main className="main">{children}</main>
       </div>
 
-      {/* Footer ALWAYS visible */}
       <Footer />
 
       <style jsx>{`
         .page {
           display: flex;
           flex-direction: column;
-          height: 100vh;
+          min-height: 100vh; /* ✅ KEY FIX */
         }
 
         .container {
           display: flex;
           flex: 1;
-          overflow: hidden;
         }
 
         .sidebar {
           width: 220px;
           background: #020617;
           padding: 20px;
-          height: 100%;
-          overflow-y: auto;
           border-right: 1px solid #1e293b;
         }
 
         .main {
           flex: 1;
           padding: 20px;
-          overflow-y: auto;
         }
 
         h2 {
