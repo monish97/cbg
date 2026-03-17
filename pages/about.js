@@ -46,7 +46,7 @@ export default function About() {
           </p>
 
           <p>
-            Our mission is simple — to create a space where anyone can relax,
+            Our mission is to create a space where anyone can relax,
             unwind, and enjoy casual games anytime, anywhere.
           </p>
         </div>
