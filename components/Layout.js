@@ -55,7 +55,7 @@ export default function Layout({ children }) {
           />
         </Link>
       </header>
-              
+
       <div className="container">
         {/* Sidebar */}
         <aside className="sidebar">
