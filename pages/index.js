@@ -7,14 +7,6 @@ export default function Home({ games, page }) {
   const router = useRouter();
 
   const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const categories = ["All", ...new Set(games.map((g) => g.category))];
-
-  const filteredGames =
-    selectedCategory === "All"
-      ? games
-      : games.filter((g) => g.category === selectedCategory);
-
   const getPageNumbers = () => {
   const totalVisible = 5;
   const pages = [];
@@ -35,11 +27,6 @@ export default function Home({ games, page }) {
 
   return pages;
 };
-  
-  // 🔥 Pagination handler
-  const goToPage = (newPage) => {
-    router.push(`/?page=${newPage}`);
-  };
 
   return (
     <div className="container">
