@@ -6,52 +6,16 @@ import { getGames } from "../lib/api";
 export default function Home({ games, page, category }) {
   const router = useRouter();
 
-  // ✅ Sync category with URL
-  const [selectedCategory, setSelectedCategory] = useState(category);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // ✅ Fixed category list (matches GamePix API)
- const categories = [
-  "All",
-  "action",
-  "arcade",
-  "puzzle",
-  "racing",
-  "sports",
-  "shooter",
-  "multiplayer",
-  "adventure",
-  "strategy",
-  "simulation",
-  "idle",
-  "hyper casual",
-  "match 3",
-  "platformer"
-];
+  const filteredGames = games.filter((game) =>
+    game.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const categoryIcons = {
-  All: "🎮",
-  action: "⚔️",
-  adventure: "🗺️",
-  arcade: "🕹️",
-  puzzle: "🧩",
-  sports: "🏅",
-  racing: "🏎️",
-  strategy: "♟️",
-  shooting: "🔫",
-  multiplayer: "👥",
-  "2048": "🔢",
-  idle: "⏳",
-  "hyper casual": "🎯",
-  "match 3": "💎",
-  platformer: "🧱"
-};
-  
-  // ✅ Pagination navigation (preserve category)
   const goToPage = (newPage) => {
-    router.push(`/?page=${newPage}&category=${selectedCategory}`);
+    router.push(`/?page=${newPage}&category=${category}`);
   };
 
-  // ✅ Dynamic pagination numbers
   const getPageNumbers = () => {
     const totalVisible = 5;
     const pages = [];
@@ -71,96 +35,54 @@ export default function Home({ games, page, category }) {
     return pages;
   };
 
-  const [searchQuery, setSearchQuery] = useState("");
-  
-  const filteredGames = games.filter((game) =>
-      game.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-  
   return (
-    <div className="container">
+    <>
+      <h1>
+        {category === "All"
+          ? "All Games"
+          : `${category.charAt(0).toUpperCase() + category.slice(1)} Games`}
+      </h1>
 
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <h2>Categories</h2>
-        {categories.map((cat) => (
-          <button
-  key={cat}
-  className={`category-btn ${
-    selectedCategory === cat ? "active" : ""
-  }`}
-  onClick={() => {
-    setSelectedCategory(cat);
-    router.push(`/?page=1&category=${cat}`);
-  }}
->
-  <span className="category-content">
-    <span className="icon">{categoryIcons[cat] || "🎲"}</span>
-    <span className="label">
-      {cat === "All"
-        ? "All"
-        : cat.charAt(0).toUpperCase() + cat.slice(1)}
-    </span>
-  </span>
-</button>
+      {/* Search */}
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search games..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
+      {/* Grid */}
+      <div className="grid">
+        {filteredGames.map((game) => (
+          <GameCard key={game.id} game={game} />
         ))}
-      </aside>
+      </div>
 
-      {/* Main */}
-      <main className="main">
-        <h1>
-          {selectedCategory === "All"
-            ? "All Games"
-            : `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Games`}
-        </h1>
+      {/* Pagination */}
+      <div className="pagination">
+        <button onClick={() => goToPage(page - 1)} disabled={page <= 1}>
+          Prev
+        </button>
 
-        {/* 🔍 SEARCH BAR */}
-        <div className="search-bar">
-          <input
-            type="text"
-            placeholder="Search games..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      
-        <div className="grid">
-          {filteredGames.map((game) => (
-            <GameCard key={game.id} game={game} />
-          ))}
-        </div>
-
-        {/* Pagination */}
-        <div className="pagination">
+        {getPageNumbers().map((p) => (
           <button
-            onClick={() => goToPage(page - 1)}
-            disabled={page <= 1}
+            key={p}
+            className={p === page ? "active" : ""}
+            onClick={() => goToPage(p)}
           >
-            Prev
+            {p}
           </button>
+        ))}
 
-          {getPageNumbers().map((p) => (
-            <button
-              key={p}
-              className={p === page ? "active" : ""}
-              onClick={() => goToPage(p)}
-            >
-              {p}
-            </button>
-          ))}
-
-          <button onClick={() => goToPage(page + 1)}>
-            Next
-          </button>
-        </div>
-
-      </main>
-
-    </div>
+        <button onClick={() => goToPage(page + 1)}>Next</button>
+      </div>
+    </>
   );
 }
 
-// ✅ SSR (page + category)
+// SSR
 export async function getServerSideProps(context) {
   const page = parseInt(context.query.page || "1");
   const category = context.query.category || "All";
