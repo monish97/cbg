@@ -1,10 +1,12 @@
-import Layout from "../components/Layout";
 import "../styles/globals.css";
 
-export default function App({ Component, pageProps }) {
+export default function MyApp({ Component, pageProps }) {
   return (
-    <Layout>
+    <>
+      <header className="header">
+        <h1>🎮 Game Hub</h1>
+      </header>
       <Component {...pageProps} />
-    </Layout>
+    </>
   );
 }
