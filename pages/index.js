@@ -7,30 +7,44 @@ export default function Home({ games, page }) {
   const router = useRouter();
 
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  // ✅ Categories
+  const categories = ["All", ...new Set(games.map((g) => g.category))];
+
+  // ✅ Filtered games
+  const filteredGames =
+    selectedCategory === "All"
+      ? games
+      : games.filter((g) => g.category === selectedCategory);
+
+  // ✅ Pagination function
+  const goToPage = (newPage) => {
+    router.push(`/?page=${newPage}`);
+  };
+
+  // ✅ Dynamic page numbers
   const getPageNumbers = () => {
-  const totalVisible = 5;
-  const pages = [];
+    const totalVisible = 5;
+    const pages = [];
 
-  let start = Math.max(1, page - 2);
-  let end = start + totalVisible - 1;
+    let start = Math.max(1, page - 2);
+    let end = start + totalVisible - 1;
 
-  // Adjust if near beginning
-  if (page <= 3) {
-    start = 1;
-    end = totalVisible;
-  }
+    if (page <= 3) {
+      start = 1;
+      end = totalVisible;
+    }
 
-  // Generate pages
-  for (let i = start; i <= end; i++) {
-    pages.push(i);
-  }
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
 
-  return pages;
-};
+    return pages;
+  };
 
   return (
     <div className="container">
-      
+
       {/* Sidebar */}
       <aside className="sidebar">
         <h2>Categories</h2>
@@ -57,7 +71,7 @@ export default function Home({ games, page }) {
           ))}
         </div>
 
-        {/* 🔥 PAGINATION */}
+        {/* Pagination */}
         <div className="pagination">
           <button
             onClick={() => goToPage(page - 1)}
@@ -80,10 +94,13 @@ export default function Home({ games, page }) {
             Next
           </button>
         </div>
+      </main>
+
+    </div>
   );
 }
 
-// 🔥 SSR WITH PAGE
+// ✅ SSR
 export async function getServerSideProps(context) {
   const page = parseInt(context.query.page || "1");
 
