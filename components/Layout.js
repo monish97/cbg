@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import Footer from "./Footer";
 
 export default function Layout({ children }) {
   const router = useRouter();
@@ -40,52 +41,70 @@ export default function Layout({ children }) {
   };
 
   return (
-    <div className="container">
+    <div className="page">
 
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <h2>Categories</h2>
+      <div className="container">
+        {/* Sidebar */}
+        <aside className="sidebar">
+          <h2>Categories</h2>
 
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            className={`category-btn ${
-              currentCategory === cat ? "active" : ""
-            }`}
-            onClick={() => {
-              router.push(`/?page=1&category=${cat}`);
-            }}
-          >
-            <span className="category-content">
-              <span className="icon">
-                {categoryIcons[cat] || "🎲"}
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              className={`category-btn ${
+                currentCategory === cat ? "active" : ""
+              }`}
+              onClick={() => {
+                router.push(`/?page=1&category=${cat}`);
+              }}
+            >
+              <span className="category-content">
+                <span className="icon">
+                  {categoryIcons[cat] || "🎲"}
+                </span>
+                <span className="label">
+                  {cat === "All"
+                    ? "All"
+                    : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </span>
               </span>
-              <span className="label">
-                {cat === "All"
-                  ? "All"
-                  : cat.charAt(0).toUpperCase() + cat.slice(1)}
-              </span>
-            </span>
-          </button>
-        ))}
-      </aside>
+            </button>
+          ))}
+        </aside>
 
-      {/* Main Content */}
-      <main className="main">{children}</main>
+        {/* Main Content */}
+        <main className="main">{children}</main>
+      </div>
+
+      {/* Footer ALWAYS visible */}
+      <Footer />
 
       <style jsx>{`
+        .page {
+          display: flex;
+          flex-direction: column;
+          height: 100vh;
+        }
+
         .container {
           display: flex;
+          flex: 1;
+          overflow: hidden;
         }
 
         .sidebar {
           width: 220px;
           background: #020617;
           padding: 20px;
-          height: 100vh;
-          position: sticky;
-          top: 0;
+          height: 100%;
+          overflow-y: auto;
           border-right: 1px solid #1e293b;
+        }
+
+        .main {
+          flex: 1;
+          padding: 20px;
+          overflow-y: auto;
         }
 
         h2 {
@@ -136,11 +155,6 @@ export default function Layout({ children }) {
 
         .icon {
           font-size: 18px;
-        }
-
-        .main {
-          flex: 1;
-          padding: 20px;
         }
       `}</style>
     </div>
