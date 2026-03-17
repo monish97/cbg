@@ -32,17 +32,40 @@ body {
 }
 
 .category-btn {
+  position: relative;
   display: block;
   width: 100%;
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 10px 12px;
   border: none;
   background: #1e293b;
   color: #fff;
   cursor: pointer;
   border-radius: 8px;
   text-align: left;
-  transition: 0.2s;
+  transition: background 0.2s;
+  overflow: hidden;
+}
+
+.category-btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) scaleY(0);
+  width: 4px;
+  height: 70%;
+  background: #3b82f6;
+  border-radius: 4px;
+  transition: transform 0.25s ease;
+}
+
+.category-btn:hover::before {
+  transform: translateY(-50%) scaleY(1);
+}
+
+.category-btn.active::before {
+  transform: translateY(-50%) scaleY(1);
 }
 
 .category-btn:hover {
