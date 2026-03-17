@@ -15,8 +15,7 @@ export default function Home({ games }) {
       ? games
       : games.filter((g) => g.category === selectedCategory);
 
-  return (
-    <Layout>
+  return (    
       <div className="container">
         
         {/* LEFT SIDEBAR */}
@@ -46,8 +45,7 @@ export default function Home({ games }) {
           </div>
         </main>
 
-      </div>
-    </Layout>
+      </div>    
   );
 }
 
