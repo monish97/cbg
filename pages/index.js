@@ -15,6 +15,27 @@ export default function Home({ games, page }) {
       ? games
       : games.filter((g) => g.category === selectedCategory);
 
+  const getPageNumbers = () => {
+  const totalVisible = 5;
+  const pages = [];
+
+  let start = Math.max(1, page - 2);
+  let end = start + totalVisible - 1;
+
+  // Adjust if near beginning
+  if (page <= 3) {
+    start = 1;
+    end = totalVisible;
+  }
+
+  // Generate pages
+  for (let i = start; i <= end; i++) {
+    pages.push(i);
+  }
+
+  return pages;
+};
+  
   // 🔥 Pagination handler
   const goToPage = (newPage) => {
     router.push(`/?page=${newPage}`);
@@ -58,26 +79,20 @@ export default function Home({ games, page }) {
             Prev
           </button>
 
-          {[...Array(5)].map((_, i) => {
-            const p = i + 1;
-            return (
-              <button
-                key={p}
-                className={p === page ? "active" : ""}
-                onClick={() => goToPage(p)}
-              >
-                {p}
-              </button>
-            );
-          })}
+          {getPageNumbers().map((p) => (
+            <button
+              key={p}
+              className={p === page ? "active" : ""}
+              onClick={() => goToPage(p)}
+            >
+              {p}
+            </button>
+          ))}
 
           <button onClick={() => goToPage(page + 1)}>
             Next
           </button>
         </div>
-
-      </main>
-    </div>
   );
 }
 
