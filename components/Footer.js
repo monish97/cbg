@@ -10,10 +10,10 @@ export default function Footer() {
         color: "#94a3b8",
       }}
     >
-      <Link href="/privacy" style={{ margin: "0 10px" }}>Privacy Policy</Link>
-      <Link href="/terms" style={{ margin: "0 10px" }}>Terms</Link>      
-      <Link href="/about" style={{ margin: "0 10px" }}>About Us</Link>
-      <Link href="/faq" style={{ margin: "0 10px" }}>FAQ</Link>
+      <Link href="pages/privacy" style={{ margin: "0 10px" }}>Privacy Policy</Link>
+      <Link href="pages/terms" style={{ margin: "0 10px" }}>Terms</Link>      
+      <Link href="pages/about" style={{ margin: "0 10px" }}>About Us</Link>
+      <Link href="pages/faq" style={{ margin: "0 10px" }}>FAQ</Link>
       <p style={{ marginTop: "10px", fontSize: "12px" }}>
         &copy; {new Date().getFullYear()} Casual Browser Games
       </p>
