@@ -3,26 +3,27 @@ import { useRouter } from "next/router";
 import GameCard from "../components/GameCard";
 import { getGames } from "../lib/api";
 
-export default function Home({ games, page }) {
+export default function Home({ games, page, category }) {
   const router = useRouter();
 
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  // ✅ Category state synced with URL
+  const [selectedCategory, setSelectedCategory] = useState(category);
 
-  // ✅ Categories
+  // ✅ Extract categories
   const categories = ["All", ...new Set(games.map((g) => g.category))];
 
-  // ✅ Filtered games
+  // ✅ Filter games
   const filteredGames =
     selectedCategory === "All"
       ? games
       : games.filter((g) => g.category === selectedCategory);
 
-  // ✅ Pagination function
+  // ✅ Pagination navigation (preserve category)
   const goToPage = (newPage) => {
-    router.push(`/?page=${newPage}`);
+    router.push(`/?page=${newPage}&category=${selectedCategory}`);
   };
 
-  // ✅ Dynamic page numbers
+  // ✅ Dynamic pagination numbers
   const getPageNumbers = () => {
     const totalVisible = 5;
     const pages = [];
@@ -54,7 +55,10 @@ export default function Home({ games, page }) {
             className={`category-btn ${
               selectedCategory === cat ? "active" : ""
             }`}
-            onClick={() => setSelectedCategory(cat)}
+            onClick={() => {
+              setSelectedCategory(cat);
+              router.push(`/?page=1&category=${cat}`);
+            }}
           >
             {cat}
           </button>
@@ -94,15 +98,17 @@ export default function Home({ games, page }) {
             Next
           </button>
         </div>
+
       </main>
 
     </div>
   );
 }
 
-// ✅ SSR
+// ✅ SSR (reads page + category from URL)
 export async function getServerSideProps(context) {
   const page = parseInt(context.query.page || "1");
+  const category = context.query.category || "All";
 
   const games = await getGames(page);
 
@@ -110,6 +116,7 @@ export async function getServerSideProps(context) {
     props: {
       games,
       page,
+      category,
     },
   };
 }
