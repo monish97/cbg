@@ -71,6 +71,8 @@ export default function Home({ games, page, category }) {
     return pages;
   };
 
+  const featuredGames = games.slice(0, 10);
+  
   return (
     <div className="container">
 
@@ -108,6 +110,24 @@ export default function Home({ games, page, category }) {
             : `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Games`}
         </h1>
 
+        {/* 🔥 FEATURED SECTION */}
+        <section className="featured">
+          <h2>🔥 Featured Games</h2>
+        
+          <div className="featured-row">
+            {featuredGames.map((game) => (
+              <div
+                key={game.id}
+                className="featured-card"
+                onClick={() => router.push(`/game/${game.slug}`)}
+              >
+                <img src={game.thumbnail} alt={game.title} />
+                <p>{game.title}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      
         <div className="grid">
           {games.map((game) => (
             <GameCard key={game.id} game={game} />
