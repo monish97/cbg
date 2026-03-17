@@ -4,7 +4,7 @@ import Layout from "../components/Layout";
 
 export default function MyApp({ Component, pageProps }) {
   return (
-    <>
+    
       <Head>
         {/* ✅ Step 4: Title + Description */}
         <title>Casual Browser Games - Play Free Online Games</title>
