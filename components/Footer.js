@@ -12,7 +12,6 @@ export default function Footer() {
     >
       <Link href="/privacy" style={{ margin: "0 10px" }}>Privacy Policy</Link>
       <Link href="/terms" style={{ margin: "0 10px" }}>Terms</Link>
-      <Link href="/disclaimer" style={{ margin: "0 10px" }}>Disclaimer</Link>
       <Link href="/about" style={{ margin: "0 10px" }}>About Us</Link>
       <Link href="/faq" style={{ margin: "0 10px" }}>FAQ</Link>
       <p style={{ marginTop: "10px", fontSize: "12px" }}>
