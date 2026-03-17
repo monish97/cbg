@@ -71,7 +71,11 @@ export default function Home({ games, page, category }) {
     return pages;
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
   const featuredGames = games.slice(0, 10);
+  const filteredGames = games.filter((game) =>
+      game.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
   
   return (
     <div className="container">
@@ -110,6 +114,16 @@ export default function Home({ games, page, category }) {
             : `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Games`}
         </h1>
 
+        {/* 🔍 SEARCH BAR */}
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Search games..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
         {/* 🔥 FEATURED SECTION */}
         <section className="featured">
           <h2>🔥 Featured Games</h2>
@@ -129,7 +143,7 @@ export default function Home({ games, page, category }) {
         </section>
       
         <div className="grid">
-          {games.map((game) => (
+          {filteredGames.map((game) => (
             <GameCard key={game.id} game={game} />
           ))}
         </div>
