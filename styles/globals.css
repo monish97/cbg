@@ -223,3 +223,27 @@ body {
   padding: 10px;
   font-size: 14px;
 }
+
+/* SEARCH BAR */
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #1e293b;
+  color: white;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-bar input::placeholder {
+  color: #94a3b8;
+}
+
+.search-bar input:focus {
+  background: #334155;
+}
