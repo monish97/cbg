@@ -10,3 +10,11 @@ export default function MyApp({ Component, pageProps }) {
     </>
   );
 }
+
+.header {
+  background: #020617;
+  padding: 15px 20px;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid #1e293b;
+}
