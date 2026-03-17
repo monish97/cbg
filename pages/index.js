@@ -6,29 +6,23 @@ import { getGames } from "../lib/api";
 export default function Home({ games, page, category }) {
   const router = useRouter();
 
-  // ✅ Category state synced with URL
+  // ✅ Sync category with URL
   const [selectedCategory, setSelectedCategory] = useState(category);
 
-  // ✅ Extract categories
+  // ✅ Fixed category list (matches GamePix API)
   const categories = [
-  "All",
-  "action",
-  "adventure",
-  "arcade",
-  "puzzle",
-  "sports",
-  "racing",
-  "strategy",
-  "shooting",
-  "multiplayer",
-  "2048"
-];
-
-  // ✅ Filter games
-  const filteredGames =
-    selectedCategory === "All"
-      ? games
-      : games.filter((g) => g.category === selectedCategory);
+    "All",
+    "action",
+    "adventure",
+    "arcade",
+    "puzzle",
+    "sports",
+    "racing",
+    "strategy",
+    "shooting",
+    "multiplayer",
+    "2048"
+  ];
 
   // ✅ Pagination navigation (preserve category)
   const goToPage = (newPage) => {
@@ -72,17 +66,23 @@ export default function Home({ games, page, category }) {
               router.push(`/?page=1&category=${cat}`);
             }}
           >
-            {cat}
+            {cat === "All"
+              ? "All"
+              : cat.charAt(0).toUpperCase() + cat.slice(1)}
           </button>
         ))}
       </aside>
 
       {/* Main */}
       <main className="main">
-        <h1>{selectedCategory} Games</h1>
+        <h1>
+          {selectedCategory === "All"
+            ? "All Games"
+            : `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Games`}
+        </h1>
 
         <div className="grid">
-          {filteredGames.map((game) => (
+          {games.map((game) => (
             <GameCard key={game.id} game={game} />
           ))}
         </div>
@@ -117,12 +117,14 @@ export default function Home({ games, page, category }) {
   );
 }
 
-// ✅ SSR (reads page + category from URL)
+// ✅ SSR (page + category)
 export async function getServerSideProps(context) {
   const page = parseInt(context.query.page || "1");
   const category = context.query.category || "All";
 
-  const games = await getGames(page);
+  const apiCategory = category === "All" ? null : category;
+
+  const games = await getGames(page, apiCategory);
 
   return {
     props: {
