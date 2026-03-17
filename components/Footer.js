@@ -10,6 +10,7 @@ export default function Footer() {
         <Link href="/privacy">Privacy Policy</Link>
         <Link href="/terms">Terms</Link>
         <Link href="/faq">FAQ</Link>
+        <Link href="/contact">Contact Us</Link>
       </div>
 
       <style jsx>{`
