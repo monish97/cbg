@@ -6,22 +6,25 @@ async function fetchAllGames() {
   let allGames = [];
 
   // Fetch multiple pages
-  for (let page = 1; page <= 10; page++) {
-    try {
-      const res = await fetch(
-        `https://gamemonetize.com/feed.php?format=0&num=50&page=${page}`
-      );
-      const data = await res.json();
+  for (let page = 1; page <= 20; page++) {
+  try {
+    const res = await fetch(
+      `https://gamemonetize.com/feed.php?format=0&num=50&page=${page}`
+    );
+    const data = await res.json();
 
-      const gamesArray = Array.isArray(data)
-        ? data
-        : data?.games || [];      
+    const gamesArray = Array.isArray(data)
+      ? data
+      : data?.games || [];
 
+    if (gamesArray.length > 0) {
       allGames = allGames.concat(gamesArray);
-    } catch (err) {
-      console.error("Fetch failed page:", page);
     }
+
+  } catch (err) {
+    console.error("Fetch failed page:", page);
   }
+}
 
   return allGames.map((game) => ({
     id: game.id,
