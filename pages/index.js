@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import GameCard from "../components/GameCard";
-import { getAllGames, getGamesByPage } from "../lib/api";
+import { getGames } from "../lib/api";
 
-export default function Home({ games, page, totalPages }) {
+export default function Home({ games, page }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -15,11 +15,20 @@ export default function Home({ games, page, totalPages }) {
     router.push(`/?page=${newPage}`);
   };
 
+  const getPageNumbers = () => {
+    const totalVisible = 5;
+    const pages = [];
+    let start = Math.max(1, page - 2);
+    let end = start + totalVisible - 1;
+    if (page <= 3) start = 1;
+    for (let i = start; i <= end; i++) pages.push(i);
+    return pages;
+  };
+
   return (
     <>
       <h1>All Games</h1>
 
-      {/* Search */}
       <div className="search-bar">
         <input
           type="text"
@@ -29,30 +38,26 @@ export default function Home({ games, page, totalPages }) {
         />
       </div>
 
-      {/* Grid */}
       <div className="grid">
         {filteredGames.map((game) => (
           <GameCard key={game.id} game={game} />
         ))}
       </div>
 
-      {/* Pagination */}
       <div className="pagination">
         <button onClick={() => goToPage(page - 1)} disabled={page <= 1}>
           Prev
         </button>
-        {Array.from({ length: totalPages }, (_, i) => (
+        {getPageNumbers().map((p) => (
           <button
-            key={i + 1}
-            className={page === i + 1 ? "active" : ""}
-            onClick={() => goToPage(i + 1)}
+            key={p}
+            className={p === page ? "active" : ""}
+            onClick={() => goToPage(p)}
           >
-            {i + 1}
+            {p}
           </button>
         ))}
-        <button onClick={() => goToPage(page + 1)} disabled={page >= totalPages}>
-          Next
-        </button>
+        <button onClick={() => goToPage(page + 1)}>Next</button>
       </div>
     </>
   );
@@ -60,18 +65,8 @@ export default function Home({ games, page, totalPages }) {
 
 export async function getServerSideProps(context) {
   const page = parseInt(context.query.page || "1");
-  const category = context.query.category || "All";
-
-  const apiCategory = category === "All" ? null : category;
-
-  // Fetch games
   const games = await getGames(page);
-
   return {
-    props: {
-      games,
-      page,
-      category,
-    },
+    props: { games, page },
   };
 }
