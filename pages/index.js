@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import GameCard from "../components/GameCard";
 import { getGames } from "../lib/api";
 
-export default function Home({ games, page }) {
+export default function Home({ games, page, category }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -12,7 +12,7 @@ export default function Home({ games, page }) {
   );
 
   const goToPage = (newPage) => {
-    router.push(`/?page=${newPage}`);
+    router.push(`/?page=${newPage}&category=${category}`);
   };
 
   const getPageNumbers = () => {
@@ -20,14 +20,21 @@ export default function Home({ games, page }) {
     const pages = [];
     let start = Math.max(1, page - 2);
     let end = start + totalVisible - 1;
-    if (page <= 3) start = 1;
+    if (page <= 3) {
+      start = 1;
+      end = totalVisible;
+    }
     for (let i = start; i <= end; i++) pages.push(i);
     return pages;
   };
 
   return (
     <>
-      <h1>All Games</h1>
+      <h1>
+        {category === "All"
+          ? "All Games"
+          : `${category.charAt(0).toUpperCase() + category.slice(1)} Games`}
+      </h1>
 
       <div className="search-bar">
         <input
@@ -48,6 +55,7 @@ export default function Home({ games, page }) {
         <button onClick={() => goToPage(page - 1)} disabled={page <= 1}>
           Prev
         </button>
+
         {getPageNumbers().map((p) => (
           <button
             key={p}
@@ -57,16 +65,27 @@ export default function Home({ games, page }) {
             {p}
           </button>
         ))}
+
         <button onClick={() => goToPage(page + 1)}>Next</button>
       </div>
     </>
   );
 }
 
+// SSR
 export async function getServerSideProps(context) {
   const page = parseInt(context.query.page || "1");
-  const games = await getGames(page);
+  const category = context.query.category || "All";
+
+  const apiCategory = category === "All" ? null : category;
+
+  const games = await getGames(page, apiCategory);
+
   return {
-    props: { games, page },
+    props: {
+      games,
+      page,
+      category,
+    },
   };
 }
