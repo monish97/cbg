@@ -49,8 +49,9 @@ body {
 
 /* CATEGORY BUTTONS */
 .category-btn {
-  position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
   margin-bottom: 10px;
   padding: 10px 12px;
@@ -60,33 +61,12 @@ body {
   cursor: pointer;
   border-radius: 8px;
   text-align: left;
-  transition: background 0.2s;
-  overflow: hidden;
-}
-
-.category-btn::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%) scaleY(0);
-  width: 4px;
-  height: 70%;
-  background: #3b82f6;
-  border-radius: 4px;
-  transition: transform 0.25s ease;
-}
-
-.category-btn:hover::before {
-  transform: translateY(-50%) scaleY(1);
-}
-
-.category-btn.active::before {
-  transform: translateY(-50%) scaleY(1);
+  transition: background 0.2s, transform 0.2s;
 }
 
 .category-btn:hover {
   background: #334155;
+  transform: translateX(2px);
 }
 
 .category-btn.active {
@@ -144,46 +124,19 @@ body {
   transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
+  text-decoration: none;
 }
 
 .game-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.5);
-}
-
-.game-card img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
 .game-card h3 {
   padding: 10px;
   font-size: 16px;
   color: #38bdf8;
-}
-
-.game-card p {
-  padding: 0 10px 10px;
-  font-size: 13px;
-  color: #cbd5e1;
-  flex: 1;
-}
-
-.game-card a {
-  text-decoration: none;
-  color: #ffffff;
-  background: #3b82f6;
-  margin: 10px;
-  padding: 8px;
-  border-radius: 6px;
   text-align: center;
-  display: block;
-  transition: background 0.2s;
-}
-
-.game-card a:hover {
-  background: #2563eb;
 }
 
 /* PAGINATION */
@@ -202,11 +155,12 @@ body {
   color: white;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.2s;
 }
 
-.pagination button:hover {
+.pagination button:hover:not(:disabled) {
   background: #334155;
+  transform: translateY(-1px);
 }
 
 .pagination button.active {
@@ -251,33 +205,17 @@ body {
   .game-card h3 {
     font-size: 14px;
   }
-
-  .game-card p {
-    font-size: 12px;
-  }
-
-  .game-card a {
-    font-size: 13px;
-    padding: 6px;
-  }
 }
 
 /* IFRAME / GAME VIEW */
-.game-container {
-  width: 100%;
-  max-width: 1000px;
-  margin-bottom: 25px;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #1e293b;
-  background: #000;
-}
-
 .iframe-wrapper {
   position: relative;
   width: 100%;
   height: 0;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+  background: #000;
 }
 
 .iframe-wrapper iframe {
