@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import GameCard from "../components/GameCard";
 import { getGames } from "../lib/api";
 
-export default function Home({ games, page, category }) {
+export default function Home({ games, page, category, hasMore }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -16,23 +16,28 @@ export default function Home({ games, page, category }) {
   };
 
   const getPageNumbers = () => {
-    const totalVisible = 5;
-    const pages = [];
+  const totalVisible = 5;
+  const pages = [];
 
-    let start = Math.max(1, page - 2);
-    let end = start + totalVisible - 1;
+  let start = Math.max(1, page - 2);
+  let end = start + totalVisible - 1;
 
-    if (page <= 3) {
-      start = 1;
-      end = totalVisible;
-    }
+  if (page <= 3) {
+    start = 1;
+    end = totalVisible;
+  }
 
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
+  // ✅ Prevent going beyond last page
+  if (!hasMore) {
+    end = page;
+  }
 
-    return pages;
-  };
+  for (let i = start; i <= end; i++) {
+    pages.push(i);
+  }
+
+  return pages;
+};
 
   return (
     <>
@@ -68,7 +73,9 @@ export default function Home({ games, page, category }) {
           </button>
         ))}
 
-        <button onClick={() => goToPage(page + 1)}>Next</button>
+        <button onClick={() => goToPage(page + 1)} disabled={!hasMore}>
+          Next
+        </button>
       </div>
     </>
   );
@@ -81,11 +88,15 @@ export async function getServerSideProps(context) {
 
   const games = await getGames(page, category);
 
+  const PAGE_SIZE = 50;
+  const hasMore = games.length === PAGE_SIZE;
+
   return {
     props: {
       games: games || [],
       page,
       category,
+      hasMore,
     },
   };
 }
