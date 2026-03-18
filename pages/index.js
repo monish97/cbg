@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import GameCard from "../components/GameCard";
-import { getGames } from "../lib/api";
+import { getAllGames, getGamesByPage } from "../lib/api";
 
-export default function Home({ games, page, category }) {
+export default function Home({ games, page, totalPages }) {
   const router = useRouter();
-
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredGames = games.filter((game) =>
@@ -13,35 +12,12 @@ export default function Home({ games, page, category }) {
   );
 
   const goToPage = (newPage) => {
-    router.push(`/?page=${newPage}&category=${category}`);
-  };
-
-  const getPageNumbers = () => {
-    const totalVisible = 5;
-    const pages = [];
-
-    let start = Math.max(1, page - 2);
-    let end = start + totalVisible - 1;
-
-    if (page <= 3) {
-      start = 1;
-      end = totalVisible;
-    }
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-
-    return pages;
+    router.push(`/?page=${newPage}`);
   };
 
   return (
     <>
-      <h1>
-        {category === "All"
-          ? "All Games"
-          : `${category.charAt(0).toUpperCase() + category.slice(1)} Games`}
-      </h1>
+      <h1>All Games</h1>
 
       {/* Search */}
       <div className="search-bar">
@@ -65,37 +41,38 @@ export default function Home({ games, page, category }) {
         <button onClick={() => goToPage(page - 1)} disabled={page <= 1}>
           Prev
         </button>
-
-        {getPageNumbers().map((p) => (
+        {Array.from({ length: totalPages }, (_, i) => (
           <button
-            key={p}
-            className={p === page ? "active" : ""}
-            onClick={() => goToPage(p)}
+            key={i + 1}
+            className={page === i + 1 ? "active" : ""}
+            onClick={() => goToPage(i + 1)}
           >
-            {p}
+            {i + 1}
           </button>
         ))}
-
-        <button onClick={() => goToPage(page + 1)}>Next</button>
+        <button onClick={() => goToPage(page + 1)} disabled={page >= totalPages}>
+          Next
+        </button>
       </div>
     </>
   );
 }
 
-// SSR
 export async function getServerSideProps(context) {
   const page = parseInt(context.query.page || "1");
-  const category = context.query.category || "All";
+  const perPage = 50;
 
-  const apiCategory = category === "All" ? null : category;
+  // Fetch all games (from cache if available)
+  await getAllGames();
+  const games = getGamesByPage(page, perPage);
 
-  const games = await getGames(page, apiCategory);
+  const totalPages = Math.ceil(cachedGames.length / perPage);
 
   return {
     props: {
       games,
       page,
-      category,
+      totalPages,
     },
   };
 }
