@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import GameCard from "../components/GameCard";
 import { getGames } from "../lib/api";
 
-export default function Home({ games, page, category }) {
+export default function Home({ games, currentPage, category }) {
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,17 +13,18 @@ export default function Home({ games, page, category }) {
   );
 
   const goToPage = (newPage) => {
-    router.push(`/?page=${newPage}&category=${category}`);
+    if (newPage < 1) return;
+    router.push(`/?page=${newPage}`);
   };
 
   const getPageNumbers = () => {
     const totalVisible = 5;
     const pages = [];
 
-    let start = Math.max(1, page - 2);
+    let start = Math.max(1, currentPage - 2);
     let end = start + totalVisible - 1;
 
-    if (page <= 3) {
+    if (currentPage <= 3) {
       start = 1;
       end = totalVisible;
     }
@@ -37,13 +38,9 @@ export default function Home({ games, page, category }) {
 
   return (
     <>
-      <h1>
-        {category === "All"
-          ? "All Games"
-          : `${category.charAt(0).toUpperCase() + category.slice(1)} Games`}
-      </h1>
+      <h1>All Games</h1>
 
-      {/* Search */}
+      {/* 🔍 Search */}
       <div className="search-bar">
         <input
           type="text"
@@ -53,36 +50,41 @@ export default function Home({ games, page, category }) {
         />
       </div>
 
-      {/* Grid */}
+      {/* 🎮 Grid */}
       <div className="grid">
         {filteredGames.map((game) => (
-          <GameCard key={game.id} game={game} />
+          <GameCard key={game.slug} game={game} />
         ))}
       </div>
 
-      {/* Pagination */}
+      {/* 📄 Pagination */}
       <div className="pagination">
-        <button onClick={() => goToPage(page - 1)} disabled={page <= 1}>
+        <button
+          onClick={() => goToPage(currentPage - 1)}
+          disabled={currentPage <= 1}
+        >
           Prev
         </button>
 
         {getPageNumbers().map((p) => (
           <button
             key={p}
-            className={p === page ? "active" : ""}
+            className={p === currentPage ? "active" : ""}
             onClick={() => goToPage(p)}
           >
             {p}
           </button>
         ))}
 
-        <button onClick={() => goToPage(page + 1)}>Next</button>
+        <button onClick={() => goToPage(currentPage + 1)}>
+          Next
+        </button>
       </div>
     </>
   );
 }
 
-// SSR
+// ✅ SSR
 export async function getServerSideProps(context) {
   const page = context.query.page ? parseInt(context.query.page) : 1;
 
