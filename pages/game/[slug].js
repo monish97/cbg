@@ -39,14 +39,23 @@ export default function GamePage({ game, relatedGames }) {
 }
 
 export async function getServerSideProps(context) {
-  await getAllGames();
-  const game = cachedGames.find((g) => g.slug === context.params.slug);
+  const allGames = await getAllGames();
 
-  if (!game) return { notFound: true };
+  const game = allGames.find((g) => g.slug === context.params.slug);
 
-  const relatedGames = getRelatedGames(game, 6);
+  if (!game) {
+    return { notFound: true };
+  }
+
+  // Related games (same category)
+  const relatedGames = allGames
+    .filter((g) => g.category === game.category && g.slug !== game.slug)
+    .slice(0, 6);
 
   return {
-    props: { game, relatedGames },
+    props: {
+      game,
+      relatedGames,
+    },
   };
 }
