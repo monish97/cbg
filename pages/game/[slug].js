@@ -14,7 +14,7 @@ export default function GamePage({ game, relatedGames }) {
           name="description"
           content={
             game.description ||
-            `Play ${game.title} online for free. No download required. Enjoy this game instantly in your browser.`
+            `Play ${game.title} online for free. No download required. Enjoy instantly in your browser.`
           }
         />
       </Head>
@@ -37,17 +37,15 @@ export default function GamePage({ game, relatedGames }) {
         <div className="content-box">
           <p>
             {game.description ||
-              `${game.title} is a fun and engaging game that you can play directly in your browser without any downloads.`}
+              `${game.title} is a fun and engaging browser game you can play instantly without downloads.`}
           </p>
 
           <p>
-            This game is designed for quick and enjoyable gameplay, making it
-            perfect for short breaks or casual entertainment sessions.
+            Perfect for quick entertainment, this game offers smooth gameplay and exciting challenges.
           </p>
 
           <p>
-            Try more games like this and explore different categories to find
-            your next favorite game.
+            Explore more games on our platform and discover your next favorite!
           </p>
         </div>
 
@@ -58,7 +56,7 @@ export default function GamePage({ game, relatedGames }) {
 
             <div className="grid">
               {relatedGames.map((g) => (
-                <GameCard key={g.id} game={g} />
+                <GameCard key={g.slug} game={g} />
               ))}
             </div>
           </>
@@ -117,17 +115,26 @@ export default function GamePage({ game, relatedGames }) {
   );
 }
 
+// ✅ FIXED SSR (MULTI-PAGE FETCH)
 export async function getServerSideProps(context) {
-  const games = await getGames();
+  let allGames = [];
 
-  const game = games.find((g) => g.slug === context.params.slug);
+  // 🔥 Fetch multiple pages to avoid 404
+  for (let i = 1; i <= 5; i++) {
+    const games = await getGames(i);
+    allGames = [...allGames, ...games];
+  }
+
+  const game = allGames.find(
+    (g) => g.slug === context.params.slug
+  );
 
   if (!game) {
     return { notFound: true };
   }
 
-  // 🔥 Related games (same category if available)
-  const relatedGames = games
+  // 🔥 Related games
+  const relatedGames = allGames
     .filter(
       (g) =>
         g.category === game.category &&
