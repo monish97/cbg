@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import GameCard from "../components/GameCard";
 import { getGames } from "../lib/api";
+import { getAllGames } from "../lib/api";
 
 export default function Home({ games, currentPage, category }) {
   const router = useRouter();
@@ -88,11 +89,18 @@ export default function Home({ games, currentPage, category }) {
 export async function getServerSideProps(context) {
   const page = context.query.page ? parseInt(context.query.page) : 1;
 
-  const games = await getGames(page);
+  const allGames = await getAllGames();
+
+  const gamesPerPage = 20;
+
+  const start = (page - 1) * gamesPerPage;
+  const end = start + gamesPerPage;
+
+  const paginatedGames = allGames.slice(start, end);
 
   return {
     props: {
-      games,
+      games: paginatedGames,
       currentPage: page,
     },
   };
