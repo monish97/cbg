@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import GameCard from "../components/GameCard";
-import fs from "fs";
-import path from "path";
+import { getGames, getAllCategories } from "../lib/api";
 
-export default function Home({ games, page, category, hasMore }) {
+export default function Home({ games, page, category, categories }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -17,33 +16,41 @@ export default function Home({ games, page, category, hasMore }) {
   };
 
   const getPageNumbers = () => {
-  const totalVisible = 5;
-  const pages = [];
+    const totalVisible = 5;
+    const pages = [];
+    let start = Math.max(1, page - 2);
+    let end = start + totalVisible - 1;
 
-  let start = Math.max(1, page - 2);
-  let end = start + totalVisible - 1;
+    if (page <= 3) start = 1;
 
-  if (page <= 3) {
-    start = 1;
-    end = totalVisible;
-  }
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
 
-  // ✅ Prevent going beyond last page
-  if (!hasMore) {
-    end = page;
-  }
-
-  for (let i = start; i <= end; i++) {
-    pages.push(i);
-  }
-
-  return pages;
-};
+  const handleCategoryClick = (cat) => {
+    router.push(`/?page=1&category=${encodeURIComponent(cat)}`);
+  };
 
   return (
     <>
       <h1>{category === "All" ? "All Games" : `${category} Games`}</h1>
 
+      {/* Category Buttons */}
+      <div className="categories">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => handleCategoryClick(cat)}
+            className={cat === category ? "active" : ""}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Search Bar */}
       <div className="search-bar">
         <input
           type="text"
@@ -53,17 +60,18 @@ export default function Home({ games, page, category, hasMore }) {
         />
       </div>
 
+      {/* Games Grid */}
       <div className="grid">
         {filteredGames.map((game) => (
           <GameCard key={game.id} game={game} />
         ))}
       </div>
 
+      {/* Pagination */}
       <div className="pagination">
         <button onClick={() => goToPage(page - 1)} disabled={page <= 1}>
           Prev
         </button>
-
         {getPageNumbers().map((p) => (
           <button
             key={p}
@@ -73,8 +81,10 @@ export default function Home({ games, page, category, hasMore }) {
             {p}
           </button>
         ))}
-
-        <button onClick={() => goToPage(page + 1)} disabled={!hasMore}>
+        <button
+          onClick={() => goToPage(page + 1)}
+          disabled={filteredGames.length < 50}
+        >
           Next
         </button>
       </div>
@@ -87,28 +97,17 @@ export async function getServerSideProps(context) {
   const page = parseInt(context.query.page || "1");
   const category = context.query.category || "All";
 
-  const filePath = path.join(process.cwd(), "data", "games.json");
-  const allGames = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-
-  const filtered =
-    category === "All"
-      ? allGames
-      : allGames.filter((game) =>
-          game.category.includes(category)
-        );
-
-  const PAGE_SIZE = 50;
-  const start = (page - 1) * PAGE_SIZE;
-  const games = filtered.slice(start, start + PAGE_SIZE);
-
-  const hasMore = start + PAGE_SIZE < filtered.length;
+  const [games, categories] = await Promise.all([
+    getGames(page, category),
+    getAllCategories(),
+  ]);
 
   return {
     props: {
       games,
       page,
       category,
-      hasMore,
+      categories,
     },
   };
 }
