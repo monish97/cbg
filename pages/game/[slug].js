@@ -21,13 +21,21 @@ export default function GamePage({ game, relatedGames }) {
       <div className="page">
         <h1>{game.title}</h1>
 
+        {/* 🎮 Game Player */}
         <div className="game-container">
-          <iframe
-            src={game.iframe}
-            title={game.title}
-            frameBorder="0"
-            allowFullScreen
-          />
+          <div
+            className="iframe-wrapper"
+            style={{
+              paddingTop: `${(game.height / game.width) * 100}%`, // maintain aspect ratio
+            }}
+          >
+            <iframe
+              src={game.iframe}
+              title={game.title}
+              frameBorder="0"
+              allowFullScreen
+            />
+          </div>
         </div>
 
         <div className="content-box">
