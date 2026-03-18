@@ -64,21 +64,6 @@ export default function Home({ games, page, category }) {
 
   return (
     <>
-      <h1>{category === "All" ? "All Games" : `${category} Games`}</h1>
-
-      {/* ✅ Categories */}
-      <div className="categories">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            className={cat === category ? "active" : ""}
-            onClick={() => changeCategory(cat)}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
       {/* 🔍 Search */}
       <div className="search-bar">
         <input
