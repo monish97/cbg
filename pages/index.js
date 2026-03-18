@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import GameCard from "../components/GameCard";
-import { getGames } from "../lib/api";
+import fs from "fs";
+import path from "path";
 
 export default function Home({ games, page, category, hasMore }) {
   const router = useRouter();
@@ -86,14 +87,25 @@ export async function getServerSideProps(context) {
   const page = parseInt(context.query.page || "1");
   const category = context.query.category || "All";
 
-  const games = await getGames(page, category);
+  const filePath = path.join(process.cwd(), "data", "games.json");
+  const allGames = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+
+  const filtered =
+    category === "All"
+      ? allGames
+      : allGames.filter((game) =>
+          game.category.includes(category)
+        );
 
   const PAGE_SIZE = 50;
-  const hasMore = games.length === PAGE_SIZE;
+  const start = (page - 1) * PAGE_SIZE;
+  const games = filtered.slice(start, start + PAGE_SIZE);
+
+  const hasMore = start + PAGE_SIZE < filtered.length;
 
   return {
     props: {
-      games: games || [],
+      games,
       page,
       category,
       hasMore,
