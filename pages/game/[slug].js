@@ -1,7 +1,6 @@
 import Head from "next/head";
 import GameCard from "../../components/GameCard";
 import { getGames } from "../../lib/api";
-import { getAllGames } from "../../lib/api";
 
 export default function GamePage({ game, relatedGames }) {
   if (!game) return <div>Game not found</div>;
@@ -15,7 +14,7 @@ export default function GamePage({ game, relatedGames }) {
           name="description"
           content={
             game.description ||
-            `Play ${game.title} online for free. No download required. Enjoy instantly in your browser.`
+            `Play ${game.title} online for free. No download required. Enjoy this game instantly in your browser.`
           }
         />
       </Head>
@@ -38,15 +37,17 @@ export default function GamePage({ game, relatedGames }) {
         <div className="content-box">
           <p>
             {game.description ||
-              `${game.title} is a fun and engaging browser game you can play instantly without downloads.`}
+              `${game.title} is a fun and engaging game that you can play directly in your browser without any downloads.`}
           </p>
 
           <p>
-            Perfect for quick entertainment, this game offers smooth gameplay and exciting challenges.
+            This game is designed for quick and enjoyable gameplay, making it
+            perfect for short breaks or casual entertainment sessions.
           </p>
 
           <p>
-            Explore more games on our platform and discover your next favorite!
+            Try more games like this and explore different categories to find
+            your next favorite game.
           </p>
         </div>
 
@@ -57,7 +58,7 @@ export default function GamePage({ game, relatedGames }) {
 
             <div className="grid">
               {relatedGames.map((g) => (
-                <GameCard key={g.slug} game={g} />
+                <GameCard key={g.id} game={g} />
               ))}
             </div>
           </>
@@ -116,19 +117,17 @@ export default function GamePage({ game, relatedGames }) {
   );
 }
 
-// ✅ FIXED SSR (MULTI-PAGE FETCH)
 export async function getServerSideProps(context) {
-  const allGames = await getAllGames();
+  const games = await getGames();
 
-  const game = allGames.find(
-    (g) => g.slug === context.params.slug
-  );
+  const game = games.find((g) => g.slug === context.params.slug);
 
   if (!game) {
     return { notFound: true };
   }
 
-  const relatedGames = allGames
+  // 🔥 Related games (same category if available)
+  const relatedGames = games
     .filter(
       (g) =>
         g.category === game.category &&
