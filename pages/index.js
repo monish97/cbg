@@ -3,30 +3,6 @@ import { useRouter } from "next/router";
 import GameCard from "../components/GameCard";
 import { getGames } from "../lib/api";
 
-const categories = [
-  "All",
-  "IO",
-  "2 Player",
-  "3D",
-  "Action",
-  "Adventure",
-  "Arcade",
-  "Baby",
-  "Bejeweled",
-  "Boys",
-  "Clicker",
-  "Cooking",
-  "Girls",
-  "Hypercasual",
-  "Multiplayer",
-  "Puzzle",
-  "Racing",
-  "Shooting",
-  "Soccer",
-  "Sports",
-  "Stickman",
-];
-
 export default function Home({ games, page, category }) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,11 +12,7 @@ export default function Home({ games, page, category }) {
   );
 
   const goToPage = (newPage) => {
-    router.push(`/?page=${newPage}&category=${category}`);
-  };
-
-  const changeCategory = (cat) => {
-    router.push(`/?page=1&category=${cat}`);
+    router.push(`/?page=${newPage}&category=${encodeURIComponent(category)}`);
   };
 
   const getPageNumbers = () => {
@@ -64,7 +36,8 @@ export default function Home({ games, page, category }) {
 
   return (
     <>
-      {/* 🔍 Search */}
+      <h1>{category === "All" ? "All Games" : `${category} Games`}</h1>
+
       <div className="search-bar">
         <input
           type="text"
@@ -74,14 +47,12 @@ export default function Home({ games, page, category }) {
         />
       </div>
 
-      {/* 🎮 Games Grid */}
       <div className="grid">
         {filteredGames.map((game) => (
           <GameCard key={game.id} game={game} />
         ))}
       </div>
 
-      {/* 📄 Pagination */}
       <div className="pagination">
         <button onClick={() => goToPage(page - 1)} disabled={page <= 1}>
           Prev
@@ -99,87 +70,11 @@ export default function Home({ games, page, category }) {
 
         <button onClick={() => goToPage(page + 1)}>Next</button>
       </div>
-
-      {/* 🎨 Styles */}
-      <style jsx>{`
-        h1 {
-          color: #fff;
-          font-size: 32px;
-          margin-bottom: 20px;
-        }
-
-        .categories {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-bottom: 20px;
-        }
-
-        .categories button {
-          padding: 6px 12px;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          background: #1e293b;
-          color: #cbd5f5;
-        }
-
-        .categories button.active {
-          background: #3b82f6;
-          color: #fff;
-        }
-
-        .search-bar {
-          margin-bottom: 20px;
-        }
-
-        .search-bar input {
-          width: 100%;
-          padding: 10px;
-          border-radius: 6px;
-          border: 1px solid #1e293b;
-          background: #0f172a;
-          color: #fff;
-        }
-
-        .grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-          gap: 15px;
-          margin-bottom: 20px;
-        }
-
-        .pagination {
-          display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
-          margin-bottom: 40px;
-        }
-
-        .pagination button {
-          padding: 6px 12px;
-          border-radius: 6px;
-          border: none;
-          cursor: pointer;
-          background: #1e293b;
-          color: #cbd5f5;
-        }
-
-        .pagination button.active {
-          background: #3b82f6;
-          color: #fff;
-        }
-
-        .pagination button:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-      `}</style>
     </>
   );
 }
 
-// ✅ SSR
+// SSR
 export async function getServerSideProps(context) {
   const page = parseInt(context.query.page || "1");
   const category = context.query.category || "All";
