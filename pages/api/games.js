@@ -15,9 +15,7 @@ async function fetchAllGames() {
 
       const gamesArray = Array.isArray(data)
         ? data
-        : data?.games || [];
-
-      if (gamesArray.length === 0) break;
+        : data?.games || [];      
 
       allGames = allGames.concat(gamesArray);
     } catch (err) {
