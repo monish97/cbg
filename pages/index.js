@@ -203,7 +203,7 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      games,
+      games: games || [],
       page,
       category,
     },
