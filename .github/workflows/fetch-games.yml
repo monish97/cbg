@@ -1,0 +1,33 @@
+name: Fetch Games Data
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # runs daily at midnight UTC
+  workflow_dispatch:     # allows manual trigger
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run fetch script
+        run: node scripts/fetchGames.js
+
+      - name: Commit & push if changed
+        run: |
+          git config --global user.name "bot"
+          git config --global user.email "bot@example.com"
+          git add data/games.json
+          git commit -m "Update games data" || echo "No changes"
+          git push
