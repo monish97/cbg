@@ -26,6 +26,8 @@ async function fetchAllGames() {
   }
 }
 
+  console.log("Total games fetched:", allGames.length);
+  
   return allGames.map((game) => ({
     id: game.id,
     title: game.title,
