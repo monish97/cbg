@@ -1,113 +1,94 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import gamesData from "../data/games.json"; 
+import GameCard from "../components/GameCard"; // optional if using separate component
 import { useRouter } from "next/router";
-import GameCard from "../components/GameCard";
-import { getGames, getAllCategories } from "../lib/api";
 
-export default function Home({ games, page, category, categories }) {
+const GAMES_PER_PAGE = 20;
+
+export default function Home() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
+  const { page = 1, category = "All", search = "" } = router.query;
 
-  const filteredGames = games.filter((game) =>
-    game.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const [games, setGames] = useState([]);
+  const [filteredGames, setFilteredGames] = useState([]);
+  const [currentPage, setCurrentPage] = useState(parseInt(page));
+  const [searchQuery, setSearchQuery] = useState(search);
+
+  useEffect(() => {
+    setGames(gamesData);
+  }, []);
+
+  useEffect(() => {
+    let filtered = games;
+
+    if (category !== "All") {
+      filtered = filtered.filter((g) => g.category === category);
+    }
+
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (g) =>
+          g.title.toLowerCase().includes(query) ||
+          g.tags?.some((t) => t.toLowerCase().includes(query))
+      );
+    }
+
+    setFilteredGames(filtered);
+    setCurrentPage(1);
+  }, [games, category, searchQuery]);
+
+  const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
+  const paginatedGames = filteredGames.slice(
+    (currentPage - 1) * GAMES_PER_PAGE,
+    currentPage * GAMES_PER_PAGE
   );
 
-  const goToPage = (newPage) => {
-    router.push(`/?page=${newPage}&category=${encodeURIComponent(category)}`);
-  };
+  const handleSearch = (e) => setSearchQuery(e.target.value);
 
-  const getPageNumbers = () => {
-    const totalVisible = 5;
-    const pages = [];
-    let start = Math.max(1, page - 2);
-    let end = start + totalVisible - 1;
-
-    if (page <= 3) start = 1;
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-    return pages;
-  };
-
-  const handleCategoryClick = (cat) => {
-    router.push(`/?page=1&category=${encodeURIComponent(cat)}`);
+  const goToPage = (p) => {
+    setCurrentPage(p);
+    router.push(
+      `/?page=${p}&category=${encodeURIComponent(category)}&search=${encodeURIComponent(searchQuery)}`,
+      undefined,
+      { shallow: true }
+    );
   };
 
   return (
-    <>
-      <h1>{category === "All" ? "All Games" : `${category} Games`}</h1>
-
-      {/* Category Buttons */}
-      <div className="categories">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => handleCategoryClick(cat)}
-            className={cat === category ? "active" : ""}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {/* Search Bar */}
+    <div>
       <div className="search-bar">
         <input
           type="text"
           placeholder="Search games..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={handleSearch}
         />
       </div>
 
-      {/* Games Grid */}
       <div className="grid">
-        {filteredGames.map((game) => (
+        {paginatedGames.map((game) => (
           <GameCard key={game.id} game={game} />
         ))}
       </div>
 
-      {/* Pagination */}
       <div className="pagination">
-        <button onClick={() => goToPage(page - 1)} disabled={page <= 1}>
+        <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
           Prev
         </button>
-        {getPageNumbers().map((p) => (
+        {Array.from({ length: totalPages }, (_, i) => (
           <button
-            key={p}
-            className={p === page ? "active" : ""}
-            onClick={() => goToPage(p)}
+            key={i + 1}
+            onClick={() => goToPage(i + 1)}
+            className={currentPage === i + 1 ? "active" : ""}
           >
-            {p}
+            {i + 1}
           </button>
         ))}
-        <button
-          onClick={() => goToPage(page + 1)}
-          disabled={filteredGames.length < 50}
-        >
+        <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>
           Next
         </button>
       </div>
-    </>
+    </div>
   );
-}
-
-// SSR
-export async function getServerSideProps(context) {
-  const page = parseInt(context.query.page || "1");
-  const category = context.query.category || "All";
-
-  const [games, categories] = await Promise.all([
-    getGames(page, category),
-    getAllCategories(),
-  ]);
-
-  return {
-    props: {
-      games,
-      page,
-      category,
-      categories,
-    },
-  };
 }
