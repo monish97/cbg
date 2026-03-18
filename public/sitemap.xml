@@ -1,4 +1,3 @@
-// pages/sitemap.xml.js
 import { getGames } from "../lib/api";
 
 const SITE_URL = "https://casualbrowsergames.com";
