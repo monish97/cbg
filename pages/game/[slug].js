@@ -1,6 +1,7 @@
 import Head from "next/head";
 import GameCard from "../../components/GameCard";
 import { getGames } from "../../lib/api";
+import { getAllGames } from "../../lib/api";
 
 export default function GamePage({ game, relatedGames }) {
   if (!game) return <div>Game not found</div>;
@@ -117,13 +118,7 @@ export default function GamePage({ game, relatedGames }) {
 
 // ✅ FIXED SSR (MULTI-PAGE FETCH)
 export async function getServerSideProps(context) {
-  let allGames = [];
-
-  // 🔥 Fetch multiple pages to avoid 404
-  for (let i = 1; i <= 5; i++) {
-    const games = await getGames(i);
-    allGames = [...allGames, ...games];
-  }
+  const allGames = await getAllGames();
 
   const game = allGames.find(
     (g) => g.slug === context.params.slug
@@ -133,7 +128,6 @@ export async function getServerSideProps(context) {
     return { notFound: true };
   }
 
-  // 🔥 Related games
   const relatedGames = allGames
     .filter(
       (g) =>
