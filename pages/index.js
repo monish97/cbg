@@ -84,18 +84,14 @@ export default function Home({ games, page, category }) {
 
 // SSR
 export async function getServerSideProps(context) {
-  const page = parseInt(context.query.page || "1");
-  const category = context.query.category || "All";
+  const page = context.query.page ? parseInt(context.query.page) : 1;
 
-  const apiCategory = category === "All" ? null : category;
-
-  const games = await getGames(page, apiCategory);
+  const games = await getGames(page);
 
   return {
     props: {
       games,
-      page,
-      category,
+      currentPage: page,
     },
   };
 }
