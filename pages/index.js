@@ -60,19 +60,18 @@ export default function Home({ games, page, totalPages }) {
 
 export async function getServerSideProps(context) {
   const page = parseInt(context.query.page || "1");
-  const perPage = 50;
+  const category = context.query.category || "All";
 
-  // Fetch all games (from cache if available)
-  await getAllGames();
-  const games = getGamesByPage(page, perPage);
+  const apiCategory = category === "All" ? null : category;
 
-  const totalPages = Math.ceil(cachedGames.length / perPage);
+  // Fetch games
+  const games = await getGames(page);
 
   return {
     props: {
       games,
       page,
-      totalPages,
+      category,
     },
   };
 }
