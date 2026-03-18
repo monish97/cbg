@@ -2,9 +2,8 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import GameCard from "../components/GameCard";
 import { getGames } from "../lib/api";
-import { getAllGames } from "../lib/api";
 
-export default function Home({ games, currentPage, category }) {
+export default function Home({ games, page, category }) {
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,18 +13,17 @@ export default function Home({ games, currentPage, category }) {
   );
 
   const goToPage = (newPage) => {
-    if (newPage < 1) return;
-    router.push(`/?page=${newPage}`);
+    router.push(`/?page=${newPage}&category=${category}`);
   };
 
   const getPageNumbers = () => {
     const totalVisible = 5;
     const pages = [];
 
-    let start = Math.max(1, currentPage - 2);
+    let start = Math.max(1, page - 2);
     let end = start + totalVisible - 1;
 
-    if (currentPage <= 3) {
+    if (page <= 3) {
       start = 1;
       end = totalVisible;
     }
@@ -39,9 +37,13 @@ export default function Home({ games, currentPage, category }) {
 
   return (
     <>
-      <h1>All Games</h1>
+      <h1>
+        {category === "All"
+          ? "All Games"
+          : `${category.charAt(0).toUpperCase() + category.slice(1)} Games`}
+      </h1>
 
-      {/* 🔍 Search */}
+      {/* Search */}
       <div className="search-bar">
         <input
           type="text"
@@ -51,57 +53,49 @@ export default function Home({ games, currentPage, category }) {
         />
       </div>
 
-      {/* 🎮 Grid */}
+      {/* Grid */}
       <div className="grid">
         {filteredGames.map((game) => (
-          <GameCard key={game.slug} game={game} />
+          <GameCard key={game.id} game={game} />
         ))}
       </div>
 
-      {/* 📄 Pagination */}
+      {/* Pagination */}
       <div className="pagination">
-        <button
-          onClick={() => goToPage(currentPage - 1)}
-          disabled={currentPage <= 1}
-        >
+        <button onClick={() => goToPage(page - 1)} disabled={page <= 1}>
           Prev
         </button>
 
         {getPageNumbers().map((p) => (
           <button
             key={p}
-            className={p === currentPage ? "active" : ""}
+            className={p === page ? "active" : ""}
             onClick={() => goToPage(p)}
           >
             {p}
           </button>
         ))}
 
-        <button onClick={() => goToPage(currentPage + 1)}>
-          Next
-        </button>
+        <button onClick={() => goToPage(page + 1)}>Next</button>
       </div>
     </>
   );
 }
 
-// ✅ SSR
+// SSR
 export async function getServerSideProps(context) {
-  const page = context.query.page ? parseInt(context.query.page) : 1;
+  const page = parseInt(context.query.page || "1");
+  const category = context.query.category || "All";
 
-  const allGames = await getAllGames();
+  const apiCategory = category === "All" ? null : category;
 
-  const gamesPerPage = 20;
-
-  const start = (page - 1) * gamesPerPage;
-  const end = start + gamesPerPage;
-
-  const paginatedGames = allGames.slice(start, end);
+  const games = await getGames(page, apiCategory);
 
   return {
     props: {
-      games: paginatedGames,
-      currentPage: page,
+      games,
+      page,
+      category,
     },
   };
 }
