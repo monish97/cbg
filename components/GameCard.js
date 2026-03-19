@@ -10,7 +10,7 @@ export default function GameCard({ game }) {
             src={game.thumb}
             alt={game.title}
             width={220}
-            height={150}
+            height={140}
             style={{ borderRadius: "8px 8px 0 0" }}
           />
           <h3>{game.title}</h3>
