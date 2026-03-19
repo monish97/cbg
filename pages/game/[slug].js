@@ -60,12 +60,13 @@ export default function GamePage({ game, relatedGames }) {
 
 // SSR
 export async function getServerSideProps(context) {
-  const game = gamesData.find((g) => g.slug === context.params.slug);
+  const gameId = parseInt(context.params.id, 10); // get id from URL
+  const game = gamesData.find((g) => g.id === gameId);
 
   if (!game) return { notFound: true };
 
   const relatedGames = gamesData
-    .filter((g) => g.category === game.category && g.slug !== game.slug)
+    .filter((g) => g.category === game.category && g.id !== gameId)
     .slice(0, 6);
 
   return { props: { game, relatedGames } };
