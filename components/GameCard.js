@@ -2,18 +2,18 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function GameCard({ game }) {
-  // If game object is missing essential data, skip rendering
-  if (!game || !game.id) return null;
-
-  // Use thumbnail if available, else fallback placeholder
-  const thumbSrc = game.thumb || "/placeholder.png";
+  if (!game.url) return null; // safety check
 
   return (
     <div className="game-card">
-      <Link href={`/play?id=${game.id}`}>
+      <Link
+        href={`/play?url=${encodeURIComponent(game.url)}&title=${encodeURIComponent(
+          game.title
+        )}`}
+      >
         <a>
           <Image
-            src={thumbSrc}
+            src={game.thumb || "/placeholder.png"}
             alt={game.title}
             width={220}
             height={140}
@@ -22,16 +22,6 @@ export default function GameCard({ game }) {
           <h3>{game.title}</h3>
         </a>
       </Link>
-
-      {/* Debug info: optionally log to console */}
-      {typeof window !== "undefined" &&
-        console.log(
-          "GameCard:",
-          game.id,
-          game.title,
-          game.thumb,
-          game.url
-        )}
     </div>
   );
 }
