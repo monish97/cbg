@@ -10,11 +10,9 @@ export default function GameCard({ game }) {
     url: game.url,
   });
 
-  /*
-export default function GameCard({ game }) {
   return (
     <div className="game-card">
-      <Link href={game.url}>
+      <Link href={`/play?id=${game.id}`}>
         <a>
           <Image
             src={game.thumb}
@@ -28,4 +26,4 @@ export default function GameCard({ game }) {
       </Link>
     </div>
   );
-}*/
+}
