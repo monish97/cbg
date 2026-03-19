@@ -17,7 +17,7 @@ export default function Terms() {
         <div className="content-box">
           <p>
             By accessing and using Casual Browser Games, you agree to comply
-            with these terms and conditions. If you do not agreed with any part of
+            with these terms and conditions. If you do not agree with any part of
             these terms, please discontinue use of the website.
           </p>
 
