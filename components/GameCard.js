@@ -2,15 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function GameCard({ game }) {
-  if (!game.url) return null; // safety check
+  if (!game || !game.slug) return null;
 
   return (
     <div className="game-card">
-      <Link
-        href={`/play?url=${encodeURIComponent(game.url)}&title=${encodeURIComponent(
-          game.title
-        )}`}
-      >
+      <Link href={`/play/${game.slug}`} passHref>
         <a>
           <Image
             src={game.thumb || "/placeholder.png"}
