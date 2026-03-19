@@ -2,14 +2,17 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function GameCard({ game }) {
-  if (!game || !game.slug) return null;
-
   return (
     <div className="game-card">
-      <Link href={`/play/${game.slug}`} passHref>
+      <Link
+        href={{
+          pathname: "/play",
+          query: { url: game.url, title: game.title },
+        }}
+      >
         <a>
           <Image
-            src={game.thumb || "/placeholder.png"}
+            src={game.thumb}
             alt={game.title}
             width={220}
             height={140}
