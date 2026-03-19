@@ -11,7 +11,7 @@ export default function GamePage({ game, relatedGames }) {
         <title>Play {game.title} Online Free | Casual Browser Games</title>
         <meta
           name="description"
-          content={game.description || `Play ${game.title} online for free in your browser.`}
+          content={game.description || `Play ${game.title} online for fre in your browser.`}
         />
       </Head>
 
