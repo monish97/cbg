@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import gamesData from "../data/games.json";
 import GameCard from "../components/GameCard";
 
-const GAMES_PER_PAGE = 10;
+const GAMES_PER_PAGE = 50;
 
 export default function Home() {
   const router = useRouter();
