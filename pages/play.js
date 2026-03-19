@@ -7,13 +7,16 @@ export default function PlayPage() {
   const router = useRouter();
   const { id } = router.query;
 
+  // Wait for router.query to be ready
+  if (!id) return <div>Loading...</div>;
+
   const gameId = Number(id);
-  const game = gamesData.find(g => g.id === gameId);
+  const game = gamesData.find((g) => g.id === gameId);
 
   if (!game) return <div>Game not found</div>;
 
   const relatedGames = gamesData
-    .filter(g => g.category === game.category && g.id !== game.id)
+    .filter((g) => g.category === game.category && g.id !== game.id)
     .slice(0, 6);
 
   return (
