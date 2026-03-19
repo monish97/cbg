@@ -13,7 +13,7 @@ export default function PlayPage() {
   const gameId = Number(id);
   const game = gamesData.find((g) => g.id === gameId);
 
-  if (!game) return <div>Game not found</div>;
+  if (!game) return <div>Game not found + game</div>;
 
   const relatedGames = gamesData
     .filter((g) => g.category === game.category && g.id !== game.id)
