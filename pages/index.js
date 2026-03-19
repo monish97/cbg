@@ -70,25 +70,31 @@ export default function Home() {
 
       {totalPages > 1 && (
         <div className="pagination">
-          <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
-            Prev
-          </button>
+  <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
+    Prev
+  </button>
 
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => goToPage(i + 1)}
-              className={currentPage === i + 1 ? "active" : ""}
-            >
-              {i + 1}
-            </button>
-          ))}
+  {Array.from({ length: totalPages }, (_, i) => i + 1)
+    .filter(p => 
+      p === 1 ||
+      p === totalPages ||
+      (p >= currentPage - 2 && p <= currentPage + 2)
+    )
+    .map((p, idx, arr) => (
+      <span key={p}>
+        {idx > 0 && p - arr[idx - 1] > 1 && <>…</>} {/* ellipsis for skipped pages */}
+        <button
+          onClick={() => goToPage(p)}
+          className={currentPage === p ? "active" : ""}
+        >
+          {p}
+        </button>
+      </span>
+  ))}
 
-          <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>
-            Next
-          </button>
-        </div>
-      )}
-    </div>
+  <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>
+    Next
+  </button>
+</div>
   );
 }
