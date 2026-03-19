@@ -9,7 +9,8 @@ export default function GameCard({ game }) {
     title: game.title,
     url: game.url,
   });
-  
+
+  /*
 export default function GameCard({ game }) {
   return (
     <div className="game-card">
@@ -27,4 +28,4 @@ export default function GameCard({ game }) {
       </Link>
     </div>
   );
-}
+}*/
