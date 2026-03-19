@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function GameCard({ game }) {
   return (
     <div className="game-card">
-      <Link href={`/play?id=${game.id}`}>
+      <Link href={`/play?id=${game.url}`}>
           <a>
             <Image
               src={game.thumb}
