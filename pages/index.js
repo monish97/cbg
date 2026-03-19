@@ -1,37 +1,54 @@
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import gamesData from "../data/games.json";
 import GameCard from "../components/GameCard";
 
-const GAMES_PER_PAGE = 50;
+const GAMES_PER_PAGE = 20;
 
 export default function Home() {
-  const router = useRouter();
-  const { page = 1, category = "All", search = "" } = router.query;
-
+  const [games, setGames] = useState([]);
   const [filteredGames, setFilteredGames] = useState([]);
-  const [currentPage, setCurrentPage] = useState(parseInt(page));
-  const [searchQuery, setSearchQuery] = useState(search);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
+  // Fetch from API
   useEffect(() => {
-    let filtered = gamesData;
-  
-    if (category && category !== "All") {
-      filtered = filtered.filter((g) => g.category === category);
+    async function fetchGames() {
+      try {
+        const res = await fetch("https://api.gamemonetize.com/api/games?limit=2000");
+        const data = await res.json();
+        // Transform API data to expected fields
+        const transformed = data.map((g) => ({
+          id: g.id,
+          title: g.title,
+          slug: g.slug,
+          thumb: g.thumbnail,
+          url: g.url,
+          category: g.category || "Other",
+        }));
+        setGames(transformed);
+        setFilteredGames(transformed);
+      } catch (err) {
+        console.error("Failed to fetch games:", err);
+      }
     }
-  
-    if (searchQuery && searchQuery.trim() !== "") {
+    fetchGames();
+  }, []);
+
+  // Filter by search
+  useEffect(() => {
+    if (!searchQuery) {
+      setFilteredGames(games);
+    } else {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (g) =>
-          g.title.toLowerCase().includes(query) ||
-          g.tags?.some((t) => t.toLowerCase().includes(query))
+      setFilteredGames(
+        games.filter(
+          (g) =>
+            g.title.toLowerCase().includes(query) ||
+            g.category?.toLowerCase().includes(query)
+        )
       );
     }
-  
-    setFilteredGames(filtered);
     setCurrentPage(1);
-  }, [category, searchQuery]);
+  }, [searchQuery, games]);
 
   const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
   const paginatedGames = filteredGames.slice(
@@ -39,25 +56,12 @@ export default function Home() {
     currentPage * GAMES_PER_PAGE
   );
 
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-  
-    router.push(
-      `/?page=1&category=${encodeURIComponent(category)}&search=${encodeURIComponent(value)}`,
-      undefined,
-      { shallow: true }
-    );
-  };
+  const handleSearch = (e) => setSearchQuery(e.target.value);
 
   const goToPage = (p) => {
     if (p < 1 || p > totalPages) return;
     setCurrentPage(p);
-    router.push(
-      `/?page=${p}&category=${encodeURIComponent(category)}&search=${encodeURIComponent(searchQuery)}`,
-      undefined,
-      { shallow: true }
-    );
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -82,25 +86,17 @@ export default function Home() {
           <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
             Prev
           </button>
-        
-          {Array.from({ length: totalPages }, (_, i) => i + 1)
-            .filter(p => 
-              p === 1 ||
-              p === totalPages ||
-              (p >= currentPage - 2 && p <= currentPage + 2)
-            )
-            .map((p, idx, arr) => (
-              <span key={p}>
-                {idx > 0 && p - arr[idx - 1] > 1 && <>…</>} {/* ellipsis for skipped pages */}
-                <button
-                  onClick={() => goToPage(p)}
-                  className={currentPage === p ? "active" : ""}
-                >
-                  {p}
-                </button>
-              </span>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => goToPage(i + 1)}
+              className={currentPage === i + 1 ? "active" : ""}
+            >
+              {i + 1}
+            </button>
           ))}
-        
+
           <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>
             Next
           </button>
