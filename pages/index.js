@@ -1,54 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import GameCard from "../components/GameCard";
+import Layout from "../components/Layout";
+import xml2js from "xml2js";
 
 const GAMES_PER_PAGE = 20;
 
-export default function Home() {
-  const [games, setGames] = useState([]);
-  const [filteredGames, setFilteredGames] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+export default function Home({ games }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Fetch from API
-  useEffect(() => {
-    async function fetchGames() {
-      try {
-        const res = await fetch("https://api.gamemonetize.com/api/games?limit=2000");
-        const data = await res.json();
-        // Transform API data to expected fields
-        const transformed = data.map((g) => ({
-          id: g.id,
-          title: g.title,
-          slug: g.slug,
-          thumb: g.thumbnail,
-          url: g.url,
-          category: g.category || "Other",
-        }));
-        setGames(transformed);
-        setFilteredGames(transformed);
-      } catch (err) {
-        console.error("Failed to fetch games:", err);
-      }
-    }
-    fetchGames();
-  }, []);
-
-  // Filter by search
-  useEffect(() => {
-    if (!searchQuery) {
-      setFilteredGames(games);
-    } else {
-      const query = searchQuery.toLowerCase();
-      setFilteredGames(
-        games.filter(
-          (g) =>
-            g.title.toLowerCase().includes(query) ||
-            g.category?.toLowerCase().includes(query)
-        )
-      );
-    }
-    setCurrentPage(1);
-  }, [searchQuery, games]);
+  const filteredGames = games.filter(
+    (g) =>
+      g.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const totalPages = Math.ceil(filteredGames.length / GAMES_PER_PAGE);
   const paginatedGames = filteredGames.slice(
@@ -56,22 +20,19 @@ export default function Home() {
     currentPage * GAMES_PER_PAGE
   );
 
-  const handleSearch = (e) => setSearchQuery(e.target.value);
-
   const goToPage = (p) => {
     if (p < 1 || p > totalPages) return;
     setCurrentPage(p);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div>
+    <Layout>
       <div className="search-bar">
         <input
           type="text"
           placeholder="Search games..."
           value={searchQuery}
-          onChange={handleSearch}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
@@ -102,6 +63,31 @@ export default function Home() {
           </button>
         </div>
       )}
-    </div>
+    </Layout>
   );
+}
+
+// SERVER SIDE FETCH
+export async function getServerSideProps() {
+  try {
+    const res = await fetch("https://gamemonetize.com/feed.php?format=0&page=1");
+    const xmlText = await res.text();
+
+    // Parse XML to JS object
+    const parser = new xml2js.Parser();
+    const result = await parser.parseStringPromise(xmlText);
+
+    // Extract games
+    const games = result.games.game.map((g) => ({
+      id: g.id[0],
+      title: g.title[0],
+      url: g.url[0],
+      thumb: g.thumbnail[0],
+    }));
+
+    return { props: { games } };
+  } catch (err) {
+    console.error(err);
+    return { props: { games: [] } };
+  }
 }
