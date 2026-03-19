@@ -3,12 +3,10 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
-      'img.gamemonetize.com',        // replace with your actual thumbnail domain(s)      
+      'example.com',        // replace with your actual thumbnail domain(s)
+      'another-domain.com'  // add more if needed
     ],
   },
 };
-
-module.exports = nextConfig;/** @type {import('next').NextConfig} */
-const nextConfig = {};
 
 module.exports = nextConfig;
