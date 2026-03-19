@@ -15,12 +15,12 @@ export default function Home() {
 
   useEffect(() => {
     let filtered = gamesData;
-
-    if (category !== "All") {
+  
+    if (category && category !== "All") {
       filtered = filtered.filter((g) => g.category === category);
     }
-
-    if (searchQuery) {
+  
+    if (searchQuery && searchQuery.trim() !== "") {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (g) =>
@@ -28,7 +28,7 @@ export default function Home() {
           g.tags?.some((t) => t.toLowerCase().includes(query))
       );
     }
-
+  
     setFilteredGames(filtered);
     setCurrentPage(1);
   }, [category, searchQuery]);
@@ -39,7 +39,16 @@ export default function Home() {
     currentPage * GAMES_PER_PAGE
   );
 
-  const handleSearch = (e) => setSearchQuery(e.target.value);
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+  
+    router.push(
+      `/?page=1&category=${encodeURIComponent(category)}&search=${encodeURIComponent(value)}`,
+      undefined,
+      { shallow: true }
+    );
+  };
 
   const goToPage = (p) => {
     if (p < 1 || p > totalPages) return;
@@ -70,31 +79,25 @@ export default function Home() {
 
       {totalPages > 1 && (
         <div className="pagination">
-  <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
-    Prev
-  </button>
+          <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
+            Prev
+          </button>
 
-  {Array.from({ length: totalPages }, (_, i) => i + 1)
-    .filter(p => 
-      p === 1 ||
-      p === totalPages ||
-      (p >= currentPage - 2 && p <= currentPage + 2)
-    )
-    .map((p, idx, arr) => (
-      <span key={p}>
-        {idx > 0 && p - arr[idx - 1] > 1 && <>…</>} {/* ellipsis for skipped pages */}
-        <button
-          onClick={() => goToPage(p)}
-          className={currentPage === p ? "active" : ""}
-        >
-          {p}
-        </button>
-      </span>
-  ))}
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => goToPage(i + 1)}
+              className={currentPage === i + 1 ? "active" : ""}
+            >
+              {i + 1}
+            </button>
+          ))}
 
-  <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>
-    Next
-  </button>
-</div>
+          <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>
+            Next
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
