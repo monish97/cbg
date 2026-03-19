@@ -14,7 +14,7 @@ export default function Layout({ children }) {
   ];
 
   const categoryIcons = {
-    All: "🎮", IO: "🌐", "2 Player": "👥", "3D": "🧊", Action: "⚔️",
+    All: "🎮", IO: "🖱️", "2 Player": "👥", "3D": "🧊", Action: "⚔️",
     Adventure: "🗺️", Arcade: "🕹️", Baby: "🍼", Bejeweled: "💎", Boys: "👦",
     Clicker: "🖱️", Cooking: "🍳", Girls: "👧", Hypercasual: "🎯",
     Multiplayer: "👥", Puzzle: "🧩", Racing: "🏎️", Shooting: "🔫",
