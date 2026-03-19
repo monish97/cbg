@@ -2,6 +2,15 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function GameCard({ game }) {
+  // Log game info to console for debugging
+  console.log("Game Info:", {
+    id: game.id,
+    thumb: game.thumb,
+    title: game.title,
+    url: game.url,
+  });
+  
+export default function GameCard({ game }) {
   return (
     <div className="game-card">
       <Link href={game.url}>
