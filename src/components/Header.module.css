@@ -1,0 +1,34 @@
+/* src/components/Header.module.css */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(15, 15, 20, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.inner {
+  max-width: 1400px; margin: 0 auto;
+  display: flex; align-items: center; gap: 20px;
+  padding: 0 24px; height: 64px;
+}
+.logo {
+  font-family: var(--font-display); font-size: 22px; font-weight: 800;
+  text-decoration: none; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.logoIcon {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent4));
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.logoAccent { color: var(--accent); }
+.nav { margin-left: auto; display: flex; gap: 4px; }
+.navLink {
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  font-weight: 700; font-size: 14px;
+  text-decoration: none; color: var(--muted);
+  transition: color .2s, background .2s;
+}
+.navLink:hover, .navLink.active { color: var(--text); background: var(--bg3); }
+
+@media (max-width: 600px) { .nav { display: none; } }

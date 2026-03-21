@@ -1,0 +1,29 @@
+/* src/components/SeoPageLayout.module.css */
+.hero {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 56px 24px 40px;
+  text-align: center;
+}
+.heroInner { max-width: 700px; margin: 0 auto; }
+.icon { font-size: 52px; margin-bottom: 16px; display: block; }
+.h1 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 800; line-height: 1.1;
+}
+.sub {
+  color: var(--muted); font-size: 16px; font-weight: 600;
+  margin-top: 12px; line-height: 1.7;
+}
+.badge {
+  display: inline-block; margin-top: 16px;
+  padding: 4px 14px; border-radius: 50px;
+  background: rgba(108,99,255,0.15);
+  border: 1px solid rgba(108,99,255,0.3);
+  color: var(--accent4); font-size: 12px; font-weight: 800;
+}
+.content {
+  max-width: 860px; margin: 0 auto;
+  padding: 48px 24px 80px;
+}

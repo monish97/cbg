@@ -1,0 +1,62 @@
+/* src/components/GameCard.module.css */
+.card {
+  background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; cursor: pointer;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+  text-decoration: none; color: inherit; display: block;
+}
+.card:hover {
+  transform: translateY(-6px) scale(1.01);
+  border-color: var(--accent4);
+  box-shadow: 0 16px 40px rgba(108, 99, 255, 0.2);
+}
+
+.thumb {
+  position: relative; overflow: hidden;
+  aspect-ratio: 16 / 10; background: var(--bg3);
+}
+.big .thumb { aspect-ratio: 16 / 9; }
+
+/* Real image from feed */
+.img {
+  object-fit: cover;
+  transition: transform .3s;
+}
+.card:hover .img { transform: scale(1.06); }
+
+/* Fallback when no thumbnail */
+.placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 48px;
+}
+
+/* Play overlay */
+.overlay {
+  position: absolute; inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .2s;
+}
+.card:hover .overlay { opacity: 1; }
+
+.playBtn {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  transform: scale(0.8); transition: transform .2s;
+}
+.card:hover .playBtn { transform: scale(1); }
+
+/* Info */
+.info { padding: 12px 14px; }
+.name {
+  font-size: 14px; font-weight: 800; margin-bottom: 6px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.meta { display: flex; align-items: center; justify-content: space-between; }
+.catTag {
+  font-size: 12px; font-weight: 700;
+  padding: 2px 10px; border-radius: 50px;
+}
+.plays { font-size: 16px; }
