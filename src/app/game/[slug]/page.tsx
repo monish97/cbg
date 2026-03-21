@@ -1,4 +1,11 @@
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  return [
+    { slug: "game-1" },
+    { slug: "game-2" },
+    { slug: "game-3" },
+    { slug: "game-4" },
+  ];
+}
 
 export default function GamePage({ params }: { params: { slug: string } }) {
   return (
