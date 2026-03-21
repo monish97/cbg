@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO: Replace these dynamically per game via Next.js -->
+  <title>Snake Classic – Free Browser Game | Casual Browser Games</title>
+  <meta name="description" content="Play Snake Classic free online in your browser. No download, no login required. Guide your snake, eat food, avoid walls. One of the most addictive classic games ever made." />
+  <link rel="canonical" href="https://casualbrowsergames.com/game/snake-classic" />
+
+  <meta property="og:title" content="Snake Classic – Play Free Online" />
+  <meta property="og:description" content="Play Snake Classic free in your browser. No download needed." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://casualbrowsergames.com/game/snake-classic" />
+
+  <!-- Game structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Snake Classic",
+    "description": "Guide your snake to eat food and grow longer. Avoid hitting the walls or your own tail in this timeless classic browser game.",
+    "genre": ["Action", "Arcade", "Classic"],
+    "gamePlatform": "Web Browser",
+    "applicationCategory": "Game",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.7",
+      "ratingCount": "8420",
+      "bestRating": "5"
+    }
+  }
+  </script>
+
+  <!-- Breadcrumb structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://casualbrowsergames.com" },
+      { "@type": "ListItem", "position": 2, "name": "Action Games", "item": "https://casualbrowsergames.com/games/action" },
+      { "@type": "ListItem", "position": 3, "name": "Snake Classic" }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:#0f0f14; --bg2:#18181f; --bg3:#22222c; --surface:#2a2a36;
+      --border:#35354a; --text:#f0f0f8; --muted:#8888a8;
+      --accent:#ff4d6d; --accent2:#ffb830; --accent3:#00d4aa; --accent4:#6c63ff;
+      --radius:14px; --radius-sm:8px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+
+    /* BG blobs */
+    .bg-blobs { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+    .blob { position:absolute; border-radius:50%; filter:blur(120px); opacity:0.1; }
+    .blob-1 { width:500px; height:500px; background:#ff4d6d; top:-100px; right:-100px; }
+    .blob-2 { width:400px; height:400px; background:#6c63ff; bottom:10%; left:-50px; }
+
+    /* HEADER */
+    header { position:sticky; top:0; z-index:100; background:rgba(15,15,20,0.85); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); }
+    .header-inner { max-width:1400px; margin:0 auto; display:flex; align-items:center; gap:20px; padding:0 24px; height:64px; }
+    .logo { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; text-decoration:none; color:var(--text); display:flex; align-items:center; gap:8px; white-space:nowrap; flex-shrink:0; }
+    .logo-icon { width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,var(--accent),var(--accent4)); display:flex; align-items:center; justify-content:center; font-size:18px; }
+    .logo span { color:var(--accent); }
+    nav { margin-left:auto; display:flex; gap:4px; }
+    .nav-link { padding:8px 14px; border-radius:var(--radius-sm); font-weight:700; font-size:14px; text-decoration:none; color:var(--muted); transition:color .2s,background .2s; }
+    .nav-link:hover { color:var(--text); background:var(--bg3); }
+
+    /* BREADCRUMB */
+    .breadcrumb { max-width:1400px; margin:0 auto; padding:16px 24px 0; display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--muted); position:relative; z-index:1; }
+    .breadcrumb a { color:var(--muted); text-decoration:none; }
+    .breadcrumb a:hover { color:var(--text); }
+    .breadcrumb span { color:var(--text); }
+
+    /* MAIN LAYOUT */
+    .game-layout { max-width:1400px; margin:0 auto; padding:20px 24px 48px; position:relative; z-index:1; display:grid; grid-template-columns:1fr 320px; gap:28px; }
+    @media(max-width:1100px) { .game-layout { grid-template-columns:1fr; } .sidebar { display:grid; grid-template-columns:1fr 1fr; gap:20px; } }
+    @media(max-width:600px)  { .sidebar { grid-template-columns:1fr; } }
+
+    /* GAME CONTAINER */
+    .game-col {}
+    .game-header { margin-bottom:16px; }
+    .game-header h1 { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; line-height:1.1; }
+    .game-header-meta { display:flex; align-items:center; gap:14px; margin-top:10px; flex-wrap:wrap; }
+    .tag { display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:50px; font-size:12px; font-weight:800; background:rgba(255,77,109,0.15); color:var(--accent); }
+    .rating-row { display:flex; align-items:center; gap:6px; font-size:14px; font-weight:700; color:var(--accent2); }
+    .plays { font-size:13px; color:var(--muted); font-weight:700; }
+
+    /* GAME FRAME */
+    .game-frame-wrap {
+      background:var(--bg2); border:1.5px solid var(--border);
+      border-radius:20px; overflow:hidden;
+      position:relative;
+    }
+    .game-loader {
+      position:absolute; inset:0; z-index:5;
+      background:var(--bg2); display:flex; flex-direction:column;
+      align-items:center; justify-content:center; gap:20px;
+      transition:opacity .4s;
+    }
+    .game-loader.hidden { opacity:0; pointer-events:none; }
+    .loader-emoji { font-size:64px; animation:bounce .8s ease-in-out infinite alternate; }
+    @keyframes bounce { from{transform:translateY(0)} to{transform:translateY(-16px)} }
+    .loader-bar { width:220px; height:4px; background:var(--bg3); border-radius:4px; overflow:hidden; }
+    .loader-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent4)); border-radius:4px; animation:load 1.8s ease-in-out forwards; }
+    @keyframes load { from{width:0} to{width:100%} }
+    .loader-text { font-size:14px; font-weight:700; color:var(--muted); }
+
+    .game-iframe-container { position:relative; width:100%; padding-top:56.25%; /* 16:9 */ }
+    .game-iframe-container iframe { position:absolute; inset:0; width:100%; height:100%; border:none; }
+
+    /* Game controls bar */
+    .game-controls {
+      display:flex; align-items:center; gap:10px; padding:12px 16px;
+      border-top:1px solid var(--border); background:var(--bg3);
+    }
+    .ctrl-btn {
+      display:flex; align-items:center; gap:6px; padding:8px 16px;
+      border-radius:var(--radius-sm); border:1.5px solid var(--border);
+      background:var(--surface); color:var(--text); font-family:'Nunito',sans-serif;
+      font-size:13px; font-weight:800; cursor:pointer; transition:background .2s;
+    }
+    .ctrl-btn:hover { background:var(--bg3); }
+    .ctrl-btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .ctrl-btn.primary:hover { background:#e63558; }
+    .ctrl-btn-fullscreen { margin-left:auto; }
+
+    /* DESCRIPTION */
+    .game-desc { margin-top:24px; }
+    .game-desc h2 { font-family:'Syne',sans-serif; font-size:18px; font-weight:800; margin-bottom:12px; }
+    .game-desc p { color:var(--muted); font-size:15px; font-weight:600; line-height:1.8; margin-bottom:12px; }
+    .game-desc h3 { font-family:'Syne',sans-serif; font-size:15px; font-weight:800; margin:20px 0 10px; }
+    .how-to-list { list-style:none; }
+    .how-to-list li { display:flex; gap:10px; align-items:flex-start; color:var(--muted); font-size:14px; font-weight:600; line-height:1.6; margin-bottom:8px; }
+    .how-to-list li::before { content:'›'; color:var(--accent); font-size:18px; line-height:1.2; flex-shrink:0; }
+    .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
+    .info-card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px 16px; }
+    .info-card-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:4px; }
+    .info-card-value { font-size:15px; font-weight:800; }
+
+    /* STARS RATING UI */
+    .star-rating { display:flex; gap:4px; margin:20px 0 8px; }
+    .star { font-size:28px; cursor:pointer; transition:transform .15s; filter:grayscale(1) opacity(0.4); }
+    .star:hover, .star.lit { filter:none; transform:scale(1.15); }
+    .rating-prompt { font-size:13px; color:var(--muted); font-weight:700; }
+
+    /* SIDEBAR */
+    .sidebar {}
+    .sidebar-card { background:var(--bg2); border:1.5px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:20px; }
+    .sidebar-card h3 { font-family:'Syne',sans-serif; font-size:15px; font-weight:800; margin-bottom:16px; }
+    .related-list { display:flex; flex-direction:column; gap:12px; }
+    .related-item { display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; padding:8px; border-radius:var(--radius-sm); transition:background .15s; }
+    .related-item:hover { background:var(--bg3); }
+    .related-thumb { width:60px; height:45px; border-radius:8px; background:var(--bg3); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
+    .related-name { font-size:13px; font-weight:800; margin-bottom:3px; }
+    .related-meta { font-size:12px; color:var(--muted); font-weight:600; }
+
+    /* Tags cloud */
+    .tags-cloud { display:flex; flex-wrap:wrap; gap:8px; }
+    .tag-btn { padding:6px 14px; border-radius:50px; background:var(--bg3); border:1px solid var(--border); color:var(--muted); font-size:13px; font-weight:700; text-decoration:none; transition:color .2s,border-color .2s; cursor:pointer; }
+    .tag-btn:hover { color:var(--text); border-color:var(--accent4); }
+
+    /* FOOTER */
+    footer { position:relative; z-index:1; border-top:1px solid var(--border); background:var(--bg2); padding:40px 24px 28px; }
+    .footer-inner { max-width:1400px; margin:0 auto; }
+    .footer-bottom { display:flex; align-items:center; justify-content:space-between; font-size:13px; color:var(--muted); font-weight:600; }
+    .footer-links { display:flex; gap:20px; }
+    .footer-links a { color:var(--muted); text-decoration:none; font-size:13px; font-weight:700; }
+    .footer-links a:hover { color:var(--text); }
+  </style>
+</head>
+<body>
+
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <a href="/" class="logo"><div class="logo-icon">🕹️</div>Casual<span>Browser</span></a>
+      <nav>
+        <a href="/games/action"  class="nav-link">Action</a>
+        <a href="/games/puzzle"  class="nav-link">Puzzle</a>
+        <a href="/games/racing"  class="nav-link">Racing</a>
+        <a href="/games/sports"  class="nav-link">Sports</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a> ›
+    <a href="/games/action">Action</a> ›
+    <span>Snake Classic</span>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="game-layout">
+
+    <!-- LEFT: GAME -->
+    <div class="game-col">
+
+      <div class="game-header">
+        <h1>Snake Classic</h1>
+        <div class="game-header-meta">
+          <span class="tag">⚔️ Action</span>
+          <span class="tag" style="background:rgba(255,184,48,0.15);color:var(--accent2)">🕹️ Arcade</span>
+          <div class="rating-row">★★★★★ <span>4.7</span></div>
+          <span class="plays">2.1M plays</span>
+        </div>
+      </div>
+
+      <!-- Game frame -->
+      <div class="game-frame-wrap">
+        <div class="game-loader" id="game-loader">
+          <div class="loader-emoji">🐍</div>
+          <div class="loader-bar"><div class="loader-fill"></div></div>
+          <div class="loader-text">Loading Snake Classic…</div>
+        </div>
+        <div class="game-iframe-container">
+          <!--
+            Replace the src below with the actual GameDistribution embed URL.
+            Format: https://html5.gamedistribution.com/GAME_ID/?gd_sdk_referrer_url=https://casualbrowsergames.com/game/snake-classic
+            The iframe loads the game from GameDistribution's CDN — you don't host game files.
+          -->
+          <iframe
+            id="game-frame"
+            src="about:blank"
+            data-src="https://html5.gamedistribution.com/xxxxxxxxx/?gd_sdk_referrer_url=https://casualbrowsergames.com/game/snake-classic"
+            allow="autoplay; fullscreen"
+            allowfullscreen
+            loading="lazy"
+            title="Play Snake Classic online free"
+            onload="frameLoaded()"
+          ></iframe>
+        </div>
+        <div class="game-controls">
+          <button class="ctrl-btn primary" onclick="startGame()">▶ Play Now</button>
+          <button class="ctrl-btn" onclick="restartGame()">↺ Restart</button>
+          <button class="ctrl-btn ctrl-btn-fullscreen" onclick="goFullscreen()">⛶ Fullscreen</button>
+        </div>
+      </div>
+
+      <!-- Description — THIS SECTION IS CRITICAL FOR SEO -->
+      <div class="game-desc">
+        <h2>About Snake Classic</h2>
+        <p>
+          Snake Classic is one of the most iconic and beloved browser games of all time. Originally popularized on Nokia mobile phones in the late 1990s, this timeless game has been enjoyed by hundreds of millions of people around the world. The concept is beautifully simple: guide a growing snake around the screen, collect food, and avoid hitting the walls or your own tail.
+        </p>
+        <p>
+          As you eat more food, your snake grows longer, making navigation increasingly difficult and satisfying. How long can you survive before things get too tight? Whether you're playing for the first time or chasing a high score, Snake Classic never gets old.
+        </p>
+
+        <h3>How to Play</h3>
+        <ul class="how-to-list">
+          <li>Use the arrow keys (or WASD) to control the direction of your snake</li>
+          <li>Guide the snake to eat the food that appears on the screen</li>
+          <li>Each piece of food makes your snake grow longer</li>
+          <li>Avoid running into the walls or your own tail — that ends the game</li>
+          <li>The longer your snake, the higher your score!</li>
+        </ul>
+
+        <h3>Game Details</h3>
+        <div class="info-grid">
+          <div class="info-card"><div class="info-card-label">Genre</div><div class="info-card-value">Arcade / Action</div></div>
+          <div class="info-card"><div class="info-card-label">Platform</div><div class="info-card-value">Web Browser</div></div>
+          <div class="info-card"><div class="info-card-label">Controls</div><div class="info-card-value">Keyboard / Touch</div></div>
+          <div class="info-card"><div class="info-card-label">Download</div><div class="info-card-value">Not Required</div></div>
+        </div>
+
+        <h3>Rate this game</h3>
+        <div class="star-rating" id="stars">
+          <span class="star" data-v="1" onclick="rate(1)">★</span>
+          <span class="star" data-v="2" onclick="rate(2)">★</span>
+          <span class="star" data-v="3" onclick="rate(3)">★</span>
+          <span class="star" data-v="4" onclick="rate(4)">★</span>
+          <span class="star" data-v="5" onclick="rate(5)">★</span>
+        </div>
+        <div class="rating-prompt" id="rating-prompt">Click a star to rate Snake Classic</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <h3>🔥 More Action Games</h3>
+        <div class="related-list" id="related-games"></div>
+      </div>
+      <div class="sidebar-card">
+        <h3>🏷️ Tags</h3>
+        <div class="tags-cloud">
+          <a href="/games/action"  class="tag-btn">Action</a>
+          <a href="/games/arcade"  class="tag-btn">Arcade</a>
+          <a href="/tag/classic"   class="tag-btn">Classic</a>
+          <a href="/tag/keyboard"  class="tag-btn">Keyboard</a>
+          <a href="/tag/highscore" class="tag-btn">High Score</a>
+          <a href="/tag/1-player"  class="tag-btn">1 Player</a>
+          <a href="/tag/skill"     class="tag-btn">Skill</a>
+          <a href="/tag/retro"     class="tag-btn">Retro</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-bottom">
+        <span>© 2025 Casual Browser Games</span>
+        <div class="footer-links">
+          <a href="/">Home</a>
+          <a href="/privacy-policy">Privacy</a>
+          <a href="/terms">Terms</a>
+          <a href="/contact">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Load iframe on play click, not on page load (saves bandwidth + speeds up page)
+    function startGame() {
+      const frame = document.getElementById('game-frame');
+      if (!frame.src || frame.src === 'about:blank') {
+        frame.src = frame.dataset.src;
+      }
+    }
+    function frameLoaded() {
+      setTimeout(() => document.getElementById('game-loader').classList.add('hidden'), 600);
+    }
+    function restartGame() {
+      const frame = document.getElementById('game-frame');
+      frame.src = frame.src; // reloads iframe
+    }
+    function goFullscreen() {
+      const container = document.querySelector('.game-iframe-container');
+      if (container.requestFullscreen) container.requestFullscreen();
+      else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+    }
+
+    // Star rating (demo — hook to backend later)
+    function rate(val) {
+      document.querySelectorAll('.star').forEach((s,i) => {
+        s.classList.toggle('lit', i < val);
+      });
+      document.getElementById('rating-prompt').textContent = `Thanks for rating ${val} star${val>1?'s':''}! ⭐`;
+    }
+
+    // Related games data (replace with API)
+    const RELATED = [
+      { id:'stickman-archer', title:'Stickman Archer', cat:'Action', rating:'4.5', emoji:'🏹' },
+      { id:'tower-defense',   title:'Tower Defense',   cat:'Action', rating:'4.5', emoji:'🏰' },
+      { id:'zombie-shooter',  title:'Zombie Shooter',  cat:'Shooter',rating:'4.3', emoji:'🧟' },
+      { id:'bubble-shooter',  title:'Bubble Shooter',  cat:'Puzzle', rating:'4.8', emoji:'🔵' },
+    ];
+    document.getElementById('related-games').innerHTML = RELATED.map(g => `
+      <a class="related-item" href="/game/${g.id}">
+        <div class="related-thumb">${g.emoji}</div>
+        <div>
+          <div class="related-name">${g.title}</div>
+          <div class="related-meta">${g.cat} · ★ ${g.rating}</div>
+        </div>
+      </a>`).join('');
+  </script>
+</body>
+</html>

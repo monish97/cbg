@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Casual Browser Games – Free Online Games, No Download</title>
+  <meta name="description" content="Play hundreds of free browser games instantly – no download, no login. Action, puzzle, racing, sports and more at Casual Browser Games." />
+  <link rel="canonical" href="https://casualbrowsergames.com/" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Casual Browser Games – Free Online Games" />
+  <meta property="og:description" content="Play hundreds of free browser games instantly. No download, no login required." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://casualbrowsergames.com/" />
+
+  <!-- Schema.org structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Casual Browser Games",
+    "url": "https://casualbrowsergames.com",
+    "description": "Free online browser games – no download required",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://casualbrowsergames.com/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0f0f14;
+      --bg2:       #18181f;
+      --bg3:       #22222c;
+      --surface:   #2a2a36;
+      --border:    #35354a;
+      --text:      #f0f0f8;
+      --muted:     #8888a8;
+      --accent:    #ff4d6d;
+      --accent2:   #ffb830;
+      --accent3:   #00d4aa;
+      --accent4:   #6c63ff;
+      --cat-action:#ff4d6d;
+      --cat-puzzle:#6c63ff;
+      --cat-racing:#ffb830;
+      --cat-sports:#00d4aa;
+      --cat-shoot: #ff6b35;
+      --cat-idle:  #c084fc;
+      --radius:    14px;
+      --radius-sm: 8px;
+      --shadow:    0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND BLOBS ── */
+    .bg-blobs {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .blob {
+      position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.18;
+    }
+    .blob-1 { width: 600px; height: 600px; background: #ff4d6d; top: -200px; left: -100px; animation: drift 18s ease-in-out infinite alternate; }
+    .blob-2 { width: 500px; height: 500px; background: #6c63ff; top: 30%; right: -150px; animation: drift 22s ease-in-out infinite alternate-reverse; }
+    .blob-3 { width: 400px; height: 400px; background: #ffb830; bottom: 10%; left: 20%; animation: drift 26s ease-in-out infinite alternate; }
+    @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(40px,30px) scale(1.1); } }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,15,20,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      max-width: 1400px; margin: 0 auto;
+      display: flex; align-items: center; gap: 20px;
+      padding: 0 24px; height: 64px;
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px; font-weight: 800;
+      text-decoration: none; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .logo-icon {
+      width: 34px; height: 34px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent4));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .logo span { color: var(--accent); }
+
+    /* Search */
+    .search-wrap {
+      flex: 1; max-width: 500px; position: relative;
+    }
+    .search-wrap input {
+      width: 100%; padding: 10px 16px 10px 44px;
+      background: var(--bg3); border: 1.5px solid var(--border);
+      border-radius: 50px; color: var(--text); font-family: 'Nunito', sans-serif;
+      font-size: 14px; font-weight: 600; outline: none; transition: border-color .2s;
+    }
+    .search-wrap input::placeholder { color: var(--muted); }
+    .search-wrap input:focus { border-color: var(--accent4); }
+    .search-icon {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); pointer-events: none;
+    }
+
+    nav { margin-left: auto; display: flex; gap: 4px; }
+    .nav-link {
+      padding: 8px 14px; border-radius: var(--radius-sm); font-weight: 700;
+      font-size: 14px; text-decoration: none; color: var(--muted);
+      transition: color .2s, background .2s;
+    }
+    .nav-link:hover { color: var(--text); background: var(--bg3); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; z-index: 1;
+      padding: 72px 24px 48px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,77,109,0.15); border: 1px solid rgba(255,77,109,0.35);
+      color: var(--accent); padding: 6px 16px; border-radius: 50px;
+      font-size: 13px; font-weight: 800; margin-bottom: 24px;
+      animation: fadeUp .6s ease both;
+    }
+    .hero-badge::before { content: '🎮'; font-size: 14px; }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(40px, 7vw, 80px); font-weight: 800; line-height: 1.05;
+      letter-spacing: -1px;
+      animation: fadeUp .7s .1s ease both;
+    }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero h1 strong { font-style: normal; color: var(--accent2); font-weight: 800; }
+    .hero-sub {
+      margin-top: 16px; font-size: 18px; color: var(--muted); font-weight: 600;
+      animation: fadeUp .7s .2s ease both;
+    }
+    .hero-stats {
+      display: flex; justify-content: center; gap: 36px; margin-top: 36px;
+      animation: fadeUp .7s .3s ease both;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .stat-label { font-size: 13px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── CATEGORY PILLS ── */
+    .categories {
+      position: relative; z-index: 1;
+      max-width: 1400px; margin: 0 auto;
+      padding: 0 24px 40px;
+      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+    }
+    .cat-pill {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 20px; border-radius: 50px;
+      font-weight: 800; font-size: 14px; cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform .15s, box-shadow .15s;
+      text-decoration: none; color: #fff;
+    }
+    .cat-pill:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .cat-pill.active { border-color: #fff; }
+
+    .cat-pill-action  { background: var(--cat-action); }
+    .cat-pill-puzzle  { background: var(--cat-puzzle); }
+    .cat-pill-racing  { background: var(--cat-racing); color: #111; }
+    .cat-pill-sports  { background: var(--cat-sports); color: #111; }
+    .cat-pill-shooter { background: var(--cat-shoot); }
+    .cat-pill-idle    { background: var(--cat-idle); }
+    .cat-pill-all     { background: var(--surface); border-color: var(--border); }
+
+    /* ── SECTION ── */
+    .section {
+      position: relative; z-index: 1;
+      max-width: 1400px; margin: 0 auto;
+      padding: 0 24px 56px;
+    }
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent); display: inline-block;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.7; }
+    }
+    .see-all {
+      font-size: 14px; font-weight: 800; color: var(--accent4);
+      text-decoration: none; padding: 6px 14px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--accent4); transition: background .2s;
+    }
+    .see-all:hover { background: rgba(108,99,255,0.15); }
+
+    /* ── GAME GRID ── */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 18px;
+    }
+    .game-grid.featured {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+
+    /* ── GAME CARD ── */
+    .game-card {
+      background: var(--bg2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+      text-decoration: none; color: inherit;
+      display: block;
+    }
+    .game-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: var(--accent4);
+      box-shadow: 0 16px 40px rgba(108,99,255,0.25);
+    }
+    .game-thumb {
+      position: relative; overflow: hidden;
+      aspect-ratio: 16/10;
+      background: var(--bg3);
+    }
+    .game-thumb img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .3s;
+    }
+    .game-card:hover .game-thumb img { transform: scale(1.06); }
+
+    .game-thumb-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px;
+    }
+
+    /* Play overlay */
+    .play-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .2s;
+    }
+    .game-card:hover .play-overlay { opacity: 1; }
+    .play-btn {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--accent); display: flex; align-items: center; justify-content: center;
+      transform: scale(0.8); transition: transform .2s;
+    }
+    .game-card:hover .play-btn { transform: scale(1); }
+    .play-btn svg { width: 20px; height: 20px; fill: #fff; margin-left: 3px; }
+
+    /* Badges */
+    .thumb-badge {
+      position: absolute; top: 8px; left: 8px;
+      padding: 3px 9px; border-radius: 50px;
+      font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .badge-hot  { background: var(--accent); color: #fff; }
+    .badge-new  { background: var(--accent3); color: #111; }
+    .badge-top  { background: var(--accent2); color: #111; }
+
+    .game-info { padding: 12px 14px; }
+    .game-name {
+      font-size: 14px; font-weight: 800; margin-bottom: 5px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .game-meta {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .game-cat {
+      font-size: 12px; font-weight: 700; padding: 2px 10px;
+      border-radius: 50px;
+    }
+    .game-rating {
+      font-size: 12px; font-weight: 700; color: var(--accent2);
+      display: flex; align-items: center; gap: 3px;
+    }
+
+    /* ── FEATURED CARD (big) ── */
+    .game-card.big .game-thumb { aspect-ratio: 16/9; }
+
+    /* ── BANNER ── */
+    .banner {
+      position: relative; z-index: 1;
+      max-width: 1400px; margin: 0 auto 56px;
+      padding: 0 24px;
+    }
+    .banner-inner {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 56px;
+      display: flex; align-items: center; justify-content: space-between; gap: 40px;
+      overflow: hidden; position: relative;
+    }
+    .banner-inner::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(255,77,109,0.12) 0%, transparent 60%);
+    }
+    .banner-text { position: relative; }
+    .banner-text h2 {
+      font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800;
+      line-height: 1.15; margin-bottom: 12px;
+    }
+    .banner-text p { color: var(--muted); font-size: 15px; font-weight: 600; max-width: 400px; }
+    .banner-icons { display: flex; gap: 16px; flex-shrink: 0; font-size: 52px; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      background: var(--bg2);
+      padding: 48px 24px 32px;
+    }
+    .footer-inner {
+      max-width: 1400px; margin: 0 auto;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px; margin-bottom: 40px;
+    }
+    .footer-brand p {
+      color: var(--muted); font-size: 14px; font-weight: 600;
+      line-height: 1.7; margin-top: 12px; max-width: 260px;
+    }
+    .footer-col h4 {
+      font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
+      color: var(--text); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .footer-col a {
+      display: block; color: var(--muted); text-decoration: none;
+      font-size: 14px; font-weight: 600; margin-bottom: 10px;
+      transition: color .2s;
+    }
+    .footer-col a:hover { color: var(--text); }
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding-top: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 13px; color: var(--muted); font-weight: 600;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .hero { padding: 48px 20px 32px; }
+      .hero-stats { gap: 24px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      nav { display: none; }
+      .banner-icons { display: none; }
+      .banner-inner { padding: 32px 24px; }
+      .game-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .game-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background blobs -->
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <div class="logo-icon">🕹️</div>
+        Casual<span>Browser</span>
+      </a>
+
+      <div class="search-wrap">
+        <svg class="search-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="search" placeholder="Search 500+ games…" autocomplete="off" id="search-input" />
+      </div>
+
+      <nav>
+        <a href="/games/action" class="nav-link">Action</a>
+        <a href="/games/puzzle" class="nav-link">Puzzle</a>
+        <a href="/games/racing" class="nav-link">Racing</a>
+        <a href="/games/sports" class="nav-link">Sports</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-badge">100% Free · No Login · No Download</div>
+    <h1>Play <em>Free</em> Games<br>Right in Your <strong>Browser</strong></h1>
+    <p class="hero-sub">500+ games. Pick one. Play instantly.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Games</div></div>
+      <div class="stat"><div class="stat-num">0</div><div class="stat-label">Downloads</div></div>
+      <div class="stat"><div class="stat-num">Free</div><div class="stat-label">Always</div></div>
+    </div>
+  </section>
+
+  <!-- ── CATEGORY PILLS ── -->
+  <div class="categories">
+    <a href="#" class="cat-pill cat-pill-all active" onclick="filterCat(event,'all')">🎮 All Games</a>
+    <a href="/games/action"  class="cat-pill cat-pill-action"  onclick="filterCat(event,'action')">⚔️ Action</a>
+    <a href="/games/puzzle"  class="cat-pill cat-pill-puzzle"  onclick="filterCat(event,'puzzle')">🧩 Puzzle</a>
+    <a href="/games/racing"  class="cat-pill cat-pill-racing"  onclick="filterCat(event,'racing')">🏎️ Racing</a>
+    <a href="/games/sports"  class="cat-pill cat-pill-sports"  onclick="filterCat(event,'sports')">⚽ Sports</a>
+    <a href="/games/shooter" class="cat-pill cat-pill-shooter" onclick="filterCat(event,'shooter')">🔫 Shooter</a>
+    <a href="/games/idle"    class="cat-pill cat-pill-idle"    onclick="filterCat(event,'idle')">💤 Idle</a>
+  </div>
+
+  <!-- ── FEATURED GAMES ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="dot"></span> Featured Games</div>
+      <a href="/games" class="see-all">See all →</a>
+    </div>
+    <div class="game-grid featured" id="featured-grid">
+      <!-- Cards injected by JS -->
+    </div>
+  </div>
+
+  <!-- ── HOT RIGHT NOW ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🔥 Hot Right Now</div>
+      <a href="/games?sort=trending" class="see-all">See all →</a>
+    </div>
+    <div class="game-grid" id="trending-grid"></div>
+  </div>
+
+  <!-- ── BANNER ── -->
+  <div class="banner">
+    <div class="banner-inner">
+      <div class="banner-text">
+        <h2>No account needed.<br>Just hit Play.</h2>
+        <p>Every game on this site runs in your browser. No downloads, no installs, no sign-ups — ever. Just pick a game and start playing in seconds.</p>
+      </div>
+      <div class="banner-icons">🎯🏆🕹️</div>
+    </div>
+  </div>
+
+  <!-- ── NEW ARRIVALS ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">✨ New Arrivals</div>
+      <a href="/games?sort=new" class="see-all">See all →</a>
+    </div>
+    <div class="game-grid" id="new-grid"></div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="logo" style="display:inline-flex">
+            <div class="logo-icon">🕹️</div>
+            Casual<span>Browser</span>
+          </a>
+          <p>Free browser games for everyone. No download, no login — just instant fun. New games added every week.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Games</h4>
+          <a href="/games/action">Action</a>
+          <a href="/games/puzzle">Puzzle</a>
+          <a href="/games/racing">Racing</a>
+          <a href="/games/sports">Sports</a>
+          <a href="/games/idle">Idle</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="/about">About Us</a>
+          <a href="/contact">Contact</a>
+          <a href="/faq">FAQ</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Casual Browser Games. All rights reserved.</span>
+        <span>Made with ❤️ for gamers everywhere</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── GAME DATA (replace with real API / CMS later) ──
+    const GAMES = [
+      { id:'snake-classic',     title:'Snake Classic',      cat:'action',  emoji:'🐍', badge:'hot',  rating:4.7, plays:'2.1M' },
+      { id:'bubble-shooter',    title:'Bubble Shooter',     cat:'puzzle',  emoji:'🔵', badge:'top',  rating:4.8, plays:'3.4M' },
+      { id:'drift-racers',      title:'Drift Racers',       cat:'racing',  emoji:'🏎️', badge:'hot',  rating:4.6, plays:'1.8M' },
+      { id:'stickman-archer',   title:'Stickman Archer',    cat:'action',  emoji:'🏹', badge:null,   rating:4.5, plays:'900K' },
+      { id:'2048',              title:'2048',               cat:'puzzle',  emoji:'🔢', badge:'top',  rating:4.9, plays:'8.2M' },
+      { id:'penalty-shootout',  title:'Penalty Shootout',   cat:'sports',  emoji:'⚽', badge:null,   rating:4.4, plays:'1.2M' },
+      { id:'cookie-clicker',    title:'Cookie Clicker',     cat:'idle',    emoji:'🍪', badge:'hot',  rating:4.6, plays:'5.1M' },
+      { id:'zombie-shooter',    title:'Zombie Shooter',     cat:'shooter', emoji:'🧟', badge:'new',  rating:4.3, plays:'670K' },
+      { id:'tower-defense',     title:'Tower Defense',      cat:'action',  emoji:'🏰', badge:'new',  rating:4.5, plays:'430K' },
+      { id:'jigsaw-daily',      title:'Jigsaw Daily',       cat:'puzzle',  emoji:'🧩', badge:'new',  rating:4.7, plays:'210K' },
+      { id:'moto-x3m',         title:'Moto X3M',           cat:'racing',  emoji:'🏍️', badge:null,   rating:4.8, plays:'4.6M' },
+      { id:'basketball-stars',  title:'Basketball Stars',   cat:'sports',  emoji:'🏀', badge:'new',  rating:4.4, plays:'180K' },
+    ];
+
+    const CAT_COLORS = {
+      action: { bg:'rgba(255,77,109,0.15)',  color:'var(--cat-action)' },
+      puzzle: { bg:'rgba(108,99,255,0.15)',  color:'var(--cat-puzzle)' },
+      racing: { bg:'rgba(255,184,48,0.15)', color:'var(--cat-racing)' },
+      sports: { bg:'rgba(0,212,170,0.15)',   color:'var(--cat-sports)' },
+      shooter:{ bg:'rgba(255,107,53,0.15)', color:'var(--cat-shoot)'  },
+      idle:   { bg:'rgba(192,132,252,0.15)',color:'var(--cat-idle)'   },
+    };
+
+    function cardHTML(game, big = false) {
+      const c = CAT_COLORS[game.cat] || CAT_COLORS.action;
+      const badgeClass = game.badge ? `badge-${game.badge}` : '';
+      const badgeLabel = { hot:'🔥 Hot', new:'✨ New', top:'⭐ Top' }[game.badge] || '';
+      return `
+        <a class="game-card${big?' big':''}" href="/game/${game.id}" data-cat="${game.cat}">
+          <div class="game-thumb">
+            <div class="game-thumb-placeholder">${game.emoji}</div>
+            ${game.badge ? `<span class="thumb-badge ${badgeClass}">${badgeLabel}</span>` : ''}
+            <div class="play-overlay">
+              <div class="play-btn">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="game-info">
+            <div class="game-name">${game.title}</div>
+            <div class="game-meta">
+              <span class="game-cat" style="background:${c.bg};color:${c.color}">${game.cat}</span>
+              <span class="game-rating">★ ${game.rating}</span>
+            </div>
+          </div>
+        </a>`;
+    }
+
+    // Render sections
+    const featured = GAMES.filter(g => g.badge === 'hot' || g.badge === 'top').slice(0, 6);
+    const trending  = GAMES.sort((a,b) => parseFloat(b.rating) - parseFloat(a.rating)).slice(0, 8);
+    const newest    = GAMES.filter(g => g.badge === 'new').slice(0, 6);
+
+    document.getElementById('featured-grid').innerHTML = featured.map(g => cardHTML(g, true)).join('');
+    document.getElementById('trending-grid').innerHTML  = trending.map(g => cardHTML(g)).join('');
+    document.getElementById('new-grid').innerHTML       = newest.map(g => cardHTML(g)).join('');
+
+    // Category filter
+    function filterCat(e, cat) {
+      e.preventDefault();
+      document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      const filtered = cat === 'all' ? GAMES : GAMES.filter(g => g.cat === cat);
+      document.getElementById('featured-grid').innerHTML = filtered.slice(0,6).map(g=>cardHTML(g,true)).join('');
+      document.getElementById('trending-grid').innerHTML  = filtered.slice(0,8).map(g=>cardHTML(g)).join('');
+      document.getElementById('new-grid').innerHTML       = filtered.filter(g=>g.badge==='new').map(g=>cardHTML(g)).join('');
+    }
+
+    // Search (client-side demo — hook to real backend later)
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('input', function() {
+      const q = this.value.toLowerCase().trim();
+      if (!q) return;
+      const results = GAMES.filter(g => g.title.toLowerCase().includes(q) || g.cat.includes(q));
+      document.getElementById('featured-grid').innerHTML = results.map(g=>cardHTML(g,true)).join('') || '<p style="color:var(--muted);padding:20px">No games found.</p>';
+      document.getElementById('trending-grid').innerHTML = '';
+      document.getElementById('new-grid').innerHTML = '';
+    });
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') { this.value = ''; location.reload(); }
+    });
+  </script>
+</body>
+</html>
