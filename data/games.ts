@@ -2,6 +2,6 @@
   id: "1",
   title: "Game Name",
   slug: "game-name",
-  thumbnail: "...",
+  thumbnail: "...", 
   url: "iframe-url"
 }
