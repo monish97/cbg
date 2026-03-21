@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 export default function GamePage({ params }: { params: { slug: string } }) {
   return (
     <div style={{ padding: "20px" }}>
